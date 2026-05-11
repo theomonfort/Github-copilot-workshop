@@ -1,6 +1,6 @@
 {
   "name": "GitHub Copilot Workshop",
-  "image": "mcr.microsoft.com/devcontainers/javascript-node:0-22",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
   "customizations": {
     "vscode": {
       "extensions": [
