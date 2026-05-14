@@ -2,7 +2,7 @@
 title: ギットハブ
 titleEn: GitHub
 summary: 1.8 億人以上の開発者が利用する AI ネイティブの開発者プラットフォーム。Pull Request から GitHub Copilot まで、ソフトウェア開発の歴史を作り続ける。
-icon: /theomonfort/github-white-icon.svg
+icon: 🐙
 color: magenta
 order: 1
 category: introduction

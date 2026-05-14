@@ -2,7 +2,7 @@
 title: GitHub Actions
 titleEn: GitHub Actions
 summary: GitHub にネイティブ統合された CI/CD・自動化プラットフォーム。詳細は coming soon。
-icon: /theomonfort/github-white-icon.svg
+icon: ⚙️
 color: amber
 order: 20
 category: secure
