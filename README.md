@@ -6,7 +6,7 @@
 
 1. このリポジトリを **Use this template → Create a new repository** で自分用にコピー
 2. **Code → Codespaces → Create codespace on main** で開発環境を起動
-3. ハンズオンの手順は [ワークショップ資料](https://theomonfort.github.io/2026-Github-Copilot-Workshop/github-copilot-workshop/custom/handson/) を参照
+3. ハンズオンの手順は [ワークショップ資料](https://theomonfort.github.io/theomonfort/handson/intro/) を参照
 
 ## 構成
 
