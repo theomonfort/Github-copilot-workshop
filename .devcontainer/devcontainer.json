@@ -1,6 +1,11 @@
 {
   "name": "GitHub Copilot Workshop",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+  "hostRequirements": {
+    "cpus": 8,
+    "memory": "32gb",
+    "storage": "64gb"
+  },
   "customizations": {
     "vscode": {
       "extensions": [
