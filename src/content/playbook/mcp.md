@@ -2,7 +2,7 @@
 title: MCP Server（Model Context Protocol）
 titleEn: MCP Server
 summary: MCP は AI モデルに対して追加の文脈を提供する方法である。
-icon: 🔌
+icon: /theomonfort/mcp.png
 color: cyan
 order: 4
 category: plan

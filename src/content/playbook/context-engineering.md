@@ -32,30 +32,30 @@ links:
 
 > 良い context は量ではなく **選び方**。不要な情報を減らし、必要な情報を欠かさない。
 
-## Context rot
+## Context rot（コンテキスト劣化）
 
-LLM は context window が大きいほど賢くなるわけではない。情報を詰め込みすぎると、**Lost in the middle** で重要情報が中央に埋もれたり、**Recency bias** で直近の情報を過大評価したりして、判断が鈍る。
+LLM は context window（コンテキストウィンドウ）が大きいほど賢くなるわけではない。情報を詰め込みすぎると、**Lost in the middle（中央埋没）** で重要情報が中央に埋もれたり、**Recency bias（直近性バイアス）** で直近の情報を過大評価したりして、判断が鈍る。
 
-これを **context rot** と呼ぶ。
+これを **context rot（コンテキスト劣化）** と呼ぶ。
 
 ```mermaid
 treemap-beta
-"Context window"
-  "Smart zone": 60:::smart
-  "Dumb zone": 40:::dumb
+"コンテキストウィンドウ"
+  "賢いゾーン": 60:::smart
+  "鈍いゾーン": 40:::dumb
 classDef smart fill:#0891b2,stroke:#67e8f9,color:#ecfeff
 classDef dumb fill:#7a1748,stroke:#ff2e88,color:#ffe8f4
 ```
 
 > Context Engineering の目的は、context window を埋めることではなく、**必要な情報が目立つ状態を保つこと**。
 
-## Context window：Start
+## コンテキストウィンドウ：Start
 
-Start はほぼ理想状態。常時必要な system/tools だけが入り、作業用の余白が大きい。
+Start はほぼ理想状態。常時必要な **System/tools**（skills descriptions / copilot-instructions / MCP servers）だけが入り、作業用の余白が大きい。
 
 ```mermaid
 treemap-beta
-"Context window"
+"コンテキストウィンドウ"
   "System & tools": 10:::used
   "Free space": 75:::free
   "Buffer": 15:::free
@@ -63,13 +63,13 @@ classDef used fill:#7a1748,stroke:#ff2e88,color:#ffe8f4
 classDef free fill:#0891b2,stroke:#67e8f9,color:#ecfeff
 ```
 
-## Context window：Custom agent
+## コンテキストウィンドウ：Custom agent
 
 Custom agent に切り替えると、その agent instruction が context に追加される。
 
 ```mermaid
 treemap-beta
-"Context window"
+"コンテキストウィンドウ"
   "System & tools": 10:::used
   "Custom Agent": 10:::used
   "Free space": 65:::free
@@ -78,13 +78,13 @@ classDef used fill:#7a1748,stroke:#ff2e88,color:#ffe8f4
 classDef free fill:#0891b2,stroke:#67e8f9,color:#ecfeff
 ```
 
-## Context window：Prompt
+## コンテキストウィンドウ：Prompt
 
 Prompt を書く。たとえば「test を追加して」と頼むと、関連 skill と test 用の path instruction が読み込まれることがある。
 
 ```mermaid
 treemap-beta
-"Context window"
+"コンテキストウィンドウ"
   "System & tools": 10:::used
   "Custom Agent": 10:::used
   "Path instruction": 10:::used
@@ -96,13 +96,13 @@ classDef used fill:#7a1748,stroke:#ff2e88,color:#ffe8f4
 classDef free fill:#0891b2,stroke:#67e8f9,color:#ecfeff
 ```
 
-## Context window：Sub-agent
+## コンテキストウィンドウ：Sub-agent
 
 Explore、database、review などの sub-agent は、調査結果の summary を main agent に返せる。
 
 ```mermaid
 treemap-beta
-"Context window"
+"コンテキストウィンドウ"
   "System & tools": 10:::used
   "Custom Agent": 10:::used
   "Path instruction": 10:::used
@@ -115,13 +115,13 @@ classDef used fill:#7a1748,stroke:#ff2e88,color:#ffe8f4
 classDef free fill:#0891b2,stroke:#67e8f9,color:#ecfeff
 ```
 
-## Context window：Memory
+## コンテキストウィンドウ：Memory
 
 Repo で作業を続けると、memory が生成され、必要な時に動的に読み込まれることがある。
 
 ```mermaid
 treemap-beta
-"Context window"
+"コンテキストウィンドウ"
   "System & tools": 10:::used
   "Custom Agent": 10:::used
   "Path instruction": 10:::used

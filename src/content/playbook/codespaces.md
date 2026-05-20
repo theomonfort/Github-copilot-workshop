@@ -2,7 +2,7 @@
 title: GitHub Codespaces
 titleEn: GitHub Codespaces
 summary: クラウド上にホストされる、カスタマイズ可能なリモート開発環境。AI を"安全に閉じ込めて"実験・作業できる、AI駆動開発の理想的な遊び場。
-icon: 📦
+icon: /theomonfort/github-vscode-mark.png
 color: cyan
 order: 17
 category: develop
@@ -16,7 +16,7 @@ links:
     url: https://docs.github.com/en/codespaces
   - group: GitHub Docs
     label: Choosing the machine type for your codespace
-    url: https://docs.github.com/en/codespaces/setting-your-user-preferences/choosing-the-machine-type-for-your-codespace
+    url: https://docs.github.com/en/codespaces/customizing-your-codespace/changing-the-machine-type-for-your-codespace
   - group: Dev Containers
     label: devcontainer.json reference
     url: https://containers.dev/

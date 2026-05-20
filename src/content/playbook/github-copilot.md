@@ -2,7 +2,7 @@
 title: GitHub Copilot
 titleEn: GitHub Copilot
 summary: 世界で最も活用されている AI 開発ツール。SDLC 全体を AI で支える開発者プラットフォーム。
-icon: 🤖
+icon: /theomonfort/github-copilot-white-icon.png
 color: cyan
 order: 2
 category: introduction
@@ -18,7 +18,7 @@ links:
 
 ## 一言で
 
-GitHub Copilot は世界で最もご活用いただいている AI 開発ツール。競合の中で **最も多くの AI モデルと利用サーフェス** を選べるオーケストレーターです。
+GitHub Copilot は世界で最もご活用いただいている AI 開発ツール。**主要 AI モデルと多様な利用サーフェスを自由に組み合わせられる** オーケストレーターです。
 
 選べる AI モデル：OpenAI / Anthropic / Google Gemini / xAI Grok、さらにカスタムモデルにも対応。
 
@@ -84,11 +84,12 @@ flowchart LR
 - ✅ **オーケストレーション**<br/>　コーディングだけでなく、SDLC 全体にわたる AI
 - ✅ **モデル・エージェント・サーフェス全体での選択の自由**<br/>　あらゆるワークフローに最適なモデルとインターフェース。ベンダーロックインなし
 - ✅ **エンタープライズコントロール**<br/>　一元化されたガバナンス、可視性、セキュリティ
+- ✅ **コンプライアンス**<br/>　Copilot Proxy、ポリシー制御、公開コードフィルタ、対象利用に対する Microsoft の IP 保護
 - ✅ **最高のコストパフォーマンス**<br/>　プール型使用量、充実した組み込みエンタイトルメント、ACD による価格優位性の最大化
 
 ## セキュアでコンプライアントなアーキテクチャ
 
-入力されたコードは **Copilot Proxy (CAPI)** を経由し、安心してエンタープライズで使える設計。
+入力されたコードは **Copilot Proxy** を経由し、安心してエンタープライズで使える設計。
 
 ```mermaid
 ---
@@ -103,7 +104,7 @@ config:
 ---
 flowchart LR
   Dev["👤 開発者"]
-  Proxy["<img class='proxy-ico' src='/theomonfort/github-copilot-white-icon.png'/><b>CAPI</b>"]
+  Proxy["<img class='proxy-ico' src='/theomonfort/github-copilot-white-icon.png'/><b>Copilot Proxy</b>"]
   LLM["<b>LLM プロバイダー</b><div class='llm-row'><img src='/theomonfort/llm-openai.png'/><img src='/theomonfort/llm-anthropic.svg'/><img src='/theomonfort/llm-gemini.png'/><img src='/theomonfort/llm-grok.png'/></div>"]
 
   Dev -->|"文脈"| Proxy

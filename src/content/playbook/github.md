@@ -2,28 +2,56 @@
 title: ギットハブ
 titleEn: GitHub
 summary: 1.8 億人以上の開発者が利用する AI ネイティブの開発者プラットフォーム。Pull Request から GitHub Copilot まで、ソフトウェア開発の歴史を作り続ける。
-icon: 🐙
+icon: /theomonfort/github-white-icon.svg
 color: magenta
 order: 1
 category: introduction
 related: ['copilot-chat', 'cloud-agent']
 links:
-  - label: About GitHub
+  - group: 🔗 公式リソース
+    label: About GitHub
     url: https://github.com/about
-  - label: GitHub Copilot
+  - group: 🔗 公式リソース
+    label: GitHub Copilot
     url: https://github.com/features/copilot
-  - label: GitHub Enterprise
+  - group: 🔗 公式リソース
+    label: GitHub Enterprise
     url: https://github.com/enterprise
+  - group: 🔗 公式リソース
+    label: GitHub Well-Architected
+    url: https://wellarchitected.github.com
+  - group: 📰 ニュース・発信
+    label: GitHub Blog
+    url: https://github.blog
+  - group: 📰 ニュース・発信
+    label: GitHub Changelog
+    url: https://github.blog/changelog
+  - group: 📰 ニュース・発信
+    label: GitHub YouTube
+    url: https://www.youtube.com/@GitHub
+  - group: 🇯🇵 日本コミュニティ
+    label: GitHub Japan YouTube
+    url: https://www.youtube.com/@GitHubJapan
+  - group: 🇯🇵 日本コミュニティ
+    label: GitHub Japan X (Twitter)
+    url: https://x.com/GitHubJapan
 ---
 
 ## 一言で
 
-- GitHub 開発者：世界で **1.8 億人以上**
-- GitHub Copilot 登録ユーザー：**2,000 万人**
-- GitHub Copilot 有料サブスクリプション：**470 万人**
-- エンタープライズ顧客：**77,000 社以上**
-- Fortune 100 の **約 90%** が Copilot を採用
-- 有料 AI コーディングツール市場シェア **42%**
+<div class="hero-quote hero-quote-mona">
+  <p>こんにちは、<strong>Mona</strong> です！<strong>GitHub</strong> の顔として世界中の開発者を見守っています。</p>
+  <p>今日お話しする <strong>GitHub</strong> は、<strong>1.8 億人以上</strong>の開発者が集う世界最大の AI ネイティブ開発者プラットフォームです。</p>
+</div>
+
+## 数字で見る GitHub
+
+- GitHub 開発者：世界で **1.8 億人以上**（[2025](https://github.blog/news-insights/octoverse/octoverse-a-new-developer-joins-github-every-second-as-ai-leads-typescript-to-1/)）
+- GitHub Copilot 登録ユーザー：**2,000 万人以上**（[2025](https://www.microsoft.com/en-us/investor/events/fy-2025/earnings-fy-2025-q4.aspx)）
+- GitHub Copilot 有料サブスクリプション：**470 万人以上**（[2026](https://www.getpanto.ai/blog/github-copilot-statistics)）
+- エンタープライズ顧客：**77,000 社以上**（[2024](https://www.microsoft.com/investor/reports/ar24/)）
+- Fortune 100 の **約 90%** が Copilot を採用（[2025](https://www.microsoft.com/en-us/investor/events/fy-2025/earnings-fy-2025-q4.aspx)）
+- 有料 AI コーディングツール市場シェア **約 42%**（[2025](https://www.secondtalent.com/resources/github-copilot-statistics/)）
 
 ## 進化の歴史
 

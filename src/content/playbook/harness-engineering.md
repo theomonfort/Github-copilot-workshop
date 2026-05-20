@@ -48,7 +48,7 @@ links:
   </p>
 </div>
 
-## The good old days
+## 古き良き時代（2021 〜 2024）
 
 昔の LLM chat はシンプルだった。You が prompt を投げ、LLM が answer を返す。
 
@@ -65,18 +65,18 @@ flowchart LR
 
 > この世界では、context はほぼ **prompt の中に人間が手で詰めるもの** だった。
 
-## Current
+## 現在（2025 〜）
 
-現在は、project context と tools を持つ **agent / harness** が LLM の前に立つ。
+現在は、**プロジェクトのコンテキスト** と **ツール群** を備えた **エージェント／ハーネス** が LLM の前に立つ。
 
 ```mermaid
 flowchart LR
-  Project[You + Project] -->|prompts / instructions / skills / MCP| Agent[The Agent<br/>aka Harness<br/><br/>Copilot Chat<br/>Copilot CLI<br/>Cloud Agent<br/>Claude Code<br/>Codex]
-  Agent -->|answer / PR / edit| Project
-  Agent -->|context| LLM[The LLM]
-  LLM -->|next step| Agent
-  Agent -->|tool call| Tools[Tools<br/>read / edit / run]
-  Tools -->|result| Agent
+  Project[あなた + プロジェクト] -->|プロンプト / 指示書 / スキル / MCP| Agent[エージェント<br/>別名：ハーネス<br/><br/>Copilot Chat<br/>Copilot CLI<br/>Cloud Agent<br/>Claude Code<br/>Codex]
+  Agent -->|回答 / PR / 編集| Project
+  Agent -->|コンテキスト| LLM[LLM]
+  LLM -->|次の一手| Agent
+  Agent -->|ツール呼び出し| Tools[ツール群<br/>読む / 編集 / 実行]
+  Tools -->|結果| Agent
 
   classDef human fill:#102033,stroke:#00f0ff,color:#e8f4ff,stroke-width:2px;
   classDef llm fill:#302500,stroke:#ffb000,color:#fff4d6,stroke-width:2px;
@@ -88,12 +88,12 @@ flowchart LR
   class Tools context;
 ```
 
-> No magic. Agent は、LLM を直接呼ぶ代わりに、**何を読ませるか・どの tool を使わせるか・結果をどう戻すか** を管理する layer。
+> 魔法ではない。エージェントは LLM を直接呼ぶ代わりに、**何を読ませるか・どのツールを使わせるか・結果をどう戻すか** を管理するレイヤー。
 
-## Agent / Harness の裏側（Simplified）
+## Agent / Harness の裏側（簡略版）
 
-- **Execution Loop**：LLM が次の一手を決め、tool 実行 → 結果を context に戻す、を `done` まで繰り返す。
-- **Context Management**：system prompt、available tools、user task、tool results を整理し、毎回の LLM call に必要な context として渡す。
+- **実行ループ**：LLM が次の一手を決め、tool 実行 → 結果を context に戻す、を `done` まで繰り返す。
+- **コンテキスト管理**：system prompt、available tools、user task、tool results を整理し、毎回の LLM call に必要な context として渡す。
 
 ```python
 # --- Setup ---
@@ -125,6 +125,7 @@ AI を強くする技術ツールは 1 つではない。**常に読ませるも
 | Path-specific custom instructions | `.github/instructions/*.instructions.md` + `applyTo` | `tests/**`、`api/**` など領域別ルール |
 | Agent skills | `.github/skills/*/SKILL.md` / `~/.copilot/skills/` | PR description、frontend design など専門手順 |
 | Custom agents | `.github/agents/*.agent.md` / `~/.copilot/agents/` | 役割・モデル・使えるツールを切り替える |
+| Hooks | `.github/hooks/*.json` | ツール実行前後に script を差し込み、deny / log / notify する |
 | MCP servers | MCP 設定ファイル | GitHub、Figma、Playwright、Jira、Salesforce へ接続 |
 | Tool permissions | agent host の権限設定 | `read/search` のみ、`edit` 可、コマンド実行可などを制御 |
 
@@ -134,10 +135,10 @@ AI を強くする技術ツールは 1 つではない。**常に読ませるも
 
 同じ「AI の足場」でも、置き場所やファイル名はエコシステムごとに少し違う。
 
-| レイヤー | GitHub / Copilot | Open ecosystem |
+| Layer | GitHub / Copilot | Open ecosystem |
 | --- | --- | --- |
-| 全体指示 | `.github/copilot-instructions.md` | `AGENTS.md` |
-| パス別ルール | `.github/instructions/*.instructions.md` | nested `AGENTS.md` |
+| Global instructions | `.github/copilot-instructions.md` | `AGENTS.md` |
+| Path-specific rules | `.github/instructions/*.instructions.md` | nested `AGENTS.md` |
 | Skills（project） | `.github/skills/*/SKILL.md` | `.agents/skills/*/SKILL.md` |
 | Skills（personal） | `~/.copilot/skills/` | `~/.agents/skills/` |
 | Custom agents | Copilot custom agents | agent definitions / plugins |
@@ -191,4 +192,4 @@ flowchart LR
   class R ship;
 ```
 
-> AI を信頼するな。**役割・モデル・ツール権限・スキル・MCP** で囲った harness を信頼せよ。
+> 🚀 数クリックで試せるように Codespace 対応のリポジトリを用意しました： [theomonfort/ultralight-template](https://github.com/theomonfort/ultralight-template)
