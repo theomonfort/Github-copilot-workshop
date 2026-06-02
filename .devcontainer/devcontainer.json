@@ -10,7 +10,8 @@
     "vscode": {
       "extensions": [
         "GitHub.copilot",
-        "GitHub.copilot-chat"
+        "GitHub.copilot-chat",
+        "GitHub.vscode-github-actions"
       ],
       "settings": {
         "github.copilot.chat.mcp.discovery.enabled": true
