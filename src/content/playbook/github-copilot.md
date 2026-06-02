@@ -2,7 +2,7 @@
 title: GitHub Copilot
 titleEn: GitHub Copilot
 summary: 世界で最も活用されている AI 開発ツール。SDLC 全体を AI で支える開発者プラットフォーム。
-icon: /theomonfort/github-copilot-white-icon.png
+icon: 🤖
 color: cyan
 order: 2
 category: introduction
