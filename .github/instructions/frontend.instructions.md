@@ -26,6 +26,20 @@ A retro JRPG / cyberpunk arcade. A radial background of deep purple → midnight
 
 Build the `body` background as a radial gradient from deep purple → midnight → pitch black.
 
+## Semantic color mapping
+
+When a prompt uses ordinary color words, translate them to this site's neon token vocabulary rather than introducing new colors:
+
+| Prompt wording | Use this site color |
+| -------------- | ------------------- |
+| blue / blue section / Copilot blue | `neon-cyan` (`#00f0ff`) |
+| pink / purple / magenta / important | `neon-magenta` (`#ff2e88`) |
+| yellow / orange / warning / highlight | `crt-amber` (`#ffb000`) |
+| green / success / MCP | `gb-green` (`#9bbc0f`) |
+| dark / panel / card | `midnight` or `shadow-ink` |
+
+Example: if asked for a "blue Copilot section", use `text-neon-cyan`, `border-neon-cyan`, or cyan glow — do **not** add a generic Tailwind blue.
+
 ## Fonts
 
 | Usage                                      | Font                | Tailwind        |
