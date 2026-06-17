@@ -6,7 +6,8 @@
 
 1. このリポジトリを **Use this template → Create a new repository** で自分用にコピー
 2. **Code → Codespaces → Create codespace on main** で開発環境を起動
-3. Copilot Chat に「playbook landing page を作る」よう依頼して、`src/content/playbook/` の Markdown を一覧表示するサイトを作成
+3. ワークショップ中に `.github/copilot-instructions.md` と `.github/instructions/frontend.instructions.md` を作成
+4. Copilot Chat に「playbook landing page を作る」よう依頼して、`src/content/playbook/` の Markdown を一覧表示するサイトを作成
 
 ## 構成
 
@@ -18,6 +19,8 @@
 | `src/content/playbook/en/` | 最新の英語 playbook |
 | `src/lib/playbook-categories.ts` | category のラベル、説明、actor、avatar、色、表示順のメタデータ |
 | `public/` | playbook 用の惑星、Octocat、背景、アイコンなどのサイト用アセット |
+
+> `.github/` 配下の Copilot instruction files は、ワークショップ手順の中で作成します。
 
 ## コンテンツに含まれる要素
 
