@@ -22,6 +22,7 @@
   - `src/content/playbook/*.md` — flat Japanese compatibility copy for the workshop starter.
   - `src/content/playbook/ja/*.md` — latest Japanese playbook.
   - `src/content/playbook/en/*.md` — latest English playbook.
+- Playbook category metadata lives in `src/lib/playbook-categories.ts`. Use it for category order, labels, icons, actor names, avatars, descriptions, and category colors.
 - Content schemas are defined in `src/content.config.ts`.
 - The package manager is **pnpm**. Use `pnpm install`, `pnpm dev`, and `pnpm build`.
 - Public assets are referenced with the `/theomonfort/` base path, for example `/theomonfort/icons/copilot-chat.png`.
@@ -30,7 +31,7 @@
 ## Workshop goal
 
 - In the Copilot Chat section, start by building the **playbook landing page** rather than presentation mode.
-- The landing page should read playbook Markdown, render a card grid, and use category visuals from `public/planet-*.webp` and icons from `public/icons/`.
+- The landing page should read playbook Markdown, render a card grid, and use `src/lib/playbook-categories.ts` plus category visuals from `public/planet-*.webp` and icons from `public/icons/`.
 - Keep the implementation simple first: index page, cards, links to detail pages. Add presentation mode only in later steps.
 - Use the supplied assets in `public/` instead of inventing remote URLs.
 - Scope this starter to the Playbook landing page and Playbook detail pages only.
