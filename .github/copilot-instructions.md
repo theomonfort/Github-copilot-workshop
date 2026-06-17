@@ -18,8 +18,7 @@
 - Pages live in src/pages/.
 - Reusable UI lives in src/components/.
 - Content lives in `src/content/`.
-- Playbook content exists in three shapes:
-  - `src/content/playbook/*.md` — flat Japanese compatibility copy for the workshop starter.
+- Playbook content exists under localized folders:
   - `src/content/playbook/ja/*.md` — latest Japanese playbook.
   - `src/content/playbook/en/*.md` — latest English playbook.
 - Playbook category metadata lives in `src/lib/playbook-categories.ts`. Use it for category order, labels, icons, actor names, avatars, descriptions, and category colors.

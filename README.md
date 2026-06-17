@@ -14,7 +14,6 @@
 |---|---|
 | `.devcontainer/devcontainer.json` | Codespaces / Dev Containers の定義 |
 | `.vscode/mcp.json` | GitHub MCP Server 設定 |
-| `src/content/playbook/` | 題材コンテンツ (Markdown)。ルート直下は日本語 playbook の互換コピー |
 | `src/content/playbook/ja/` | 最新の日本語 playbook |
 | `src/content/playbook/en/` | 最新の英語 playbook |
 | `src/lib/playbook-categories.ts` | category のラベル、説明、actor、avatar、色、表示順のメタデータ |
@@ -34,7 +33,7 @@
 
 まずは presentation mode ではなく、**playbook landing page** を作るところから始めます。
 
-- `src/content/playbook/` の Markdown を読み込んでカード一覧を表示
+- `src/content/playbook/ja/` の Markdown を読み込んでカード一覧を表示
 - `src/lib/playbook-categories.ts` から category metadata（label / actor / avatar / description / color）を使う
 - `public/planet-*.webp`、`public/icons/`、Octocat 画像、背景画像を使ってカテゴリごとの見た目を作る
 - その後のステップで詳細ページや presentation mode に拡張する
