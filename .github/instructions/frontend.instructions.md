@@ -26,19 +26,24 @@ A retro JRPG / cyberpunk arcade. A radial background of deep purple → midnight
 
 Build the `body` background as a radial gradient from deep purple → midnight → pitch black.
 
-## Semantic color mapping
+## Entry accent tokens
 
-When a prompt uses ordinary color words, translate them to this site's neon token vocabulary rather than introducing new colors:
+Playbook Markdown frontmatter includes exact Tailwind classes under `accent`.
+Use these values directly for each card or detail page instead of guessing from ordinary color words.
 
-| Prompt wording | Use this site color |
-| -------------- | ------------------- |
-| blue / blue section / Copilot blue | `neon-cyan` (`#00f0ff`) |
-| pink / purple / magenta / important | `neon-magenta` (`#ff2e88`) |
-| yellow / orange / warning / highlight | `crt-amber` (`#ffb000`) |
-| green / success / MCP | `gb-green` (`#9bbc0f`) |
-| dark / panel / card | `midnight` or `shadow-ink` |
+Example:
 
-Example: if asked for a "blue Copilot section", use `text-neon-cyan`, `border-neon-cyan`, or cyan glow — do **not** add a generic Tailwind blue.
+```yaml
+color: cyan
+accent:
+  text: text-neon-cyan
+  border: border-neon-cyan
+  glow: hover:shadow-neon-cyan
+  shadow: shadow-neon-cyan
+  hex: "#00f0ff"
+```
+
+For a Copilot entry with `color: cyan`, use `accent.text`, `accent.border`, `accent.glow`, and `accent.hex` from the Markdown. Do **not** introduce generic Tailwind colors like `text-blue-500`.
 
 ## Fonts
 

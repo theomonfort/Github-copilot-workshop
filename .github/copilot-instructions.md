@@ -25,6 +25,7 @@
 - Content schemas are defined in `src/content.config.ts`.
 - The package manager is **pnpm**. Use `pnpm install`, `pnpm dev`, and `pnpm build`.
 - Public assets are referenced with the `/theomonfort/` base path, for example `/theomonfort/icons/copilot-chat.png`.
+- Each Playbook Markdown file includes an `accent` object with exact Tailwind classes (`text`, `border`, `glow`, `shadow`) and `hex`. Use those values directly when styling playbook cards/details.
 
 ## Workshop goal
 
