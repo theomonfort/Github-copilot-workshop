@@ -1,0 +1,111 @@
+---
+title: "OPERATE: Agentic Workflow"
+order: 14
+stepSlug: "operate-agentic-workflow"
+duration: 15
+summary: "Combine GitHub Actions with Copilot (AI) to experience an Agentic Workflow that detects code changes and runs autonomous tasks on its own."
+---
+
+import Aside from '../../../components/handson/Aside.astro';
+
+<Aside type="reference">
+
+**📖 Reference**: See [Playbook / Agentic Workflow](https://theomonfort.github.io/theomonfort/en/playbook/agentic-workflow?present=1) for the concepts behind Agentic Workflow and the integration patterns between GitHub Actions and Copilot.
+
+</Aside>
+
+**What is an Agentic Workflow?**: A mechanism that leverages Copilot inside GitHub Actions workflows to execute autonomous tasks (report generation, documentation updates, code fixes, etc.) in response to repository changes.
+
+### 6.1 — Create a Personal Access Token (PAT)
+
+Create a PAT so Agentic Workflow can leverage Copilot.
+
+1. Go to [https://github.com/settings/personal-access-tokens/new](https://github.com/settings/personal-access-tokens/new)
+2. Settings:
+   - **Token name**: `copilot-workshop-agent`
+   - **Resource owner**: The Organization where you created the repository (or your personal account)
+   - **Repository access**: Only select repositories → Select the repository you created
+   - **Permissions**:
+     - **Actions**: Read and write
+     - **Contents**: Read-only
+     - **Issues**: Read and write
+     - **Metadata**: Read-only (automatically granted)
+     - **Pull requests**: Read and write
+
+![PAT Permissions](/theomonfort/handson/img/pat-permissions.png)
+3\. Copy the PAT you created
+
+<Aside type="negative">
+
+**Note**: The PAT is shown only once at creation time. Make sure to copy it and store it in a safe place — it cannot be displayed again.
+
+</Aside>
+
+#### Configure the repository secret
+
+1. In the repository, go to **Settings** → **Secrets and variables** → **Actions**
+2. Click **New repository secret**
+3. Name: `COPILOT_GITHUB_TOKEN`, Value: the PAT you created
+
+#### Verify Workflow permissions
+
+1. **Settings** → **Actions** → **General**
+2. Check **Allow GitHub Actions to create and approve pull requests**
+
+### 6.2 — Create a Daily Repo Status workflow
+
+Let's create an Agentic Workflow that automatically reports today's repository activity.
+
+In agent mode, run the following:
+
+```
+Please create the following Agentic Workflow.
+
+File: .github/workflows/daily-repo-status.md
+
+Purpose: Analyze the repository activity (Issues, PRs, code changes) and
+automatically create a daily status report as an Issue.
+
+Format:
+- Define the configuration in YAML front matter (on, permissions, tools, safe-outputs)
+- Describe the workflow instructions in the Markdown body
+
+Configuration:
+- Trigger: schedule: daily and workflow_dispatch
+- permissions: contents: read, issues: read, pull-requests: read
+- tools: github (lockdown: false, min-integrity: none)
+- safe-outputs: create-issue with title-prefix "[repo-status] ",
+  labels: [report, daily-status], close-older-issues: true
+
+Workflow instructions:
+1. Collect recent repository activity (Issues, PRs, code changes)
+2. Analyze progress and highlights
+3. Create the result as a GitHub Issue
+
+Reference: https://github.com/githubnext/agentics/blob/main/workflows/daily-repo-status.md
+
+When done, run `gh aw compile` to compile the workflow, then commit
+the changes and create a PR.
+```
+
+<Aside type="positive">
+
+**Tip**: `gh aw compile` generates a `.lock.yml` file from the `.md` file that GitHub Actions can execute. Without compiling, the workflow won't run.
+
+</Aside>
+
+After merging the PR, manually run the workflow from the **Actions** tab:
+
+1. Open the **Actions** tab of your repository
+2. Select **Daily Repo Status** from the left menu
+3. Click **Run workflow** → **Run workflow**
+
+![Manually run from Actions](/theomonfort/handson/img/actions-run-workflow.png)
+
+After execution completes (⏱ about 2 minutes), an Issue prefixed with `[repo-status]` is automatically created in the repository's **Issues** tab, showing a summary of today's PRs, Issues, and code change activity.
+
+<Aside type="positive">
+
+**📚 Want to build more?**: There are ready-made Agentic Workflow template collections to draw from — [githubnext/agentics](https://github.com/githubnext/agentics) (copy-pasteable samples) and [Peli's Agent Factory](https://github.github.com/gh-aw/blog/2026-01-12-welcome-to-pelis-agent-factory/) (real-world examples blog).
+
+</Aside>

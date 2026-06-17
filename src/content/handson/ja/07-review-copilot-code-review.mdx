@@ -1,0 +1,74 @@
+---
+title: "REVIEW: Copilot Code Review"
+order: 7
+stepSlug: "review-copilot-code-review"
+duration: 15
+summary: "Copilot がサイトを実装している間に、PR に対する Copilot Code Review を自動で走るように設定しておきましょう。"
+---
+
+import Aside from '../../../components/handson/Aside.astro';
+
+<Aside type="reference">
+
+**📖 参考**: [プレイブック / Copilot Code Review](https://theomonfort.github.io/theomonfort/playbook/copilot-code-review/?present=1) で Code Review の自動化と Custom Instructions の効き方を確認できます。
+
+</Aside>
+
+### 7.1 — Copilot Code Review の設定を有効化する
+
+まず、github.com 上の自分のリポジトリを開いて、Copilot Code Review の設定を確認します。
+
+1. リポジトリの **Settings** → **Copilot** → **Code review**
+2. 以下を有効化：
+   - **Use custom instructions when reviewing pull requests** → On
+
+![Copilot Code Review の設定画面](/theomonfort/handson/img/copilot-code-review-settings.png)
+
+<Aside type="positive">
+
+**ポイント**: Custom instructions を有効にすると、`copilot-instructions.md` の内容がコードレビューにも反映されます。
+
+</Aside>
+
+### 7.2 — 自動レビューの Ruleset を作成する
+
+同じページの **Manage Copilot code review automations** セクションで、**Create ruleset for default branch** をクリックするだけです。デフォルトブランチ（`main`）に対する PR で Copilot Code Review が自動的に走るようになります。
+
+設定が終わったら [Step 6.4](../code-copilot-chat/#64) に戻って、Copilot が実装を終えるのを待ちましょう。
+
+### 7.3 — Copilot の PR で結果を確認する
+
+Step 6.4 で Copilot が実装を終えると、自動的に PR がオープンされます。その瞬間に 7.2 で作成した Ruleset が発火し、Copilot Code Review が走り出します（⏱ 約5分）：
+
+- ✅ **Pull Request Overview** — PR 全体のサマリーコメント
+- ✅ **コード提案** — 各ファイルへの具体的な改善提案
+
+<Aside type="positive">
+
+**ポイント**: レビュー中の挙動は PR 上の **「View session」** リンク、もしくはリポジトリの **Actions** タブから対応するワークフロー実行を開くことで透過的に確認できます。Copilot がどのファイルを読み、どう判断したかが追えます。
+
+</Aside>
+
+### 7.4 — レビュー提案を修正する
+
+Copilot のレビュー提案を修正する方法は2つあります：
+
+1. **Commit suggestion** — 個別の提案を1つずつコミット
+2. **Fix batch with Copilot** — すべての提案を一括で修正（おすすめ）
+
+**Fix batch with Copilot** をクリックすると、修正内容を含む **新しい PR** が自動的に作成されます（⏱ 約15分）。
+
+1. まず **修正用の新しい PR** をマージ
+2. 次に **元の PR** をマージ
+
+<Aside type="negative">
+
+**注意**: 場合によっては新しい PR が作成されず、修正が直接元の PR にコミットされることもあります。その場合はそのまま元の PR をマージしてください。
+
+</Aside>
+
+<Aside type="positive">
+
+**ポイント**: Copilot Code Review のセッションは **Agent** タブで、対応するワークフロー実行は **Actions** タブで確認できます。
+
+</Aside>

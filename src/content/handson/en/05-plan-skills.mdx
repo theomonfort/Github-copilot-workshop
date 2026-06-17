@@ -1,0 +1,68 @@
+---
+title: "PLAN: Skills"
+order: 5
+stepSlug: "plan-skills"
+duration: 5
+summary: "An Agent Skill is a reusable set of instructions that teaches Copilot 'how to handle a specific task.' It gets summoned automatically when your prompt matches, so you don't have to re-explain the template every time."
+---
+
+import Aside from '../../../components/handson/Aside.astro';
+
+<Aside type="reference">
+
+**📖 Reference**: See [Playbook / Agent Skills](https://theomonfort.github.io/theomonfort/en/playbook/agent-skills?present=1) for how Skills work and how they get summoned.
+
+</Aside>
+
+### 5.1 — Install two Skills
+
+Install the two Skills used in this workshop in one go from [`theomonfort/skills`](https://github.com/theomonfort/skills).
+
+- **github-issues** — ships multiple templates (bug report / feature request / task) and can write structured Issues complete with labels, priorities, and dependencies. You'll use it later for Issue creation.
+- **hands-on-helper** — a guide that helps this workshop's participants navigate the repository, the instructions, and the Playbook, and troubleshoots issues along the way.
+
+#### Option A: Copy from the equipment room (recommended)
+
+1. Open the [**EQUIPMENT ROOM**](https://theomonfort.github.io/theomonfort/skills/#skills) in a new tab.
+2. Confirm that the scope toggle is set to **Project .github/** (left, the default).
+3. In the **🎴 Skills** section, check the two cards for `github-issues` and `hands-on-helper`.
+4. Click the **💾 Copy 2 selected** button in the top right.
+5. Paste into the Codespace's VS Code terminal and press Enter.
+
+#### Option B: Copy the command below directly
+
+If you'd rather skip the equipment room, hit the **COPY** button on the snippet below and paste straight into the terminal:
+
+```bash
+gh skill install theomonfort/skills github-issues && \
+gh skill install theomonfort/skills hands-on-helper
+```
+
+For each Skill, you'll be asked which **agent** and which **scope** to install it for:
+
+- **Agent**: pick `copilot` (for VS Code's GitHub Copilot Chat).
+- **Scope**: pick `project` (installs the Skill into this repository only).
+
+Once installed, you'll see two new directories: `.agents/skills/github-issues/` and `.agents/skills/hands-on-helper/`. Open the `SKILL.md` inside each one to see when Copilot will summon the Skill and what templates it ships with.
+
+Note that the **Instructions** and **MCP Server** we set up earlier live under `.github/`, but Skills follow the **open-ecosystem convention** under `.agents/` (`.github/skills/` also works if you only target GitHub). See [Harness Engineering / Ecosystem map](/theomonfort/en/playbook/harness-engineering?present=1&slide=5) for the full layout.
+
+<Aside type="negative">
+
+**⚠️ Important**: After installing Skills, **open a new Copilot Chat session** (`+ New Chat`). Existing sessions won't load the new Skills, and they won't be summoned correctly in later steps.
+
+</Aside>
+
+### 5.2 — Try out hands-on-helper
+
+Open a fresh Copilot Chat session and confirm that the `hands-on-helper` Skill is correctly equipped. Type the following into the chat:
+
+```
+/hands-on-helper
+
+I just finished installing the Skills. What's the next step?
+```
+
+You're good to go if `hands-on-helper` is summoned and replies with the next step (**CODE: Copilot Chat**) and links to the relevant Playbook pages.
+
+⏱ ~3 min

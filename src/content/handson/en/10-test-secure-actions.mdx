@@ -1,0 +1,68 @@
+---
+title: "TEST & SECURE: Actions"
+order: 10
+stepSlug: "test-secure-actions"
+duration: 15
+summary: "Write Playwright E2E tests so the Presentation site's keyboard navigation doesn't break, and set up a GitHub Actions workflow that runs them automatically on every PR."
+---
+
+import Aside from '../../../components/handson/Aside.astro';
+
+<Aside type="reference">
+
+**📖 Reference**: See [Playbook / GitHub Actions](https://theomonfort.github.io/theomonfort/en/playbook/github-actions/?present=1) for an overview of Actions workflow structure and triggers.
+
+</Aside>
+
+### 10.1 — Create tests for Presentation mode
+
+In Copilot Chat (Agent mode), enter the following:
+
+```
+Create a new branch `test-creation` and do your work on that branch.
+
+Create Playwright E2E tests that verify the Presentation site's keyboard navigation.
+
+Assumptions:
+- src/content/playbook/ contains at least 2 entries.
+- Opening the site displays Presentation mode by default.
+
+Test cases:
+1. Pressing `←` / `→` moves to the previous / next slide within the same section (one slide per `##` heading).
+2. Clicking a different section in the left sidebar switches to that section's first slide.
+
+File layout:
+- Place the tests in tests/e2e/presentation.spec.ts.
+- Update playwright.config.ts if needed (baseURL, webServer configured to launch `npm run dev`).
+
+Once the tests are written, run `npx playwright test` locally and make sure they all pass.
+```
+
+⏱ ~5 minutes
+
+### 10.2 — Create an Actions workflow that runs automatically on PRs
+
+Next, enter the following in Copilot Chat:
+
+```
+Continue working on the same `test-creation` branch.
+
+Create .github/workflows/test.yml.
+Trigger it on PR open / update, and have it perform the following steps:
+
+1. Set up Node.js 22
+2. Install dependencies (`npm ci`)
+3. Install the Playwright browsers (`npx playwright install --with-deps chromium`)
+4. Run `npx playwright test`
+5. On test failure, upload the Playwright report as an artifact
+```
+
+⏱ ~2 minutes
+
+Re-create the PR and you'll see `test.yml` running in the Actions tab. Whenever you change Presentation mode behavior, this workflow will catch any regressions early.
+
+<Aside type="positive">
+
+**Key point**: By writing tests and running them continuously through Actions, you get a safety net that catches regressions — even as the Cloud Agent and the upcoming Agentic Workflow start opening PRs automatically.
+
+</Aside>

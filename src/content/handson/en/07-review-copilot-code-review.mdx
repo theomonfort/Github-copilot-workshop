@@ -1,0 +1,74 @@
+---
+title: "REVIEW: Copilot Code Review"
+order: 7
+stepSlug: "review-copilot-code-review"
+duration: 15
+summary: "While Copilot is implementing the site, let's set up automatic Copilot Code Review to run on every PR."
+---
+
+import Aside from '../../../components/handson/Aside.astro';
+
+<Aside type="reference">
+
+**📖 Reference**: See [Playbook / Copilot Code Review](https://theomonfort.github.io/theomonfort/en/playbook/copilot-code-review/?present=1) for how Code Review automation works and how Custom Instructions feed into it.
+
+</Aside>
+
+### 7.1 — Enable Copilot Code Review settings
+
+First, head over to github.com, open your repository and check the Copilot Code Review settings.
+
+1. Repository **Settings** → **Copilot** → **Code review**
+2. Enable the following:
+   - **Use custom instructions when reviewing pull requests** → On
+
+![Copilot Code Review settings page](/theomonfort/handson/img/copilot-code-review-settings.png)
+
+<Aside type="positive">
+
+**Why it matters**: Enabling custom instructions makes `copilot-instructions.md` apply to code reviews as well.
+
+</Aside>
+
+### 7.2 — Create a Ruleset for automatic review
+
+On the same page, in the **Manage Copilot code review automations** section, just click **Create ruleset for default branch**. That's it — Copilot Code Review will now fire automatically on every PR targeting the default branch (`main`).
+
+Once that's set, head back to [Step 6.4](../code-copilot-chat/#64) and wait for Copilot to finish implementing.
+
+### 7.3 — Check the results on Copilot's PR
+
+When Copilot finishes implementing in Step 6.4, it opens a PR automatically. The Ruleset you created in 7.2 fires the moment that PR opens, kicking off Copilot Code Review (⏱ about 5 minutes):
+
+- ✅ **Pull Request Overview** — a summary comment for the whole PR
+- ✅ **Code suggestions** — concrete change proposals on individual files
+
+<Aside type="positive">
+
+**Why it matters**: You can transparently follow what Copilot is doing during the review via the **"View session"** link on the PR, or by opening the matching workflow run from the **Actions** tab. You can see which files it read and how it reasoned.
+
+</Aside>
+
+### 7.4 — Apply the review suggestions
+
+There are two ways to apply Copilot's review suggestions:
+
+1. **Commit suggestion** — commit individual suggestions one at a time
+2. **Fix batch with Copilot** — fix all suggestions in one go (recommended)
+
+Clicking **Fix batch with Copilot** automatically opens a **new PR** with the fixes (⏱ about 15 minutes).
+
+1. First, merge the **new PR with the fixes**
+2. Then, merge the **original PR**
+
+<Aside type="negative">
+
+**Heads up**: In some cases, no new PR is created and the fixes are committed directly to the original PR. If that happens, just merge the original PR as-is.
+
+</Aside>
+
+<Aside type="positive">
+
+**Why it matters**: You can check Copilot Code Review sessions in the **Agent** tab, and the corresponding workflow runs in the **Actions** tab.
+
+</Aside>

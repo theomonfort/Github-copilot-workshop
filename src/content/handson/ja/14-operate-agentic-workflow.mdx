@@ -1,0 +1,111 @@
+---
+title: "OPERATE: Agentic Workflow"
+order: 14
+stepSlug: "operate-agentic-workflow"
+duration: 15
+summary: "GitHub Actions と Copilot（AI）を組み合わせることで、コードの変更を検知して自律的なタスクを自動実行する Agentic Workflow を体験しましょう。"
+---
+
+import Aside from '../../../components/handson/Aside.astro';
+
+<Aside type="reference">
+
+**📖 参考**: [プレイブック / Agentic Workflow](https://theomonfort.github.io/theomonfort/playbook/agentic-workflow?present=1) で Agentic Workflow の概念と GitHub Actions × Copilot の連携パターンを確認できます。
+
+</Aside>
+
+**Agentic Workflow とは**: GitHub Actions のワークフロー内で Copilot を活用し、リポジトリの変更に応じた自律的なタスク（レポート生成、ドキュメント更新、コード修正など）を実行する仕組みです。
+
+### 6.1 — Personal Access Token (PAT) を作成する
+
+Agentic Workflow で Copilot を活用するために PAT を作成します。
+
+1. [https://github.com/settings/personal-access-tokens/new](https://github.com/settings/personal-access-tokens/new) にアクセス
+2. 設定内容：
+   - **Token name**: `copilot-workshop-agent`
+   - **Resource owner**: リポジトリを作成した Organization（または個人アカウント）
+   - **Repository access**: Only select repositories → 作成したリポジトリを選択
+   - **Permissions**:
+     - **Actions**: Read and write
+     - **Contents**: Read-only
+     - **Issues**: Read and write
+     - **Metadata**: Read-only（自動付与）
+     - **Pull requests**: Read and write
+
+![PAT Permissions](/theomonfort/handson/img/pat-permissions.png)
+3\. 作成した PAT をコピー
+
+<Aside type="negative">
+
+**注意**: PAT は作成時に一度だけ表示されます。必ずコピーして安全な場所に保存してください。再表示はできません。
+
+</Aside>
+
+#### リポジトリシークレットに設定
+
+1. リポジトリの **Settings** → **Secrets and variables** → **Actions**
+2. **New repository secret** をクリック
+3. Name: `COPILOT_GITHUB_TOKEN`、Value: 作成した PAT
+
+#### Workflow permissions の確認
+
+1. **Settings** → **Actions** → **General**
+2. **Allow GitHub Actions to create and approve pull requests** にチェック
+
+### 6.2 — Daily Repo Status ワークフローを作成する
+
+今日のリポジトリ活動を自動レポートする Agentic Workflow を作成しましょう。
+
+エージェントモードで以下を実行：
+
+```
+以下の Agentic Workflow を作成してください。
+
+ファイル: .github/workflows/daily-repo-status.md
+
+目的: リポジトリの活動（Issue、PR、コード変更）を分析し、
+日次ステータスレポートを Issue として自動作成する。
+
+フォーマット:
+- YAML front matter で設定を定義（on, permissions, tools, safe-outputs）
+- Markdown 本文でワークフローの指示を記述
+
+設定:
+- トリガー: schedule: daily と workflow_dispatch
+- permissions: contents: read, issues: read, pull-requests: read
+- tools: github（lockdown: false, min-integrity: none）
+- safe-outputs: create-issue で title-prefix "[repo-status] "、
+  labels: [report, daily-status]、close-older-issues: true
+
+ワークフローの指示:
+1. リポジトリの最近の活動（Issue、PR、コード変更）を収集
+2. 進捗やハイライトを分析
+3. 結果を GitHub Issue として作成
+
+参考: https://github.com/githubnext/agentics/blob/main/workflows/daily-repo-status.md
+
+完了したら `gh aw compile` コマンドを実行してワークフローをコンパイルし、
+変更をコミットして PR を作成してください。
+```
+
+<Aside type="positive">
+
+**ポイント**: `gh aw compile` は `.md` ファイルから GitHub Actions が実行できる `.lock.yml` ファイルを生成します。コンパイルしないとワークフローは動作しません。
+
+</Aside>
+
+PR をマージした後、**Actions** タブからワークフローを手動実行します：
+
+1. リポジトリの **Actions** タブを開く
+2. 左メニューから **Daily Repo Status** を選択
+3. **Run workflow** → **Run workflow** をクリック
+
+![Actions から手動実行](/theomonfort/handson/img/actions-run-workflow.png)
+
+実行完了後（⏱ 約2分）、リポジトリの **Issues** タブに `[repo-status]` というプレフィックスの Issue が自動作成され、今日の PR、Issue、コード変更の活動サマリーが表示されます。
+
+<Aside type="positive">
+
+**📚 もっと作りたい場合**: 既製の Agentic Workflow テンプレート集を参考にできます — [githubnext/agentics](https://github.com/githubnext/agentics)（コピペで動くサンプル集）と [Peli's Agent Factory](https://github.github.com/gh-aw/blog/2026-01-12-welcome-to-pelis-agent-factory/)（実例ブログ）。
+
+</Aside>
