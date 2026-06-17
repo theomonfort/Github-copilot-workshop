@@ -1,12 +1,12 @@
 # GitHub Copilot Workshop
 
-ハンズオン教材リポジトリ。`src/content/` の Markdown / MDX と `public/` の画像アセットを題材に、GitHub Copilot を使って閲覧用サイトを Astro で組み立てます。
+ハンズオン教材リポジトリ。`src/content/playbook/` の Markdown と `public/` の画像アセットを題材に、GitHub Copilot を使って playbook landing page を Astro で組み立てます。
 
 ## はじめに
 
 1. このリポジトリを **Use this template → Create a new repository** で自分用にコピー
 2. **Code → Codespaces → Create codespace on main** で開発環境を起動
-3. ハンズオンの手順は [ワークショップ資料](https://theomonfort.github.io/theomonfort/handson/intro/) を参照
+3. Copilot Chat に「playbook landing page を作る」よう依頼して、`src/content/playbook/` の Markdown を一覧表示するサイトを作成
 
 ## 構成
 
@@ -17,9 +17,7 @@
 | `src/content/playbook/` | 題材コンテンツ (Markdown)。ルート直下は日本語 playbook の互換コピー |
 | `src/content/playbook/ja/` | 最新の日本語 playbook |
 | `src/content/playbook/en/` | 最新の英語 playbook |
-| `src/content/handson/` | 最新のハンズオン手順 (MDX) |
-| `src/content/equipment/` | 装備所カード用の最新 Markdown |
-| `public/` | 惑星、Octocat、背景、アイコン、ハンズオン画像などのサイト用アセット |
+| `public/` | playbook 用の惑星、Octocat、背景、アイコンなどのサイト用アセット |
 
 ## コンテンツに含まれる要素
 
@@ -36,6 +34,5 @@
 まずは presentation mode ではなく、**playbook landing page** を作るところから始めます。
 
 - `src/content/playbook/` の Markdown を読み込んでカード一覧を表示
-- `public/planet-*.webp` や `public/icons/` を使ってカテゴリごとの見た目を作る
-- `public/room/equipment-room.png`、Octocat 画像、背景画像を必要に応じて使う
+- `public/planet-*.webp`、`public/icons/`、Octocat 画像、背景画像を使ってカテゴリごとの見た目を作る
 - その後のステップで詳細ページや presentation mode に拡張する
