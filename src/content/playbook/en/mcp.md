@@ -2,7 +2,7 @@
 title: MCP Server (Model Context Protocol)
 titleEn: MCP Server
 summary: MCP is a method for providing additional context to AI models.
-icon: /theomonfort/mcp.png
+icon: /mcp.png
 color: green
 accent:
   text: text-gb-green
@@ -132,7 +132,7 @@ Choose based on your use case and security requirements.
 
   </div>
   <div class="split-figure">
-    <img src="/theomonfort/mcp-activity-monitor.png" alt="Activity Monitor showing local MCP server processes" />
+    <img src="/mcp-activity-monitor.png" alt="Activity Monitor showing local MCP server processes" />
     <figcaption>In Activity Monitor, you can see local MCP servers running as <strong>child processes</strong> of <code>npm exec</code></figcaption>
   </div>
 </div>

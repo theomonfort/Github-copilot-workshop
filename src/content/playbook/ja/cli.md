@@ -2,7 +2,7 @@
 title: Copilot CLI
 titleEn: Copilot CLI
 summary: ターミナルに住むCopilot。IDEを選ばず、計画→実装→レビューを Shift+Tab だけで往復する"端末の中の同僚"。
-icon: /theomonfort/icons/cli.png
+icon: /icons/cli.png
 color: magenta
 accent:
   text: text-neon-magenta

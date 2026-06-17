@@ -2,7 +2,7 @@
 title: Codespaces
 titleEn: Codespaces
 summary: Customizable remote development environments hosted in the cloud. The ideal AI-driven development playground for safely sandboxing AI experiments and work.
-icon: /theomonfort/github-vscode-mark.png
+icon: /github-vscode-mark.png
 color: magenta
 accent:
   text: text-neon-magenta

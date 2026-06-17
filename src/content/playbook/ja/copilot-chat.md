@@ -2,7 +2,7 @@
 title: Copilot Chat
 titleEn: Copilot Chat
 summary: Copilot と同期的に会話する入口。IDE、GitHub.com、Mobile で使えるが、最も深い harness は IDE 側にある。
-icon: /theomonfort/icons/copilot-chat.png
+icon: /icons/copilot-chat.png
 color: magenta
 accent:
   text: text-neon-magenta

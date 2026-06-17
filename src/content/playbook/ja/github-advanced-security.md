@@ -2,7 +2,7 @@
 title: GitHub Advanced Security
 titleEn: GHAS
 summary: GitHub のセキュリティ機能をまとめた有料製品。2025 年 4 月に GitHub Secret Protection ($19) と GitHub Code Security ($30) の 2 つに分割され、active committer 単位で課金される。Public repo は引き続き無料。
-icon: /theomonfort/icons/ghas.png
+icon: /icons/ghas.png
 color: cyan
 accent:
   text: text-neon-cyan
@@ -58,14 +58,14 @@ links:
 </div>
 
 > 🌐 Public repo はすべて引き続き無料。GHAS / Secret Protection / Code Security のライセンスが必要になるのは **private / internal repo** で機能を有効化したい場合だけ。
-> 🤖 **Dependabot 本体** (alerts / security updates / version updates / dependency graph) は <strong>どのプランでも完全無料</strong>・GHAS 不要。詳細は <a class="retro-link" href="/theomonfort/playbook/dependabot">Dependabot ↗</a>。
+> 🤖 **Dependabot 本体** (alerts / security updates / version updates / dependency graph) は <strong>どのプランでも完全無料</strong>・GHAS 不要。詳細は <a class="retro-link" href="/playbook/dependabot">Dependabot ↗</a>。
 
 ## 何が入っている?
 
 | 製品 | 主な機能 | 詳細エントリー |
 | --- | --- | --- |
-| 🔑 **Secret Protection** | Secret scanning · Push protection (org/repo lvl) · Custom patterns · AI detection · Validity checks | <a class="retro-link" href="/theomonfort/playbook/secret-scanning">Secret Scanning ↗</a> |
-| 🔍 **Code Security** | Code scanning (CodeQL) · Copilot Autofix · Security campaigns · Dependency review (PR enforcement) · Security overview | <a class="retro-link" href="/theomonfort/playbook/code-scanning">Code Scanning ↗</a> |
+| 🔑 **Secret Protection** | Secret scanning · Push protection (org/repo lvl) · Custom patterns · AI detection · Validity checks | <a class="retro-link" href="/playbook/secret-scanning">Secret Scanning ↗</a> |
+| 🔍 **Code Security** | Code scanning (CodeQL) · Copilot Autofix · Security campaigns · Dependency review (PR enforcement) · Security overview | <a class="retro-link" href="/playbook/code-scanning">Code Scanning ↗</a> |
 
 ## 料金 (2025 年 4 月以降)
 
@@ -104,8 +104,8 @@ links:
 
 | 棚卸し | 何を見る? | 対象 | 頻度 | 詳細 |
 | --- | --- | --- | :---: | --- |
-| 🔑 **Secret Risk Assessment** | Org 内のリポに眠る secret の種類・件数 | **すべての repo**(public / private / internal / archived) | 1 回限り | <a class="retro-link" href="/theomonfort/playbook/secret-scanning">Secret Scanning ↗</a> |
-| 🔍 **Code Security Risk Assessment** | コード脆弱性を CodeQL で検出 (severity / 言語 / Autofix 可能件数) | **最もアクティブな最大 20 repo** | 90 日に 1 回 | <a class="retro-link" href="/theomonfort/playbook/code-scanning">Code Scanning ↗</a> |
+| 🔑 **Secret Risk Assessment** | Org 内のリポに眠る secret の種類・件数 | **すべての repo**(public / private / internal / archived) | 1 回限り | <a class="retro-link" href="/playbook/secret-scanning">Secret Scanning ↗</a> |
+| 🔍 **Code Security Risk Assessment** | コード脆弱性を CodeQL で検出 (severity / 言語 / Autofix 可能件数) | **最もアクティブな最大 20 repo** | 90 日に 1 回 | <a class="retro-link" href="/playbook/code-scanning">Code Scanning ↗</a> |
 
 - 🆓 **完全無料** — どちらも GHAS / Secret Protection / Code Security のライセンス不要
 - 🛂 **権限** — Organization owner または security manager のみ実行可能

@@ -2,7 +2,7 @@
 title: Copilot Code Review
 titleEn: Copilot Code Review
 summary: Copilot をレビュアーとして手動・自動でアサインできる機能。コードの意図を読み、コメント・概要・修正提案を返す ── 人間レビューの前段ノイズ取りから自動化まで。
-icon: /theomonfort/icons/copilot-code-review.png
+icon: /icons/copilot-code-review.png
 color: amber
 accent:
   text: text-crt-amber

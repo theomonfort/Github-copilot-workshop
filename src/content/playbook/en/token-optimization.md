@@ -2,7 +2,7 @@
 title: Token Optimization
 titleEn: Token Optimization
 summary: Tokens get cheaper by raising agent quality, not by shaving prompts. Use model choice, context engineering, deterministic guardrails, and the right agent configs to make every token count.
-icon: /theomonfort/icons/token-opt.png
+icon: /icons/token-opt.png
 color: green
 accent:
   text: text-gb-green
@@ -98,7 +98,7 @@ xychart-beta
 
 ## Advice 1 — Provide as little context as possible…
 
-In <a class="retro-link" href="/theomonfort/en/playbook/context-engineering">Context Engineering ↗</a> we saw how the window fills up turn after turn, and how an over-stuffed window leads to **context rot** — the agent gets dumber, not smarter.
+In <a class="retro-link" href="/en/playbook/context-engineering">Context Engineering ↗</a> we saw how the window fills up turn after turn, and how an over-stuffed window leads to **context rot** — the agent gets dumber, not smarter.
 
 - **Short `copilot-instructions`** — keep only the rules that truly apply *every* turn
 - **Don't add a skill for everything** — the model already knows React, TypeScript, Tailwind, etc.
@@ -213,7 +213,7 @@ The other side of the lever. When context is **missing**, the agent fills the ga
 </svg>
 </figure>
 
-> 💡 In <a class="retro-link" href="/theomonfort/en/playbook/cli">Copilot CLI ↗</a>, `/research`, `/plan`, and `/fleet` map directly onto these phases. Each phase runs in its own context window, so the bloated research session never reaches the implementer.
+> 💡 In <a class="retro-link" href="/en/playbook/cli">Copilot CLI ↗</a>, `/research`, `/plan`, and `/fleet` map directly onto these phases. Each phase runs in its own context window, so the bloated research session never reaches the implementer.
 
 ## Advice 5 — Deterministic controls
 

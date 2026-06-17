@@ -2,7 +2,7 @@
 title: GitHub Actions
 titleEn: GitHub Actions
 summary: GitHub's native CI/CD and automation platform. Steps written in .github/workflows/*.yml run automatically on push / PR / schedule. Public repos are free; private repos get a free tier plus pay-as-you-go. Cloud Agent and Copilot Code Review also run on top of this.
-icon: /theomonfort/icons/github-actions.svg
+icon: /icons/github-actions.svg
 color: cyan
 accent:
   text: text-neon-cyan
@@ -153,4 +153,4 @@ The moment you push, execution logs appear in the **Actions tab**. Failures show
 
 ## Cloud Agent / Copilot Code Review also run here
 
-> 🤖 When **Copilot Cloud Agent** implements a task, or when **Copilot Code Review** reads a PR — both run as **GitHub Actions workflows** under the hood. They consume Actions free-tier minutes and appear as Actions logs. See <a class="retro-link" href="/theomonfort/en/playbook/cloud-agent/">Cloud Agent</a> and <a class="retro-link" href="/theomonfort/en/playbook/copilot-code-review/">Copilot Code Review</a> for details.
+> 🤖 When **Copilot Cloud Agent** implements a task, or when **Copilot Code Review** reads a PR — both run as **GitHub Actions workflows** under the hood. They consume Actions free-tier minutes and appear as Actions logs. See <a class="retro-link" href="/en/playbook/cloud-agent/">Cloud Agent</a> and <a class="retro-link" href="/en/playbook/copilot-code-review/">Copilot Code Review</a> for details.
