@@ -1,12 +1,13 @@
 # GitHub Copilot Workshop
 
-ハンズオン教材リポジトリ。`src/content/playbook/` の Markdown を題材に、GitHub Copilot を使って閲覧用サイトを Astro で組み立てます。
+ハンズオン教材リポジトリ。`src/content/playbook/` の Markdown と `public/` の画像アセットを題材に、GitHub Copilot を使って playbook landing page を Astro で組み立てます。
 
 ## はじめに
 
 1. このリポジトリを **Use this template → Create a new repository** で自分用にコピー
 2. **Code → Codespaces → Create codespace on main** で開発環境を起動
-3. ハンズオンの手順は [ワークショップ資料](https://theomonfort.github.io/theomonfort/handson/intro/) を参照
+3. ワークショップ中に `.github/copilot-instructions.md` と `.github/instructions/frontend.instructions.md` を作成
+4. Copilot Chat に「playbook landing page を作る」よう依頼して、`src/content/playbook/` の Markdown を一覧表示するサイトを作成
 
 ## 構成
 
@@ -14,7 +15,12 @@
 |---|---|
 | `.devcontainer/devcontainer.json` | Codespaces / Dev Containers の定義 |
 | `.vscode/mcp.json` | GitHub MCP Server 設定 |
-| `src/content/playbook/` | 題材コンテンツ (Markdown) |
+| `src/content/playbook/ja/` | 最新の日本語 playbook |
+| `src/content/playbook/en/` | 最新の英語 playbook |
+| `src/lib/playbook-categories.ts` | category のラベル、説明、actor、avatar、色、表示順のメタデータ |
+| `public/` | playbook 用の惑星、Octocat、背景、アイコンなどのサイト用アセット |
+
+> `.github/` 配下の Copilot instruction files は、ワークショップ手順の中で作成します。
 
 ## コンテンツに含まれる要素
 
@@ -25,3 +31,12 @@
 - **テーブル、リスト、見出し**：標準的な Markdown 要素
 
 > 💡 サイト構築のプロンプトで「Mermaid 図をレンダリングできるようにする」と明示すると確実です。
+
+## Copilot Chat セクションで試すこと
+
+まずは presentation mode ではなく、**playbook landing page** を作るところから始めます。
+
+- `src/content/playbook/ja/` の Markdown を読み込んでカード一覧を表示
+- `src/lib/playbook-categories.ts` から category metadata（label / actor / avatar / description / color）を使う
+- `public/planet-*.webp`、`public/icons/`、Octocat 画像、背景画像を使ってカテゴリごとの見た目を作る
+- その後のステップで詳細ページや presentation mode に拡張する
