@@ -2,7 +2,7 @@
 title: Harness Engineering
 titleEn: Harness Engineering
 summary: The discipline of designing the scaffold that lets agents operate safely and effectively — tools, constraints, permissions, and external connections.
-icon: /icons/harness-engineering.png
+icon: /theomonfort/icons/harness-engineering.png
 color: green
 accent:
   text: text-gb-green
