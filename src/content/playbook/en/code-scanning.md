@@ -2,14 +2,14 @@
 title: Code Scanning
 titleEn: Code Scanning
 summary: CodeQL statically analyzes source code for vulnerabilities, and Copilot Autofix generates fix PRs automatically. Default setup requires no config file — just one click. Free for public repos; private repos need GHAS / Code Security.
-icon: /icons/code-scanning.png
-color: cyan
+icon: /theomonfort/icons/code-scanning.png
+color: amber
 accent:
-  text: text-neon-cyan
-  border: border-neon-cyan
-  glow: hover:shadow-neon-cyan
-  shadow: shadow-neon-cyan
-  hex: "#00f0ff"
+  text: text-crt-amber
+  border: border-crt-amber
+  glow: hover:shadow-neon-amber
+  shadow: shadow-neon-amber
+  hex: "#ffb000"
 order: 19.4
 category: secure
 related: ['github-advanced-security', 'dependabot', 'secret-scanning']
@@ -233,7 +233,7 @@ Use `Org → Settings → Code security → default settings` to apply to new an
 - 🚀 **How to run** — `Org → Security → Assessments → Run code security risk assessment`
 - 🆓 **Cost** — no license, no Actions minutes charged — perfect for evaluating Code Security before purchase
 
-> 📊 Pair this with Secret Risk Assessment (see <a class="retro-link" href="/en/playbook/secret-scanning">Secret Scanning ↗</a>) to get a complete picture of your organization's security posture in a single day. Use the results to decide whether to adopt **Code Security**.
+> 📊 Pair this with Secret Risk Assessment (see <a class="retro-link" href="/theomonfort/en/playbook/secret-scanning">Secret Scanning ↗</a>) to get a complete picture of your organization's security posture in a single day. Use the results to decide whether to adopt **Code Security**.
 
 📘 Details:
 - <a class="retro-link" href="https://github.blog/changelog/2026-04-08-code-security-risk-assessment-available-for-organizations/" target="_blank" rel="noopener noreferrer">Code Security Risk Assessment GA (2026/04) ↗</a>
