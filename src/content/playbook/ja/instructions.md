@@ -2,14 +2,14 @@
 title: インストラクション（Instructions）
 titleEn: Instructions
 summary: リポジトリやファイル単位でAIに常駐のルールを与える"指示書"。チーム全員のCopilotが同じ規約に従うようになる。
-icon: /icons/instructions.png
-color: green
+icon: /theomonfort/icons/instructions.png
+color: amber
 accent:
-  text: text-gb-green
-  border: border-gb-green
-  glow: hover:shadow-neon-green
-  shadow: shadow-neon-green
-  hex: "#9bbc0f"
+  text: text-crt-amber
+  border: border-crt-amber
+  glow: hover:shadow-neon-amber
+  shadow: shadow-neon-amber
+  hex: "#ffb000"
 order: 5
 category: plan
 related: ['agent-skills']
@@ -26,6 +26,9 @@ links:
   - group: 📦 Repository インストラクション
     label: GitHub Docs — Add repository custom instructions
     url: https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions
+  - group: 📦 Repository インストラクション
+    label: VS Code — Use custom instructions in VS Code
+    url: https://code.visualstudio.com/docs/agent-customization/custom-instructions
   - group: 🏢 Organization インストラクション
     label: GitHub Docs — Add organization custom instructions
     url: https://docs.github.com/en/enterprise-cloud@latest/copilot/how-tos/configure-custom-instructions/add-organization-instructions
