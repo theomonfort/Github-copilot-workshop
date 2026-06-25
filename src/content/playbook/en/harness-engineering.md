@@ -2,7 +2,7 @@
 title: Harness Engineering
 titleEn: Harness Engineering
 summary: The discipline of designing the scaffold that lets agents operate safely and effectively — tools, constraints, permissions, and external connections.
-icon: /icons/harness-engineering.png
+icon: /theomonfort/icons/harness-engineering.png
 color: green
 accent:
   text: text-gb-green
@@ -10,7 +10,7 @@ accent:
   glow: hover:shadow-neon-green
   shadow: shadow-neon-green
   hex: "#9bbc0f"
-order: 8
+order: 3.5
 category: plan
 related: ['agentic-workflow', 'agent-skills', 'mcp']
 links:

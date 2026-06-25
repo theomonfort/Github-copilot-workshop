@@ -2,14 +2,14 @@
 title: Instructions
 titleEn: Instructions
 summary: Persistent rule files that give AI standing development guidelines at the repository or file level, so every teammate's Copilot follows the same conventions.
-icon: /icons/instructions.png
-color: green
+icon: /theomonfort/icons/instructions.png
+color: amber
 accent:
-  text: text-gb-green
-  border: border-gb-green
-  glow: hover:shadow-neon-green
-  shadow: shadow-neon-green
-  hex: "#9bbc0f"
+  text: text-crt-amber
+  border: border-crt-amber
+  glow: hover:shadow-neon-amber
+  shadow: shadow-neon-amber
+  hex: "#ffb000"
 order: 5
 category: plan
 related: ['agent-skills']
@@ -26,6 +26,9 @@ links:
   - group: 📦 Repository Instructions
     label: GitHub Docs — Add repository custom instructions
     url: https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions
+  - group: 📦 Repository Instructions
+    label: VS Code — Use custom instructions in VS Code
+    url: https://code.visualstudio.com/docs/agent-customization/custom-instructions
   - group: 🏢 Organization Instructions
     label: GitHub Docs — Add organization custom instructions
     url: https://docs.github.com/en/enterprise-cloud@latest/copilot/how-tos/configure-custom-instructions/add-organization-instructions

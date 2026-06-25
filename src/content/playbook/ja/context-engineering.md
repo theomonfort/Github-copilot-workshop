@@ -2,7 +2,7 @@
 title: コンテキストエンジニアリング
 titleEn: Context Engineering
 summary: AI に渡す文脈を設計する技術。少なすぎず、多すぎず、タスク達成に必要な情報だけを届ける。
-icon: /icons/context-engineering.png
+icon: /theomonfort/icons/context-engineering.png
 color: green
 accent:
   text: text-gb-green

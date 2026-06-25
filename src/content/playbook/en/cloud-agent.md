@@ -2,14 +2,14 @@
 title: Cloud Agent
 titleEn: Cloud Agent
 summary: A "doppelganger" that works through the night even when you leave the IDE. Assign an Issue and it implements, verifies, and returns with a PR from a GitHub Actions runner.
-icon: /icons/cloud-agent.png
-color: magenta
+icon: /theomonfort/icons/cloud-agent.png
+color: amber
 accent:
-  text: text-neon-magenta
-  border: border-neon-magenta
-  glow: hover:shadow-neon-magenta
-  shadow: shadow-neon-magenta
-  hex: "#ff2e88"
+  text: text-crt-amber
+  border: border-crt-amber
+  glow: hover:shadow-neon-amber
+  shadow: shadow-neon-amber
+  hex: "#ffb000"
 order: 15
 category: develop
 related: ['partner-agent', 'copilot-code-review', 'instructions', 'mcp']

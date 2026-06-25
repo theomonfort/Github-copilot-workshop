@@ -2,14 +2,14 @@
 title: Agent Skills
 titleEn: Agent Skills
 summary: Reusable instruction packs that teach Copilot agents how to handle specialized tasks — loaded automatically when the request matches, no re-explaining required.
-icon: /icons/agent-skills.png
-color: green
+icon: /theomonfort/icons/agent-skills.png
+color: magenta
 accent:
-  text: text-gb-green
-  border: border-gb-green
-  glow: hover:shadow-neon-green
-  shadow: shadow-neon-green
-  hex: "#9bbc0f"
+  text: text-neon-magenta
+  border: border-neon-magenta
+  glow: hover:shadow-neon-magenta
+  shadow: shadow-neon-magenta
+  hex: "#ff2e88"
 order: 6
 category: plan
 related: ['mcp', 'instructions', 'custom-agent', 'cli']
@@ -29,6 +29,9 @@ links:
   - group: 🌟 Community Skills
     label: skills.sh — Open Agent Skills Registry
     url: https://skills.sh/
+  - group: 🌟 Community Skills
+    label: GitHub Agent Finder — discover skills/MCP/agents
+    url: https://github.com/agentfinder
   - group: 🛠️ Reference Implementation
     label: theomonfort skills
     url: https://theomonfort.github.io/theomonfort/skills/
@@ -162,4 +165,12 @@ A cross-ecosystem open registry. Browse and add GitHub-hosted skills.
 
 ```bash
 gh skills install <owner>/<repo> <skill-name>
+```
+
+### [GitHub Agent Finder](https://github.com/agentfinder)
+
+A discovery service that searches across **MCP servers, tools, skills, and agents** for a task. Install the `agentfinder` skill, then run `/agentfinder <what you want>` to list matches. See the [SKILL.md](https://github.com/ards-project/connectors/blob/main/skills/github-copilot/SKILL.md) definition.
+
+```bash
+gh skills install ards-project/connectors skills/github-copilot
 ```
