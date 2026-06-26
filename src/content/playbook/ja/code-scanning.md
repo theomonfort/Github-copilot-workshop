@@ -2,14 +2,14 @@
 title: Code Scanning
 titleEn: Code Scanning
 summary: コードの中の脆弱性を CodeQL が静的解析で見つけ、Copilot Autofix が PR で直してくれる GitHub のセキュリティ機能。Default setup なら設定ファイル不要で 1 クリック。public は無料、private は GHAS / Code Security が必要。
-icon: /icons/code-scanning.png
-color: cyan
+icon: /theomonfort/icons/code-scanning.png
+color: amber
 accent:
-  text: text-neon-cyan
-  border: border-neon-cyan
-  glow: hover:shadow-neon-cyan
-  shadow: shadow-neon-cyan
-  hex: "#00f0ff"
+  text: text-crt-amber
+  border: border-crt-amber
+  glow: hover:shadow-neon-amber
+  shadow: shadow-neon-amber
+  hex: "#ffb000"
 order: 19.4
 category: secure
 related: ['github-advanced-security', 'dependabot', 'secret-scanning']
@@ -233,7 +233,7 @@ Semgrep、ESLint security、Snyk などは **SARIF** 形式で結果をアップ
 - 🚀 **動かし方** — `Org → Security → Assessments → Run code security risk assessment`
 - 🆓 **コスト** — ライセンス不要、Actions 分も消費しない — Code Security 購入前の判断材料に最適
 
-> 📊 Secret Risk Assessment(<a class="retro-link" href="/playbook/secret-scanning">Secret Scanning ↗</a> 参照)とセットで「うちの組織のセキュリティ姿勢」を 1 日で可視化できる。結果を見て **Code Security 導入の是非** を判断するのが定石。
+> 📊 Secret Risk Assessment(<a class="retro-link" href="/theomonfort/playbook/secret-scanning">Secret Scanning ↗</a> 参照)とセットで「うちの組織のセキュリティ姿勢」を 1 日で可視化できる。結果を見て **Code Security 導入の是非** を判断するのが定石。
 
 📘 詳細:
 - <a class="retro-link" href="https://github.blog/changelog/2026-04-08-code-security-risk-assessment-available-for-organizations/" target="_blank" rel="noopener noreferrer">Code Security Risk Assessment GA(2026/04)↗</a>

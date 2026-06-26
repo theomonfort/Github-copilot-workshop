@@ -2,7 +2,7 @@
 title: Enterprise Setup
 titleEn: Enterprise Setup
 summary: From creating a GitHub Enterprise Cloud (EMU) account to configuring SSO — spin up a 30-day free trial, set up OIDC or SAML via Entra ID, and get your team ready to log in.
-icon: /icons/license-crown.png
+icon: /theomonfort/icons/enterprise-bank.png
 color: magenta
 accent:
   text: text-neon-magenta
@@ -10,7 +10,7 @@ accent:
   glow: hover:shadow-neon-magenta
   shadow: shadow-neon-magenta
   hex: "#ff2e88"
-order: 31
+order: 29.5
 category: administration
 related: ['license-management']
 links:
@@ -47,7 +47,7 @@ First, create a **GitHub Enterprise Cloud** account. A 30-day free trial is avai
 
 During creation, the **Data hosting** option lets you choose between **GitHub Enterprise Cloud** (github.com) or **Data Residency** (a dedicated regional subdomain on GHE.com).
 
-![Data hosting options](/playbook/img/enterprise-data-hosting.png)
+![Data hosting options](/theomonfort/playbook/img/enterprise-data-hosting.png)
 
 ## EMU: Admin account initial setup
 
@@ -57,7 +57,7 @@ When you choose EMU, a **dedicated admin account** (`shortname_admin`) is automa
 2. Log in with the admin account → the **Overview** tab shows the setup steps
 3. Follow the steps to configure SSO and provisioning
 
-![EMU admin Overview](/playbook/img/enterprise-emu-admin-overview.png)
+![EMU admin Overview](/theomonfort/playbook/img/enterprise-emu-admin-overview.png)
 
 > ⚠️ This admin account is only for configuring SSO and SCIM provisioning. For day-to-day development, use user accounts provisioned through your IdP.
 
@@ -85,8 +85,8 @@ To configure SSO, add an **Enterprise Application** in **Entra ID**.
 | **SAML** | GitHub Enterprise Managed User | [Setup guide](https://learn.microsoft.com/en-us/entra/identity/saas-apps/github-enterprise-managed-user-tutorial) |
 
 <div style="display:flex;gap:1rem;justify-content:center;">
-<img src="/playbook/img/entra-app-emu-oidc.png" alt="GitHub Enterprise Managed User (OIDC)" style="max-width:48%;" />
-<img src="/playbook/img/entra-app-emu-saml.png" alt="GitHub Enterprise Managed User" style="max-width:48%;" />
+<img src="/theomonfort/playbook/img/entra-app-emu-oidc.png" alt="GitHub Enterprise Managed User (OIDC)" style="max-width:48%;" />
+<img src="/theomonfort/playbook/img/entra-app-emu-saml.png" alt="GitHub Enterprise Managed User" style="max-width:48%;" />
 </div>
 
 ### SAML: GitHub ↔ Entra ID field mapping
@@ -108,7 +108,7 @@ In Entra ID under **Enterprise Application → Manage → Provisioning**, fill i
 - **Tenant URL**: `https://api.github.com/scim/v2/enterprises/<enterprise-slug>`
 - **Secret Token**: A **Personal Access Token (PAT)** created with the GitHub setup user (`shortname_admin`)
 
-![Provisioning configuration](/playbook/img/entra-provisioning-config.png)
+![Provisioning configuration](/theomonfort/playbook/img/entra-provisioning-config.png)
 
 > Create the PAT in GitHub under **Settings → Developer settings → Personal access tokens** with the `admin:enterprise` scope.
 
@@ -116,7 +116,7 @@ Once configured, add security groups or users to the app under **Users and group
 
 ## IdP Group and Team sync
 
-By default, provisioned users are added as **Unaffiliated** — they belong to the Enterprise but are not assigned to any Organization or Team. You can automate team membership by syncing IdP groups.
+By default, provisioned users are added as **Unaffiliated** — they belong to the Enterprise but are not assigned to any Organization or Team. You can automate team membership by syncing IdP groups (**a security group in the case of Entra ID**).
 
 | Configuration | Result |
 |---|---|
@@ -126,4 +126,6 @@ By default, provisioned users are added as **Unaffiliated** — they belong to t
 
 In GitHub, go to the Team settings → **Identity Provider Group** and select the corresponding IdP group.
 
-![IdP Group sync](/playbook/img/enterprise-idp-group-sync.png)
+> **For Entra ID**: you can only connect a team to a **security group**. Microsoft 365 groups and nested (parent/child) groups or teams are not supported.
+
+![IdP Group sync](/theomonfort/playbook/img/enterprise-idp-group-sync.png)
