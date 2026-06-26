@@ -2,14 +2,14 @@
 title: エージェント・スキル
 titleEn: Agent Skills
 summary: Copilot エージェントに「専門タスクのこなし方」を仕込む再利用可能な指示セット。プロンプトに合致したら自動で召喚され、毎回説明し直す必要がない。
-icon: /icons/agent-skills.png
-color: green
+icon: /theomonfort/icons/agent-skills.png
+color: magenta
 accent:
-  text: text-gb-green
-  border: border-gb-green
-  glow: hover:shadow-neon-green
-  shadow: shadow-neon-green
-  hex: "#9bbc0f"
+  text: text-neon-magenta
+  border: border-neon-magenta
+  glow: hover:shadow-neon-magenta
+  shadow: shadow-neon-magenta
+  hex: "#ff2e88"
 order: 6
 category: plan
 related: ['mcp', 'instructions', 'custom-agent', 'cli']
@@ -29,6 +29,9 @@ links:
   - group: 🌟 コミュニティ製スキル
     label: skills.sh — オープン Agent Skills レジストリ
     url: https://skills.sh/
+  - group: 🌟 コミュニティ製スキル
+    label: GitHub Agent Finder — スキル/MCP/エージェント探索
+    url: https://github.com/agentfinder
   - group: 🛠️ 参考実装
     label: theomonfort skills
     url: https://theomonfort.github.io/theomonfort/skills/
@@ -162,4 +165,12 @@ gh skills install github/awesome-copilot <skill-name>
 
 ```bash
 gh skills install <owner>/<repo> <skill-name>
+```
+
+### [GitHub Agent Finder](https://github.com/agentfinder)
+
+タスクに合う **MCP サーバー・ツール・スキル・エージェント** を横断検索する発見サービス。`agentfinder` スキルを入れれば `/agentfinder <やりたいこと>` で候補を一覧できる。スキル定義は [SKILL.md](https://github.com/ards-project/connectors/blob/main/skills/github-copilot/SKILL.md) を参照。
+
+```bash
+gh skills install ards-project/connectors skills/github-copilot
 ```
