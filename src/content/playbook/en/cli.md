@@ -2,14 +2,14 @@
 title: Copilot CLI
 titleEn: Copilot CLI
 summary: Copilot living in the terminal. An IDE-agnostic "colleague in the terminal" that lets you move between planning → implementation → review with just Shift+Tab.
-icon: /icons/cli.png
-color: magenta
+icon: /theomonfort/icons/cli.png
+color: cyan
 accent:
-  text: text-neon-magenta
-  border: border-neon-magenta
-  glow: hover:shadow-neon-magenta
-  shadow: shadow-neon-magenta
-  hex: "#ff2e88"
+  text: text-neon-cyan
+  border: border-neon-cyan
+  glow: hover:shadow-neon-cyan
+  shadow: shadow-neon-cyan
+  hex: "#00f0ff"
 order: 14
 category: develop
 related: ['agent-skills', 'mcp', 'custom-agent', 'cloud-agent']
@@ -20,8 +20,8 @@ links:
     url: https://docs.github.com/en/copilot/how-tos/copilot-cli/use-copilot-cli/overview
   - label: Rubber Duck — cross-model second opinion
     url: https://github.blog/ai-and-ml/github-copilot/github-copilot-cli-combines-model-families-for-a-second-opinion/
-  - label: Remote control CLI sessions (Public Preview)
-    url: https://github.blog/changelog/2026-04-13-remote-control-cli-sessions-on-web-and-mobile-in-public-preview/
+  - label: Remote control CLI sessions (now GA)
+    url: https://github.blog/changelog/2026-05-18-remote-control-for-copilot-cli-sessions-now-generally-available-on-mobile-web-and-vs-code
   - label: BYOK & Local models support
     url: https://github.blog/changelog/2026-04-07-copilot-cli-now-supports-byok-and-local-models/
   - group: 🤖 Non-interactive mode
@@ -33,6 +33,12 @@ links:
   - group: 🤖 Non-interactive mode
     label: Automating tasks with Copilot CLI and GitHub Actions
     url: https://docs.github.com/en/copilot/how-tos/copilot-cli/automate-copilot-cli/automate-with-actions
+  - group: 📰 Recent Changelog
+    label: "Cloud & local sandboxes — public preview (2026-06-02)"
+    url: https://github.blog/changelog/2026-06-02-cloud-and-local-sandboxes-for-github-copilot-now-in-public-preview/
+  - group: 📰 Recent Changelog
+    label: "Improved UI, Rubber Duck, scheduling & voice input (2026-06-02)"
+    url: https://github.blog/changelog/2026-06-02-copilot-cli-improved-ui-rubber-duck-prompt-scheduling-and-voice-input/
   - group: 📰 Recent Changelog
     label: "Remote control of CLI sessions — GA (mobile/web/VS Code) (2026-05-18)"
     url: https://github.blog/changelog/2026-05-18-remote-control-for-copilot-cli-sessions-now-generally-available-on-mobile-web-and-vs-code
@@ -79,7 +85,7 @@ A full-stack AI environment packed into a single terminal.
 
 ## Powerful Built-in Agents
 
-Copilot CLI includes standard agents for common tasks.
+Copilot CLI includes <a href="https://docs.github.com/en/copilot/concepts/agents/copilot-cli/about-custom-agents#built-in-agents" target="_blank" rel="noopener noreferrer" class="retro-link">built-in agents</a> for common tasks.
 
 | Agent | Description |
 |---|---|
@@ -89,6 +95,8 @@ Copilot CLI includes standard agents for common tasks.
 | **Code review** | Reviews code changes focusing solely on issues that genuinely matter, minimizing noise. |
 | **Research** | Conducts deep research across the codebase, related repositories, and the web, producing detailed reports with citations. |
 | **Rubber duck** | Returns constructive critical feedback for complex tasks. Used automatically by Copilot CLI. |
+
+> 💡 You can inspect these built-in agents' definitions in your local CLI install at `definitions/*.agent.yaml` (e.g. `~/.copilot/pkg/darwin-arm64/<version>/definitions/*.agent.yaml`).
 
 ## Rubber Duck — Cross-model Review
 
@@ -134,6 +142,35 @@ The CLI lets you instantly check models, sharing, experimental features, and env
 | `/task` | Check agents and tasks running in the background. |
 | `/ask` | Consult Copilot as a question before proceeding. |
 | `/env` | Check the environment information visible to the CLI. |
+
+## 🖥️ TUI (Terminal UI)
+
+Run `/experimental on` to try the redesigned terminal UI with theme-aware semantic colors — check them with `/theme`. Inside a GitHub repository, use `Tab` to move between the menus in the table below.
+
+| Tab | What's in it |
+|---|---|
+| **Session** | The normal interactive session (default) |
+| **Issues** | Browse the repository's issues |
+| **Pull requests** | Browse pull requests |
+| **Gists** | Browse your personal gists |
+
+> 📝 Screen-reader support and many other UI improvements landed too — see the <a class="retro-link" href="https://github.blog/changelog/2026-06-02-copilot-cli-improved-ui-rubber-duck-prompt-scheduling-and-voice-input/" target="_blank" rel="noopener noreferrer">changelog ↗</a>.
+
+## 🛡️ Sandbox — Safe Execution Environment
+
+Copilot runs the shell commands it executes inside an **isolated environment**, restricting access to your filesystem, network, and system — so you can hand off agentic work with confidence. (Public preview)
+
+| | 🖥️ Local sandbox | ☁️ Cloud sandbox |
+|---|---|---|
+| **Enable** | `/sandbox enable` in a session | `copilot --cloud` |
+| **Runs on** | Your machine (isolated) | GitHub-hosted ephemeral Linux |
+| **Built on** | Microsoft MXC | Azure Container Apps Sandboxes |
+| **Support** | macOS / Linux (Windows on Insiders) | Any device |
+| **Policy** | Centrally managed via Intune / MDM | Inherits Cloud Agent policies |
+
+- 🔒 **What's isolated**: filesystem / network / system capabilities for Copilot-initiated shell execution.
+- 🔁 **Cloud keeps state**: Active → Stopped (snapshot) → Deleted. Resume from another device and run heavy tasks in parallel.
+- 🧩 **Same auth**: uses your Copilot CLI sign-in — no separate cloud setup required.
 
 ## Non-interactive Mode (Programmatic Execution) ★
 
