@@ -11,7 +11,8 @@
       "extensions": [
         "GitHub.copilot",
         "GitHub.copilot-chat",
-        "GitHub.vscode-github-actions"
+        "GitHub.vscode-github-actions",
+        "openai.chatgpt"
       ],
       "settings": {
         "github.copilot.chat.mcp.discovery.enabled": true
