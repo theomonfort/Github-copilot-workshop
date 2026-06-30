@@ -32,9 +32,6 @@ links:
   - group: 🌟 コミュニティ製スキル
     label: GitHub Agent Finder — スキル/MCP/エージェント探索
     url: https://github.com/agentfinder
-  - group: 🛠️ 参考実装
-    label: theomonfort skills
-    url: https://theomonfort.github.io/theomonfort/skills/
   - group: 📰 Recent Changelog
     label: "Manage agent skills with the GitHub CLI (2026-04-16)"
     url: https://github.blog/changelog/2026-04-16-manage-agent-skills-with-github-cli
