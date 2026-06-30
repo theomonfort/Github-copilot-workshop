@@ -2,7 +2,7 @@
 title: Copilot Code Review
 titleEn: Copilot Code Review
 summary: Copilot can be assigned as a reviewer — manually or automatically — to read code intent and return inline comments, PR summaries, and fix suggestions. Goes from pre-review noise reduction all the way to full automation.
-icon: /theomonfort/icons/copilot-code-review.png
+icon: /icons/copilot-code-review.png
 color: green
 accent:
   text: text-gb-green
@@ -133,7 +133,7 @@ Define review standards by **just adding files to your repo** — Copilot code r
 | **`NAME.instructions.md`** | under `.github/instructions/` | Extra instructions scoped via `applyTo` to specific paths or languages |
 | **`AGENTS.md`** | repository **root** | If an `AGENTS.md` already exists, it's used as context automatically — share the same conventions across Cloud Agent / CLI |
 
-> 💡 **Key point**: If you already run on `AGENTS.md`, the same conventions apply to reviews with zero extra setup. <a class="retro-link" href="/theomonfort/en/playbook/harness-engineering/?present=1&amp;slide=6">What is AGENTS.md? ↗</a>
+> 💡 **Key point**: If you already run on `AGENTS.md`, the same conventions apply to reviews with zero extra setup. <a class="retro-link" href="/en/playbook/harness-engineering/?present=1&amp;slide=6">What is AGENTS.md? ↗</a>
 >
 > 📘 Official guide: <a href="https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/add-custom-instructions/add-repository-instructions" target="_blank" rel="noopener noreferrer" class="retro-link">Adding repository custom instructions for GitHub Copilot</a> — covers all three file types and which features support them
 
@@ -146,7 +146,7 @@ Copilot code review runs on an **agentic architecture**, executing on **GitHub A
 | **Runner type (Org)** | Org → **Copilot** → **Runner type** → *Runner type configuration* | Set a default runner (standard / large / self-hosted) across all repos. **Lock** it to override per-repo settings. Applies to both code review and Cloud Agent |
 | **Content exclusion** | Repo / Org / Enterprise settings (path-based rules) | Exclude sensitive or irrelevant files/directories from review context |
 
-> 🔧 **Shaping the runner environment**: Control runner size / self-hosted / Windows switching via `copilot-setup-steps.yml`. See <a class="retro-link" href="/theomonfort/playbook/cloud-agent/">Cloud Agent ↗</a> (same mechanism as Code Review).
+> 🔧 **Shaping the runner environment**: Control runner size / self-hosted / Windows switching via `copilot-setup-steps.yml`. See <a class="retro-link" href="/playbook/cloud-agent/">Cloud Agent ↗</a> (same mechanism as Code Review).
 
 ## Limits and the human role
 

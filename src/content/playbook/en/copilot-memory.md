@@ -2,7 +2,7 @@
 title: Copilot Memory
 titleEn: Copilot Memory
 summary: A mechanism for Copilot to remember and reuse knowledge learned while working in a repository, passing it on to future selves and the whole team. Gets smarter the more you use it.
-icon: /theomonfort/icons/copilot-memory.png
+icon: /icons/copilot-memory.png
 color: magenta
 accent:
   text: text-neon-magenta

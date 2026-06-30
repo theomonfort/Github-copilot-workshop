@@ -2,7 +2,7 @@
 title: Copilot App
 titleEn: Copilot App
 summary: A purpose-built desktop app for agent-driven development. Run multiple agents in parallel and handle issue triage, implementation, review, and merge in one place—without bouncing between IDE, terminal, and browser.
-icon: /theomonfort/github-copilot-white-icon.png
+icon: /github-copilot-white-icon.png
 color: cyan
 accent:
   text: text-neon-cyan
@@ -96,7 +96,7 @@ Repeatable work can be **saved and re-run**, and you can inject your org's conte
 /chronicle cost tips   # find wasteful patterns across past sessions
 ```
 
-> 🔑 BYOK, MCP, and skills share the same extension mechanisms as <a class="retro-link" href="/theomonfort/en/playbook/mcp">MCP ↗</a> and <a class="retro-link" href="/theomonfort/en/playbook/agent-skills">Agent Skills ↗</a>.
+> 🔑 BYOK, MCP, and skills share the same extension mechanisms as <a class="retro-link" href="/en/playbook/mcp">MCP ↗</a> and <a class="retro-link" href="/en/playbook/agent-skills">Agent Skills ↗</a>.
 
 ## ★ Killer use case
 
@@ -119,4 +119,4 @@ Same Copilot agent, different role depending on **where you direct it from**.
 | ☁️ **Cloud Agent** | GitHub.com | Async execution—just assign an issue |
 | 🧩 **Partner Agent** | Various SDKs / harnesses | Delegate to other harnesses like Claude / Codex |
 
-> 💡 Copilot App is built on Copilot CLI. Use <a class="retro-link" href="/theomonfort/en/playbook/cli">Copilot CLI ↗</a> for terminal automation and <a class="retro-link" href="/theomonfort/en/playbook/cloud-agent">Cloud Agent ↗</a> for async runs on GitHub.
+> 💡 Copilot App is built on Copilot CLI. Use <a class="retro-link" href="/en/playbook/cli">Copilot CLI ↗</a> for terminal automation and <a class="retro-link" href="/en/playbook/cloud-agent">Cloud Agent ↗</a> for async runs on GitHub.

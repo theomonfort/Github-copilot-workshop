@@ -2,7 +2,7 @@
 title: Copilot Licence
 titleEn: Copilot Licence
 summary: GitHub Copilot は Enterprise レベルで課金され、Enterprise または Organization レベルで割り当てられる。複数 org に所属するユーザーの請求・ポリシーの扱い、Outside collaborator / EMU の Guest collaborator まで一通り整理。
-icon: /theomonfort/icons/license-crown.png
+icon: /icons/license-crown.png
 color: magenta
 accent:
   text: text-neon-magenta

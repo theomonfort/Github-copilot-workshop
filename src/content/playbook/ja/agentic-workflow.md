@@ -2,7 +2,7 @@
 title: エージェンティック・ワークフロー
 titleEn: Agentic Workflow
 summary: GitHub Actions の上で AI エージェントを走らせる新しい自動化。Markdown に「やってほしいこと」を自然言語で書くだけで、判断と行動を伴うワークフローが動く。
-icon: /theomonfort/icons/agentic-workflow.png
+icon: /icons/agentic-workflow.png
 color: green
 accent:
   text: text-gb-green

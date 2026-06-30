@@ -2,7 +2,7 @@
 title: エージェント・スキル
 titleEn: Agent Skills
 summary: Copilot エージェントに「専門タスクのこなし方」を仕込む再利用可能な指示セット。プロンプトに合致したら自動で召喚され、毎回説明し直す必要がない。
-icon: /theomonfort/icons/agent-skills.png
+icon: /icons/agent-skills.png
 color: magenta
 accent:
   text: text-neon-magenta

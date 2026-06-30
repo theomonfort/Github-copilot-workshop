@@ -2,7 +2,7 @@
 title: Usage-based Billing (UBB)
 titleEn: Usage-based Billing
 summary: On June 1, 2026 GitHub Copilot moved to usage-based billing (UBB). Cost is tied to the tokens actually processed (input, output, cached), and usage is shown and budgeted in GitHub AI credits (1 credit = $0.01 USD). The core principles, aligned with the docs.
-icon: /theomonfort/icons/ubb-coin.png
+icon: /icons/ubb-coin.png
 color: magenta
 accent:
   text: text-neon-magenta

@@ -2,7 +2,7 @@
 title: トークン最適化
 titleEn: Token Optimization
 summary: トークンは「削る」ではなく「質を上げる」ことで結果的に減る。モデル選び・コンテキスト設計・決定的なガードレール・適切な Agent Config で、1 トークンずつを意味のあるものにする。
-icon: /theomonfort/icons/token-investment.png
+icon: /icons/token-investment.png
 color: green
 accent:
   text: text-gb-green
@@ -101,7 +101,7 @@ links:
 
 ## Advice 1 — context は「必要最小限」を渡す…
 
-<a class="retro-link" href="/theomonfort/playbook/context-engineering">Context Engineering ↗</a> で見たとおり、context window はターンごとに膨らみ、詰め込みすぎると **context rot（コンテキスト劣化）** で agent はむしろ鈍くなります。
+<a class="retro-link" href="/playbook/context-engineering">Context Engineering ↗</a> で見たとおり、context window はターンごとに膨らみ、詰め込みすぎると **context rot（コンテキスト劣化）** で agent はむしろ鈍くなります。
 
 - **`copilot-instructions` は短く** ── 本当に「毎回」効くルールだけ残す
 - **skill を増やしすぎない** ── React・TypeScript・Tailwind などは学習データで十分
@@ -216,7 +216,7 @@ links:
 </svg>
 </figure>
 
-> 💡 <a class="retro-link" href="/theomonfort/playbook/cli">Copilot CLI ↗</a> の `/research`・`/plan`・`/fleet` がこの 3 フェーズに対応しています。各フェーズは別のコンテキストウィンドウで走るので、肥大化した Research セッションが Implementer に届きません。
+> 💡 <a class="retro-link" href="/playbook/cli">Copilot CLI ↗</a> の `/research`・`/plan`・`/fleet` がこの 3 フェーズに対応しています。各フェーズは別のコンテキストウィンドウで走るので、肥大化した Research セッションが Implementer に届きません。
 
 ## Advice 5 — 決定的なコントロール
 
