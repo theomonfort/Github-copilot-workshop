@@ -17,9 +17,6 @@ links:
   - group: 🎮 ワークショップ
     label: 2026 GitHub Copilot Workshop (リポジトリ)
     url: https://github.com/theomonfort/Github-copilot-workshop
-  - group: 🎮 ワークショップ
-    label: ワークショップ(ハンズオン)を開く
-    url: https://theomonfort.github.io/theomonfort/handson/
   - group: 📖 関連リソース
     label: Codespaces
     url: https://github.com/features/codespaces

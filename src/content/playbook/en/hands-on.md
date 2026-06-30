@@ -17,9 +17,6 @@ links:
   - group: 🎮 Workshop
     label: 2026 GitHub Copilot Workshop (repo)
     url: https://github.com/theomonfort/Github-copilot-workshop
-  - group: 🎮 Workshop
-    label: Open the hands-on workshop
-    url: https://theomonfort.github.io/theomonfort/en/handson/
   - group: 📖 Related
     label: Codespaces
     url: https://github.com/features/codespaces
