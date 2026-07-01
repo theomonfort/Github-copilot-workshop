@@ -2,7 +2,7 @@
 title: Copilot Metrics
 titleEn: Copilot Metrics
 summary: Metrics API and dashboard for visualizing GitHub Copilot usage and impact. Details coming soon.
-icon: /theomonfort/icons/copilot-metrics.png
+icon: /icons/copilot-metrics.png
 color: green
 accent:
   text: text-gb-green

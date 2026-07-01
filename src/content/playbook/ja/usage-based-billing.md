@@ -2,7 +2,7 @@
 title: 従量課金制（UBB）
 titleEn: Usage-based Billing
 summary: 2026 年 6 月 1 日、GitHub Copilot は従量課金制（UBB）へ移行。コストは実際に処理されたトークン量（入力・出力・キャッシュ）と結びつき、使用量は GitHub AI クレジット（1 クレジット = $0.01 USD）で表示・予算管理される。基本原則をドキュメントに沿って整理。
-icon: /theomonfort/icons/ubb-coin.png
+icon: /icons/ubb-coin.png
 color: magenta
 accent:
   text: text-neon-magenta

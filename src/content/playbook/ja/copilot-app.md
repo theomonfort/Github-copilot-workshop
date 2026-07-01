@@ -2,7 +2,7 @@
 title: Copilot App
 titleEn: Copilot App
 summary: エージェント駆動開発のための専用デスクトップアプリ。複数のエージェントを並列で走らせ、Issue 探索から実装・レビュー・マージまでを IDE / ターミナル / ブラウザを行き来せず 1 か所で回す"司令塔"。
-icon: /theomonfort/github-copilot-white-icon.png
+icon: /github-copilot-white-icon.png
 color: cyan
 accent:
   text: text-neon-cyan
@@ -96,7 +96,7 @@ Copilot CLI の上に構築され、リポジトリ・ブランチ・Issue・PR 
 /chronicle cost tips   # 過去セッションから無駄の多いパターンを洗い出す
 ```
 
-> 🔑 BYOK や MCP・skills は <a class="retro-link" href="/theomonfort/playbook/mcp">MCP ↗</a> や <a class="retro-link" href="/theomonfort/playbook/agent-skills">Agent Skills ↗</a> と同じ拡張機構を共有する。
+> 🔑 BYOK や MCP・skills は <a class="retro-link" href="/playbook/mcp">MCP ↗</a> や <a class="retro-link" href="/playbook/agent-skills">Agent Skills ↗</a> と同じ拡張機構を共有する。
 
 ## ★ 使いどころ
 
@@ -119,4 +119,4 @@ Copilot CLI の上に構築され、リポジトリ・ブランチ・Issue・PR 
 | ☁️ **Cloud Agent** | GitHub.com | Issue を assign するだけの非同期実行 |
 | 🧩 **Partner Agent** | 各種 SDK / Harness | Claude / Codex など別ハーネスへ委譲 |
 
-> 💡 Copilot App は Copilot CLI の上に作られている。ターミナルでの自動化は <a class="retro-link" href="/theomonfort/playbook/cli">Copilot CLI ↗</a>、GitHub 上の非同期実行は <a class="retro-link" href="/theomonfort/playbook/cloud-agent">Cloud Agent ↗</a> と使い分ける。
+> 💡 Copilot App は Copilot CLI の上に作られている。ターミナルでの自動化は <a class="retro-link" href="/playbook/cli">Copilot CLI ↗</a>、GitHub 上の非同期実行は <a class="retro-link" href="/playbook/cloud-agent">Cloud Agent ↗</a> と使い分ける。

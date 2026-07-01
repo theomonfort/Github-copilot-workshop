@@ -2,7 +2,7 @@
 title: GitHub Copilot
 titleEn: GitHub Copilot
 summary: 世界で最も活用されている AI 開発ツール。SDLC 全体を AI で支える開発者プラットフォーム。
-icon: /theomonfort/github-copilot-white-icon.png
+icon: /github-copilot-white-icon.png
 color: cyan
 accent:
   text: text-neon-cyan
@@ -52,23 +52,23 @@ links:
 
   <div class="ch-card" data-tone="amber">
     <div class="ch-card-title">LLM による<br/>コード補完</div>
-    <img class="ch-mona" src="/theomonfort/github-copilot-white-icon.png" alt="" />
+    <img class="ch-mona" src="/github-copilot-white-icon.png" alt="" />
   </div>
   <div class="ch-card" data-tone="green">
     <div class="ch-card-title">Copilot Chat<br/>Ask Mode</div>
-    <img class="ch-mona" src="/theomonfort/github-copilot-white-icon.png" alt="" />
+    <img class="ch-mona" src="/github-copilot-white-icon.png" alt="" />
   </div>
   <div class="ch-card" data-tone="green">
     <div class="ch-card-title">Copilot Chat<br/>Edit Mode</div>
-    <img class="ch-mona" src="/theomonfort/github-copilot-white-icon.png" alt="" />
+    <img class="ch-mona" src="/github-copilot-white-icon.png" alt="" />
   </div>
   <div class="ch-card" data-tone="magenta">
     <div class="ch-card-title">GitHub Copilot<br/>Agent Mode</div>
-    <img class="ch-mona" src="/theomonfort/github-copilot-white-icon.png" alt="" />
+    <img class="ch-mona" src="/github-copilot-white-icon.png" alt="" />
   </div>
   <div class="ch-card" data-tone="cyan">
     <div class="ch-card-title">IDE 以外での<br/>GitHub Copilot</div>
-    <img class="ch-mona" src="/theomonfort/github-copilot-white-icon.png" alt="" />
+    <img class="ch-mona" src="/github-copilot-white-icon.png" alt="" />
   </div>
 
   <div class="ch-tag" data-tone="amber" style="grid-column: 1 / 2">コード補完だけ</div>
@@ -140,11 +140,11 @@ flowchart LR
 
 ## なぜ企業は Copilot を選ぶのか
 
-- <img src="/theomonfort/icons/play-cyan.svg" alt="" width="14" height="20" class="play-bullet" /> **オーケストレーション**<br/>　コーディングだけでなく、SDLC 全体にわたる AI
-- <img src="/theomonfort/icons/play-cyan.svg" alt="" width="14" height="20" class="play-bullet" /> **モデル・エージェント・サーフェス全体での選択の自由**<br/>　あらゆるワークフローに最適なモデルとインターフェース。ベンダーロックインなし
-- <img src="/theomonfort/icons/play-cyan.svg" alt="" width="14" height="20" class="play-bullet" /> **エンタープライズコントロール**<br/>　一元化されたガバナンス、可視性、セキュリティ
-- <img src="/theomonfort/icons/play-cyan.svg" alt="" width="14" height="20" class="play-bullet" /> **コンプライアンス**<br/>　Copilot Proxy、ポリシー制御、公開コードフィルタ、対象利用に対する Microsoft の IP 保護
-- <img src="/theomonfort/icons/play-cyan.svg" alt="" width="14" height="20" class="play-bullet" /> **最高のコストパフォーマンス**<br/>　プール型使用量、充実した組み込みエンタイトルメント、ACD による価格優位性の最大化
+- <img src="/icons/play-cyan.svg" alt="" width="14" height="20" class="play-bullet" /> **オーケストレーション**<br/>　コーディングだけでなく、SDLC 全体にわたる AI
+- <img src="/icons/play-cyan.svg" alt="" width="14" height="20" class="play-bullet" /> **モデル・エージェント・サーフェス全体での選択の自由**<br/>　あらゆるワークフローに最適なモデルとインターフェース。ベンダーロックインなし
+- <img src="/icons/play-cyan.svg" alt="" width="14" height="20" class="play-bullet" /> **エンタープライズコントロール**<br/>　一元化されたガバナンス、可視性、セキュリティ
+- <img src="/icons/play-cyan.svg" alt="" width="14" height="20" class="play-bullet" /> **コンプライアンス**<br/>　Copilot Proxy、ポリシー制御、公開コードフィルタ、対象利用に対する Microsoft の IP 保護
+- <img src="/icons/play-cyan.svg" alt="" width="14" height="20" class="play-bullet" /> **最高のコストパフォーマンス**<br/>　プール型使用量、充実した組み込みエンタイトルメント、ACD による価格優位性の最大化
 
 ## セキュアでコンプライアントなアーキテクチャ
 
@@ -164,8 +164,8 @@ config:
 ---
 flowchart LR
   Dev["👤 開発者"]
-  Proxy["<img class='proxy-ico' src='/theomonfort/github-copilot-white-icon.png'/><b>Copilot Proxy</b>"]
-  LLM["<b>LLM プロバイダー</b><div class='llm-row'><img src='/theomonfort/llm-openai.png'/><img src='/theomonfort/llm-anthropic.svg'/><img src='/theomonfort/llm-gemini.png'/><img src='/theomonfort/llm-grok.png'/></div>"]
+  Proxy["<img class='proxy-ico' src='/github-copilot-white-icon.png'/><b>Copilot Proxy</b>"]
+  LLM["<b>LLM プロバイダー</b><div class='llm-row'><img src='/llm-openai.png'/><img src='/llm-anthropic.svg'/><img src='/llm-gemini.png'/><img src='/llm-grok.png'/></div>"]
 
   Dev -->|"文脈"| Proxy
   Proxy -->|"生成提案"| Dev

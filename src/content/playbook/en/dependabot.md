@@ -2,7 +2,7 @@
 title: Dependabot
 titleEn: Dependabot
 summary: GitHub's official bot that monitors repository dependencies for vulnerabilities and opens automated fix PRs. Built on the dependency graph, it runs in three layers — Security alerts, Security updates, and Version updates. Free for public and private repos.
-icon: /theomonfort/icons/dependabot.png
+icon: /icons/dependabot.png
 color: amber
 accent:
   text: text-crt-amber

@@ -2,7 +2,7 @@
 title: Context Engineering
 titleEn: Context Engineering
 summary: The art of designing the context you pass to AI — not too little, not too much, just the information needed to complete the task.
-icon: /theomonfort/icons/context-engineering.png
+icon: /icons/context-engineering.png
 color: green
 accent:
   text: text-gb-green

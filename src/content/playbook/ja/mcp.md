@@ -2,7 +2,7 @@
 title: MCP Server（Model Context Protocol）
 titleEn: MCP Server
 summary: MCP は AI モデルに対して追加の文脈を提供する方法である。
-icon: /theomonfort/mcp.png
+icon: /mcp.png
 color: cyan
 accent:
   text: text-neon-cyan
@@ -145,7 +145,7 @@ MCP サーバーの実行場所は **2 種類** あります。
 
   </div>
   <div class="split-figure">
-    <img src="/theomonfort/mcp-activity-monitor.png" alt="Activity Monitor showing local MCP server processes" />
+    <img src="/mcp-activity-monitor.png" alt="Activity Monitor showing local MCP server processes" />
     <figcaption>Activity Monitor で見ると、ローカル MCP サーバーが <code>npm exec</code> の <strong>子プロセス</strong> として動いているのが分かる</figcaption>
   </div>
 </div>

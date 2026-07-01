@@ -2,7 +2,7 @@
 title: クラウドエージェント
 titleEn: Cloud Agent
 summary: IDEを離れても夜通し働く"分身"。Issue を投げれば GitHub Actions ランナー上で実装し、検証まで終えた PR を持って帰ってくる。
-icon: /theomonfort/icons/cloud-agent.png
+icon: /icons/cloud-agent.png
 color: amber
 accent:
   text: text-crt-amber

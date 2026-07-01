@@ -2,7 +2,7 @@
 title: Codespaces
 titleEn: Codespaces
 summary: クラウド上にホストされる、カスタマイズ可能なリモート開発環境。AI を"安全に閉じ込めて"実験・作業できる、AI駆動開発の理想的な遊び場。
-icon: /theomonfort/github-vscode-mark.png
+icon: /github-vscode-mark.png
 color: cyan
 accent:
   text: text-neon-cyan

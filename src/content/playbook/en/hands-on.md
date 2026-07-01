@@ -2,7 +2,7 @@
 title: Hands-on
 titleEn: Hands-on
 summary: A workshop where you get hands-on with the concepts in this playbook by rebuilding a simplified version of this very playbook site from scratch — together with Copilot. Touches MCP / Instructions / Agent Skills / Plan mode / Cloud Agent / Code Review / Agentic Workflow end-to-end.
-icon: /theomonfort/icons/handson.png
+icon: /icons/handson.png
 color: cyan
 accent:
   text: text-neon-cyan
@@ -42,7 +42,7 @@ The goal isn't a contrived demo app — it's **this very site** (a simplified ve
 
 Once you've learned the **why** in the Playbook, the hands-on workshop lets you **apply that knowledge** — by rebuilding this Playbook itself, using the very features you just read about.
 
-<img src="/theomonfort/handson/img/intro-context-window.png" alt="Preview of the Copilot Playbook site you'll build today (Context Engineering page)" class="build-preview" />
+<img src="/handson/img/intro-context-window.png" alt="Preview of the Copilot Playbook site you'll build today (Context Engineering page)" class="build-preview" />
 
 ## Workshop Flow
 
@@ -76,7 +76,7 @@ Fastest route — browser only:
 
 1. 🌐 Open the repo: <a class="retro-link" href="https://github.com/theomonfort/Github-copilot-workshop" target="_blank" rel="noopener noreferrer">theomonfort/Github-copilot-workshop ↗</a>
 2. 🟢 Click the green **Code** button → **Codespaces** tab → **Create codespace on main**
-3. 📖 Open the hands-on: <a class="retro-link" href="/theomonfort/en/handson/">Open the hands-on →</a>
+3. 📖 Open the hands-on: <a class="retro-link" href="/en/handson/">Open the hands-on →</a>
 4. ⌨️ Step through one task at a time, talking to Copilot as you go
 
 > 💡 No local setup needed — Codespaces ships with all extensions and dependencies preinstalled.
