@@ -17,6 +17,12 @@ links:
   - group: 📖 Reference (common)
     label: GitHub Docs — Custom agents configuration
     url: https://docs.github.com/en/copilot/reference/custom-agents-configuration
+  - group: 🏛️ Organization / Enterprise
+    label: GitHub Docs — Preparing to use custom agents in your organization
+    url: https://docs.github.com/en/enterprise-cloud@latest/copilot/how-tos/administer-copilot/manage-for-organization/prepare-for-custom-agents
+  - group: 🏛️ Organization / Enterprise
+    label: GitHub Docs — Preparing to use custom agents in your enterprise
+    url: https://docs.github.com/en/enterprise-cloud@latest/copilot/how-tos/administer-copilot/manage-for-enterprise/manage-agents/prepare-for-custom-agents
   - group: ☁️ Cloud Agent
     label: GitHub Docs — Creating custom agents for Copilot cloud agent
     url: https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/create-custom-agents
@@ -28,7 +34,13 @@ links:
     url: https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/create-custom-agents-for-cli
   - group: 🆚 VS Code
     label: VS Code Docs — Custom agents
-    url: https://code.visualstudio.com/docs/copilot/customization/custom-agents
+    url: https://code.visualstudio.com/docs/agent-customization/custom-agents
+  - group: 🆚 VS Code
+    label: VS Code Docs — Subagents
+    url: https://code.visualstudio.com/docs/agents/subagents
+  - group: 📰 Announcement
+    label: "Built-in Explore subagent (VS Code 1.110)"
+    url: https://github.blog/changelog/2026-03-06-github-copilot-in-visual-studio-code-v1-110-february-release
   - group: 🌟 Community examples
     label: github/awesome-copilot — Custom agents
     url: https://github.com/github/awesome-copilot/tree/main/agents
@@ -53,20 +65,26 @@ A Custom Agent locks in not just a prompt, but the entire "working style" of an 
 | --- | --- | --- |
 | Identity | What persona to adopt | `Planner`, `Security Reviewer`, `Test Specialist` |
 | Description | When to invoke it | "When creating a plan before implementation" |
-| Tools | Which tools to use | `read`, `search`, `edit`, `github/*` |
+| Tools | Which tools to use | `read`, `search`, `edit`, `agent`, `github/*` |
+| Agents | Which subagents it can delegate to (requires `agent` in `tools`) | `Research`, `Reviewer`, `*` |
 | Model | Which model to run on | Strong model for design, fast model for exploration |
 | Target | Which runtime to target | `github-copilot`, `vscode` |
 | MCP | Dedicated external tools | Jira, Figma, Playwright, internal API |
 | Prompt | Decision criteria & output format | Success criteria, restrictions, review focus |
 
-## Two scopes
+## Four scopes
 
-|  | 👥 Team shared | 👤 Personal |
-| --- | --- | --- |
-| 📁 Location | `.github/agents/*.agent.md` | `~/.copilot/agents/` |
-| 🎯 Scope | That repository / workspace | All your workspaces |
-| 🤝 Sharing | Managed in Git, shared with team | Local only |
-| 💡 Use case | Team-standard Planner / Reviewer / Tester | Personal work style & preferences |
+The same `.agent.md` can be published at four levels. The wider the reach, the more governance it needs.
+
+|  | 🏢 Enterprise | 🏛️ Organization | 👥 Repository | 👤 Personal |
+| --- | --- | --- | --- | --- |
+| 📁 Location | Designated org's `.github-private` → `/agents/` | Org's `.github` or `.github-private` → `/agents/` | `.github/agents/` | `~/.copilot/agents/` |
+| 🎯 Scope | Every repository in the enterprise | Every member of the organization | That repository / workspace | All your workspaces |
+| 🤝 Managed by | Enterprise owners / AI managers | Organization owners | The repo's team, via Git | You only |
+| 💡 Use case | Company-wide standards & compliance | Division-standard Planner / Reviewer | Project-specific Tester / Reviewer | Personal work style & preferences |
+
+> 🆕 Organization and enterprise scopes are in public preview. Members receive the agents even without access to the source repository itself.
+> 🛡️ Enterprise owners can protect agent files with a ruleset — but scope it to the designated organization, otherwise it also blocks org owners from editing organization-level agents.
 
 ## Inside `.agent.md`
 
@@ -105,25 +123,32 @@ Compare Figma specifications against Pull Request diffs and review only visual d
 
 > A good Custom Agent is defined not by "who" it is, but by **which decisions to delegate** to it.
 
-## Built-in agent examples
+## Agents vs. internal subagents
 
-Copilot Chat and CLI come with purpose-built agents out of the box.  
-Custom Agents are the mechanism for **extending this to your own team**.
+VS Code exposes **Agent, Plan, and Ask** to users. Internal helpers such as `searchSubagent` are tools invoked by another agent, not selectable `.agent.md` profiles.
 
-| Surface | Agent | What does it do? |
+| Surface | Agent / tool | What does it do? |
 | --- | --- | --- |
-| Copilot Chat / VS Code | Ask | Answers questions without making changes |
-| Copilot Chat / VS Code | Explore | Fast read-only codebase exploration and Q&A subagent |
+| Copilot Chat / VS Code | Agent | Implements complex tasks with editing and tool access |
+| Copilot Chat / VS Code | Ask | Answers questions and researches without making changes |
 | Copilot Chat / VS Code | Plan | Researches and outlines multi-step plans |
-| Copilot CLI | Explore | Quick codebase analysis. Ask questions about the code without adding to the main context |
-| Copilot CLI | Task | Runs commands such as tests and builds, returning a brief summary on success and full output on failure |
-| Copilot CLI | General-purpose | Handles complex multi-step tasks requiring the full toolset and high-quality reasoning in a separate context |
-| Copilot CLI | Rubber-duck | Gives high-signal feedback on plans and implementations, catching bugs, logic errors, and design flaws (never edits code) |
-| Copilot CLI | Code-review | Reviews changes and surfaces only genuinely important issues with low noise |
-| Copilot CLI | Research | A subagent that runs thorough searches: digs through GitHub repos, fetches files, and reports findings with citations |
-| Copilot CLI | Security-review | Reviews changes for high-confidence security vulnerabilities (11 categories) with severity and confidence scores |
+| VS Code internal | `searchSubagent` | Runs isolated, parallel codebase research and returns a summary |
 
-> Display names may appear shortened depending on the UI preview, but the official CLI names are `General-purpose` and `Code-review`. For how to create custom agents in the CLI, see <a href="https://docs.github.com/en/copilot/concepts/agents/copilot-cli/about-custom-agents" target="_blank" rel="noopener noreferrer" class="retro-link">About Copilot CLI custom agents</a> and <a href="https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/create-custom-agents-for-cli" target="_blank" rel="noopener noreferrer" class="retro-link">Create custom agents for CLI</a>.
+> 🔑 VS Code's former Explore behavior now appears through `searchSubagent`. Its prompt and tool are implemented in TypeScript/TSX, so there is no editable Explore `.agent.md`.
+
+## Copilot CLI built-in subagents
+
+| Agent | Best for |
+| --- | --- |
+| Explore | Fast, read-only codebase research |
+| Task | Running tests, builds, and verbose commands |
+| General-purpose | Complex multi-step work with the full toolset |
+| Rubber-duck | Independently reviews plans and implementations. Assign it a different model with `/subagents` to test work from a perspective other than the model that created it |
+| Code-review | High-confidence review of a diff |
+| Research | Thorough GitHub and web research with citations |
+| Security-review | High-confidence vulnerability review |
+
+> 🦆 Rubber-duck's strength is **cross-model review**. Instead of asking a model to evaluate its own work, use another model to critique the plan or implementation and expose blind spots or reasoning biases.
 
 ## What happens inside the harness?
 
@@ -232,3 +257,42 @@ When you need a deep dive, have the harness spin up a **subagent**. It does the 
   <text x="1060" y="236" fill="#e8f4ff" font-size="13" font-weight="bold" text-anchor="end">BACK INTO MAIN</text>
 </svg>
 </figure>
+
+## Use the Right LLM for Each Job with Custom Agents
+
+AI models are trained on different data with different architectures. **No single model is best at everything.**
+
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.2em;margin:1.8em 0;">
+<div style="padding:1.4em 1.2em;border:1px solid rgba(155,188,15,0.35);background:rgba(5,6,15,0.5);"><div style="font-size:1.15em;font-weight:bold;color:#e8f4ff;margin-bottom:0.5em;line-height:1.3;">📚 Different Training Data</div><div style="color:rgba(232,244,255,0.65);font-size:0.95em;line-height:1.55;">Models trained on different corpora have different knowledge gaps and strengths.</div></div>
+<div style="padding:1.4em 1.2em;border:1px solid rgba(0,240,255,0.35);background:rgba(5,6,15,0.5);"><div style="font-size:1.15em;font-weight:bold;color:#e8f4ff;margin-bottom:0.5em;line-height:1.3;">⚙️ Different Architectures</div><div style="color:rgba(232,244,255,0.65);font-size:0.95em;line-height:1.55;">Reasoning vs speed vs context window; each model excels at different task types.</div></div>
+<div style="padding:1.4em 1.2em;border:1px solid rgba(255,46,136,0.35);background:rgba(5,6,15,0.5);"><div style="font-size:1.15em;font-weight:bold;color:#e8f4ff;margin-bottom:0.5em;line-height:1.3;">✅ Cross-Validation</div><div style="color:rgba(232,244,255,0.65);font-size:0.95em;line-height:1.55;">Running multiple models on the same task catches bugs one model alone would miss.</div></div>
+<div style="padding:1.4em 1.2em;border:1px solid rgba(255,176,0,0.35);background:rgba(5,6,15,0.5);"><div style="font-size:1.15em;font-weight:bold;color:#e8f4ff;margin-bottom:0.5em;line-height:1.3;">🎯 Cost Optimization</div><div style="color:rgba(232,244,255,0.65);font-size:0.95em;line-height:1.55;">The right model per task won't just be about quality, it'll be about budget.</div></div>
+</div>
+
+> Only Copilot lets enterprises run Claude + Gemini + Codex + Microsoft in one governed, auditable platform.
+
+## What Is the Best Model? ❌
+
+- "What is the best model?" ➡️ **Wrong question**
+- "What is the best model for this job?" ➡️ **Good question**
+
+<table class="compact-table">
+<thead><tr><th>Dev Task</th><th>Best Model Cost/Performance (Example)</th></tr></thead>
+<tbody>
+<tr><td>Writing Requirements</td><td><span style="color:#ffb000">Claude Opus 4.8</span></td></tr>
+<tr><td>Architecture &amp; Design</td><td><span style="color:#ff2e88">Gemini 3.1 Pro</span></td></tr>
+<tr><td>Code Planning</td><td><span style="color:#ffb000">Claude Opus 4.8</span></td></tr>
+<tr><td>Code Generation</td><td><span style="color:#ffb000">Claude Sonnet 4.6</span></td></tr>
+<tr><td>Test Creation</td><td><span style="color:#ffb000">Claude Sonnet 4.6</span></td></tr>
+<tr><td>Code Review</td><td><span style="color:#00f0ff">GPT-5.5 Codex</span></td></tr>
+<tr><td>CI/CD &amp; Automation</td><td><span style="color:#00f0ff">GPT-5.4 Codex</span></td></tr>
+<tr><td>Documentation</td><td><span style="color:#ff2e88">Gemini 3.1 Pro</span></td></tr>
+<tr><td>High Volume &amp; Cost</td><td><span style="color:#9bbc0f">MAI-Code-1-Flash</span></td></tr>
+</tbody>
+</table>
+
+<div style="font-size:0.85em;margin-top:0.6em;letter-spacing:0.05em;">
+<span style="color:#ffb000;font-weight:bold;">● Anthropic</span>&nbsp;&nbsp;<span style="color:#00f0ff;font-weight:bold;">● OpenAI</span>&nbsp;&nbsp;<span style="color:#ff2e88;font-weight:bold;">● Google</span>&nbsp;&nbsp;<span style="color:#9bbc0f;font-weight:bold;">● Microsoft</span>
+</div>
+
+> Sources (benchmarks): <a href="https://www.swebench.com/" target="_blank" rel="noopener noreferrer" class="retro-link">SWE-bench Verified ↗</a> · <a href="https://www.tbench.ai/" target="_blank" rel="noopener noreferrer" class="retro-link">Terminal-Bench ↗</a> · <a href="https://aider.chat/docs/leaderboards/" target="_blank" rel="noopener noreferrer" class="retro-link">Aider Polyglot ↗</a> · <a href="https://lmarena.ai/" target="_blank" rel="noopener noreferrer" class="retro-link">LMArena ↗</a>. Models are examples only and vary by task and preference.

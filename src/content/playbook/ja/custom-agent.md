@@ -17,6 +17,12 @@ links:
   - group: 📖 リファレンス（共通）
     label: GitHub Docs — Custom agents configuration
     url: https://docs.github.com/en/copilot/reference/custom-agents-configuration
+  - group: 🏛️ Organization / Enterprise
+    label: GitHub Docs — Preparing to use custom agents in your organization
+    url: https://docs.github.com/en/enterprise-cloud@latest/copilot/how-tos/administer-copilot/manage-for-organization/prepare-for-custom-agents
+  - group: 🏛️ Organization / Enterprise
+    label: GitHub Docs — Preparing to use custom agents in your enterprise
+    url: https://docs.github.com/en/enterprise-cloud@latest/copilot/how-tos/administer-copilot/manage-for-enterprise/manage-agents/prepare-for-custom-agents
   - group: ☁️ Cloud Agent
     label: GitHub Docs — Creating custom agents for Copilot cloud agent
     url: https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/create-custom-agents
@@ -28,7 +34,13 @@ links:
     url: https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/create-custom-agents-for-cli
   - group: 🆚 VS Code
     label: VS Code Docs — Custom agents
-    url: https://code.visualstudio.com/docs/copilot/customization/custom-agents
+    url: https://code.visualstudio.com/docs/agent-customization/custom-agents
+  - group: 🆚 VS Code
+    label: VS Code Docs — Subagents
+    url: https://code.visualstudio.com/docs/agents/subagents
+  - group: 📰 発表
+    label: "Built-in Explore subagent (VS Code 1.110)"
+    url: https://github.blog/changelog/2026-03-06-github-copilot-in-visual-studio-code-v1-110-february-release
   - group: 🌟 コミュニティ例
     label: github/awesome-copilot — Custom agents
     url: https://github.com/github/awesome-copilot/tree/main/agents
@@ -53,20 +65,26 @@ Custom Agent は **プロンプトだけ** ではなく、エージェントの�
 | --- | --- | --- |
 | Identity | 何者として振る舞うか | `Planner`, `Security Reviewer`, `Test Specialist` |
 | Description | いつ呼ぶべきか | 「実装前に計画を作る時」 |
-| Tools | どの道具を使えるか | `read`, `search`, `edit`, `github/*` |
+| Tools | どの道具を使えるか | `read`, `search`, `edit`, `agent`, `github/*` |
+| Agents | どのサブエージェントに委任できるか（`tools` に `agent` が必要） | `Research`, `Reviewer`, `*` |
 | Model | どのモデルで動くか | 設計は強いモデル、探索は速いモデル |
 | Target | どの実行環境で使うか | `github-copilot`, `vscode` |
 | MCP | 専用の外部ツール | Jira, Figma, Playwright, internal API |
 | Prompt | 判断基準・出力形式 | 成功条件、禁止事項、レビュー観点 |
 
-## 2 つのスコープ
+## 4 つのスコープ
 
-|  | 👥 チーム共有 | 👤 個人用 |
-| --- | --- | --- |
-| 📁 場所 | `.github/agents/*.agent.md` | `~/.copilot/agents/` |
-| 🎯 適用範囲 | その repository / workspace | 自分の全 workspace |
-| 🤝 共有性 | Git 管理してチームで共有 | ローカル専用 |
-| 💡 用途 | チーム標準の Planner / Reviewer / Tester | 個人の作業スタイル・好み |
+同じ `.agent.md` を 4 つのレベルで配布できる。適用範囲が広いほどガバナンスが重要になる。
+
+|  | 🏢 Enterprise | 🏛️ Organization | 👥 Repository | 👤 個人用 |
+| --- | --- | --- | --- | --- |
+| 📁 場所 | 指定した org の `.github-private` → `/agents/` | org の `.github` または `.github-private` → `/agents/` | `.github/agents/` | `~/.copilot/agents/` |
+| 🎯 適用範囲 | enterprise 内の全 repository | organization のメンバー全員 | その repository / workspace | 自分の全 workspace |
+| 🤝 管理者 | enterprise owner / AI manager | organization owner | repository のチーム（Git 管理） | 自分だけ |
+| 💡 用途 | 全社標準・コンプライアンス | 部門標準の Planner / Reviewer | プロジェクト固有の Tester / Reviewer | 個人の作業スタイル・好み |
+
+> 🆕 Organization / Enterprise スコープは public preview。配布元リポジトリへのアクセス権がないメンバーにも agent が届く。
+> 🛡️ Enterprise owner は ruleset で agent ファイルを保護できる。対象を指定した organization に絞らないと、org owner による organization レベル agent の編集までブロックされる。
 
 ## `.agent.md` の中身
 
@@ -105,25 +123,32 @@ Figma の仕様と Pull Request の差分を比較し、見た目・余白・色
 
 > 良い Custom Agent は「誰か」ではなく、**どの判断を任せるか** が明確。
 
-## 組み込みエージェント例
+## Agent と内部 Subagent
 
-Copilot Chat や CLI にも、最初から目的別の agent が入っている。  
-Custom Agent は、この考え方を **自分のチーム用に増やす仕組み**。
+VS Code でユーザーが選べるのは **Agent、Plan、Ask**。`searchSubagent` のような内部 helper は、別の Agent が呼び出す tool であり、選択可能な `.agent.md` profile ではない。
 
-| Surface | Agent | 何をする？ |
+| Surface | Agent / tool | 何をする？ |
 | --- | --- | --- |
-| Copilot Chat / VS Code | Ask | 変更を加えずに質問に答える |
-| Copilot Chat / VS Code | Explore | 高速な read-only のコードベース探索と Q&A subagent |
+| Copilot Chat / VS Code | Agent | 編集と tool を使って複雑な task を実装する |
+| Copilot Chat / VS Code | Ask | 変更せずに質問へ回答し、必要な調査を行う |
 | Copilot Chat / VS Code | Plan | 調査して、複数ステップの計画を組み立てる |
-| Copilot CLI | Explore | Quick codebase analysis。main context に追加せず、コードについて質問できる |
-| Copilot CLI | Task | tests / builds などのコマンドを実行し、成功時は短い要約、失敗時は full output を返す |
-| Copilot CLI | General-purpose | Full toolset と高品質 reasoning が必要な complex multi-step task を別 context で処理する |
-| Copilot CLI | Rubber-duck | 計画や実装に高シグナルなフィードバックを返し、bug・logic error・設計の不備を指摘する（コードは変更しない） |
-| Copilot CLI | Code-review | 変更をレビューし、本当に重要な issue だけを低ノイズで指摘する |
-| Copilot CLI | Research | 指示に基づき徹底的に検索する subagent。GitHub repo を調べ、ファイルを取得し、根拠を citation 付きで報告する |
-| Copilot CLI | Security-review | 変更を security 観点でレビューし、確度の高い脆弱性（11 カテゴリ）を severity・confidence 付きで指摘する |
+| VS Code internal | `searchSubagent` | 独立した context で並列に codebase を調査し、summary を返す |
 
-> 画面上では preview / UI によって表示名が短く見えることがあるが、CLI docs の正式名は `General-purpose` と `Code-review`。CLI で独自エージェントを作る方法は <a href="https://docs.github.com/en/copilot/concepts/agents/copilot-cli/about-custom-agents" target="_blank" rel="noopener noreferrer" class="retro-link">About Copilot CLI custom agents</a> ／ <a href="https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/create-custom-agents-for-cli" target="_blank" rel="noopener noreferrer" class="retro-link">Create custom agents for CLI</a> を参照。
+> 🔑 VS Code の旧 Explore 相当の動作は `searchSubagent` に移った。Prompt と tool は TypeScript/TSX で実装され、編集可能な Explore `.agent.md` は存在しない。
+
+## Copilot CLI の組み込み Subagent
+
+| Agent | 得意な task |
+| --- | --- |
+| Explore | 高速で read-only の codebase 調査 |
+| Task | Tests、builds、出力の多い command の実行 |
+| General-purpose | Full toolset を使う複雑な multi-step task |
+| Rubber-duck | 計画や実装を独立レビュー。`/subagents` で別の model を割り当て、作成に使った model とは異なる視点で test できる |
+| Code-review | Diff の確度が高い review |
+| Research | Citation 付きの GitHub と Web の徹底調査 |
+| Security-review | 確度が高い脆弱性 review |
+
+> 🦆 Rubber-duck の強みは **cross-model review**。同じ model に自己評価させるのではなく、別の model に計画や実装を批判させることで、見落としや思考の偏りを発見しやすくなる。
 
 ## ハーネスの中で何が起きる？
 
@@ -235,3 +260,42 @@ Custom Agent は、この考え方を **自分のチーム用に増やす仕組�
   <text x="1060" y="236" fill="#e8f4ff" font-size="13" font-weight="bold" text-anchor="end">メインに戻す</text>
 </svg>
 </figure>
+
+## Custom Agent で適材適所の LLM を活用
+
+AI モデルは、それぞれ異なるデータ・異なるアーキテクチャで学習されている。**すべてに最強な単一モデルは存在しない。**
+
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.2em;margin:1.8em 0;">
+<div style="padding:1.4em 1.2em;border:1px solid rgba(155,188,15,0.35);background:rgba(5,6,15,0.5);"><div style="font-size:1.15em;font-weight:bold;color:#e8f4ff;margin-bottom:0.5em;line-height:1.3;">📚 異なる学習データ</div><div style="color:rgba(232,244,255,0.65);font-size:0.95em;line-height:1.55;">学習コーパスが違えば、知識の穴と強みも変わる。</div></div>
+<div style="padding:1.4em 1.2em;border:1px solid rgba(0,240,255,0.35);background:rgba(5,6,15,0.5);"><div style="font-size:1.15em;font-weight:bold;color:#e8f4ff;margin-bottom:0.5em;line-height:1.3;">⚙️ 異なるアーキテクチャ</div><div style="color:rgba(232,244,255,0.65);font-size:0.95em;line-height:1.55;">推論力・速度・コンテキスト長。モデルごとに得意なタスクが違う。</div></div>
+<div style="padding:1.4em 1.2em;border:1px solid rgba(255,46,136,0.35);background:rgba(5,6,15,0.5);"><div style="font-size:1.15em;font-weight:bold;color:#e8f4ff;margin-bottom:0.5em;line-height:1.3;">✅ クロス検証</div><div style="color:rgba(232,244,255,0.65);font-size:0.95em;line-height:1.55;">同じタスクを複数モデルで走らせると、1 モデルでは見逃すバグに気づける。</div></div>
+<div style="padding:1.4em 1.2em;border:1px solid rgba(255,176,0,0.35);background:rgba(5,6,15,0.5);"><div style="font-size:1.15em;font-weight:bold;color:#e8f4ff;margin-bottom:0.5em;line-height:1.3;">🎯 コスト最適化</div><div style="color:rgba(232,244,255,0.65);font-size:0.95em;line-height:1.55;">タスクごとの最適モデル選びは、品質だけでなく予算の話にもなる。</div></div>
+</div>
+
+> Claude + Gemini + Codex + Microsoft を、統制・監査可能な **単一プラットフォーム** で動かせるのは Copilot だけ。
+
+## ベストなモデルは？ ❌
+
+- 「一番いいモデルは？」 ➡️ **間違った問い**
+- 「このタスクに一番いいモデルは？」 ➡️ **良い問い**
+
+<table class="compact-table">
+<thead><tr><th>開発タスク</th><th>ベストなモデル：コスト/性能（例）</th></tr></thead>
+<tbody>
+<tr><td>要件定義</td><td><span style="color:#ffb000">Claude Opus 4.8</span></td></tr>
+<tr><td>アーキテクチャ・設計</td><td><span style="color:#ff2e88">Gemini 3.1 Pro</span></td></tr>
+<tr><td>コード計画</td><td><span style="color:#ffb000">Claude Opus 4.8</span></td></tr>
+<tr><td>コード生成</td><td><span style="color:#ffb000">Claude Sonnet 4.6</span></td></tr>
+<tr><td>テスト作成</td><td><span style="color:#ffb000">Claude Sonnet 4.6</span></td></tr>
+<tr><td>コードレビュー</td><td><span style="color:#00f0ff">GPT-5.5 Codex</span></td></tr>
+<tr><td>CI/CD・自動化</td><td><span style="color:#00f0ff">GPT-5.4 Codex</span></td></tr>
+<tr><td>ドキュメント</td><td><span style="color:#ff2e88">Gemini 3.1 Pro</span></td></tr>
+<tr><td>大量処理・コスト重視</td><td><span style="color:#9bbc0f">MAI-Code-1-Flash</span></td></tr>
+</tbody>
+</table>
+
+<div style="font-size:0.85em;margin-top:0.6em;letter-spacing:0.05em;">
+<span style="color:#ffb000;font-weight:bold;">● Anthropic</span>&nbsp;&nbsp;<span style="color:#00f0ff;font-weight:bold;">● OpenAI</span>&nbsp;&nbsp;<span style="color:#ff2e88;font-weight:bold;">● Google</span>&nbsp;&nbsp;<span style="color:#9bbc0f;font-weight:bold;">● Microsoft</span>
+</div>
+
+> 出典（ベンチマーク）：<a href="https://www.swebench.com/" target="_blank" rel="noopener noreferrer" class="retro-link">SWE-bench Verified ↗</a> ・ <a href="https://www.tbench.ai/" target="_blank" rel="noopener noreferrer" class="retro-link">Terminal-Bench ↗</a> ・ <a href="https://aider.chat/docs/leaderboards/" target="_blank" rel="noopener noreferrer" class="retro-link">Aider Polyglot ↗</a> ・ <a href="https://lmarena.ai/" target="_blank" rel="noopener noreferrer" class="retro-link">LMArena ↗</a>。モデルはあくまで一例で、タスクや好みによって変わる。
