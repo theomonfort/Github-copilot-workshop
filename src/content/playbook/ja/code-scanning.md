@@ -12,7 +12,7 @@ accent:
   hex: "#00f0ff"
 order: 19.4
 category: secure
-related: ['github-advanced-security', 'dependabot', 'secret-scanning']
+related: ['code-quality', 'github-advanced-security', 'dependabot', 'secret-scanning']
 links:
   - group: 📖 公式ドキュメント
     label: About code scanning
@@ -20,6 +20,9 @@ links:
   - group: 📖 公式ドキュメント
     label: About CodeQL
     url: https://docs.github.com/en/code-security/code-scanning/introduction-to-code-scanning/about-code-scanning-with-codeql
+  - group: 📖 公式ドキュメント
+    label: Code scanning setup types
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/code-scanning/setup-types
   - group: 📖 公式ドキュメント
     label: Configuring default setup
     url: https://docs.github.com/en/code-security/code-scanning/enabling-code-scanning/configuring-default-setup-for-code-scanning
@@ -96,7 +99,7 @@ CodeQL は **コードを「クエリ可能なデータ」に変換** してか�
 
 Code Scanning 最大のキラー機能。CodeQL のアラートに対して **AI が修正コードを生成** し、PR にそのままコミットできる。
 
-- 🤖 **どう動く** — アラートを LLM(GPT-4 系)に渡し、該当コード + 周辺コンテキスト + CodeQL の説明を元に diff を生成
+- 🤖 **どう動く** — アラートを Copilot に渡し、該当コード + 周辺コンテキスト + CodeQL の説明を元に diff を生成
 - 💬 **どこに表示** — アラート画面 **および** PR にインライン表示。コミット先は **既存ブランチ** または **新規ブランチ** から選択
 - ⚡ **MTTR 短縮** — GitHub の社内データで修正時間が 3〜4 倍速に
 - 🌐 **対応言語** — JavaScript/TypeScript、Python、Java/Kotlin、C# ほか CodeQL がサポートする言語
