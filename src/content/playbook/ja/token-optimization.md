@@ -14,6 +14,9 @@ order: 16.5
 category: operate
 related: ['context-engineering', 'agentic-workflow', 'instructions', 'custom-agent', 'agent-skills', 'cli', 'copilot-memory']
 links:
+  - group: 📰 発表
+    label: Auto のティア、Efficiency / Balance / Intelligence（2026 年 9 月 14 日）
+    url: https://github.blog/changelog/2026-09-14-configure-cost-and-quality-in-copilot-auto-model-selection/
   - label: Context Rot — Product Talk
     url: https://www.producttalk.org/context-rot
   - label: GitHub Well-Architected
@@ -34,7 +37,7 @@ links:
 
 <div class="hero-quote hero-quote-team">
   <p>
-    AI のコストは上がり続けています ── 1 トークンが高くなったのではなく、エージェントが <strong>多くのステップ</strong> をこなすようになったから。主なレバーは 2 つ ── <strong>質の高いエージェント</strong> と <strong>タスクに合ったエージェント選び</strong>。
+    AI のコストは上がり続けています。モデルは高性能になるほど単価も上がり、エージェントモードではステップやサブエージェントも増える。つまりコストは両面から膨らみます。最大のレバーは <strong>ハーネスエンジニアリング</strong>。エージェントの質を高め、<strong>タスクに合ったエージェント</strong>を選び、エージェントに <strong>良い環境</strong> を用意することです。
   </p>
 </div>
 
@@ -122,9 +125,9 @@ links:
 ## Advice 3 — プロンプトエンジニアリング
 
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2em;margin:1.8em 0;">
-<div style="padding:1.4em 1.2em;border:1px solid rgba(155,188,15,0.35);background:rgba(5,6,15,0.5);"><div style="font-family:'DotGothic16','Courier New',monospace;font-size:0.78em;letter-spacing:0.2em;color:#9bbc0f;text-transform:uppercase;margin-bottom:0.8em;">✓ ルール 01</div><div style="font-size:1.2em;font-weight:bold;color:#e8f4ff;margin-bottom:0.5em;line-height:1.3;">明確に</div><div style="color:rgba(232,244,255,0.65);font-size:0.95em;line-height:1.5;">目的・制約・「完了」の条件まで書く。</div></div>
-<div style="padding:1.4em 1.2em;border:1px solid rgba(0,240,255,0.35);background:rgba(5,6,15,0.5);"><div style="font-family:'DotGothic16','Courier New',monospace;font-size:0.78em;letter-spacing:0.2em;color:#00f0ff;text-transform:uppercase;margin-bottom:0.8em;">✓ ルール 02</div><div style="font-size:1.2em;font-weight:bold;color:#e8f4ff;margin-bottom:0.5em;line-height:1.3;">停止条件を入れる</div><div style="color:rgba(232,244,255,0.65);font-size:0.95em;line-height:1.5;">「X なら止まれ」で探索の暴走を防ぐ。</div></div>
-<div style="padding:1.4em 1.2em;border:1px solid rgba(255,176,0,0.35);background:rgba(5,6,15,0.5);"><div style="font-family:'DotGothic16','Courier New',monospace;font-size:0.78em;letter-spacing:0.2em;color:#ffb000;text-transform:uppercase;margin-bottom:0.8em;">✓ ルール 03</div><div style="font-size:1.2em;font-weight:bold;color:#e8f4ff;margin-bottom:0.5em;line-height:1.3;">事前にコンテキストを渡す</div><div style="color:rgba(232,244,255,0.65);font-size:0.95em;line-height:1.5;">ファイル・フォルダ・URL・エラーログ ── agent に探させないで済むものは全部。</div></div>
+<div style="padding:1.4em 1.2em;border:1px solid rgba(155,188,15,0.35);background:rgba(5,6,15,0.5);"><div style="font-family: 'Noto Sans JP', sans-serif;font-size:0.78em;letter-spacing:0.2em;color:#9bbc0f;text-transform:uppercase;margin-bottom:0.8em;">✓ ルール 01</div><div style="font-size:1.2em;font-weight:bold;color:#e8f4ff;margin-bottom:0.5em;line-height:1.3;">明確に</div><div style="color:rgba(232,244,255,0.65);font-size:0.95em;line-height:1.5;">目的・制約・「完了」の条件まで書く。</div></div>
+<div style="padding:1.4em 1.2em;border:1px solid rgba(0,240,255,0.35);background:rgba(5,6,15,0.5);"><div style="font-family: 'Noto Sans JP', sans-serif;font-size:0.78em;letter-spacing:0.2em;color:#00f0ff;text-transform:uppercase;margin-bottom:0.8em;">✓ ルール 02</div><div style="font-size:1.2em;font-weight:bold;color:#e8f4ff;margin-bottom:0.5em;line-height:1.3;">停止条件を入れる</div><div style="color:rgba(232,244,255,0.65);font-size:0.95em;line-height:1.5;">「X なら止まれ」で探索の暴走を防ぐ。</div></div>
+<div style="padding:1.4em 1.2em;border:1px solid rgba(255,176,0,0.35);background:rgba(5,6,15,0.5);"><div style="font-family: 'Noto Sans JP', sans-serif;font-size:0.78em;letter-spacing:0.2em;color:#ffb000;text-transform:uppercase;margin-bottom:0.8em;">✓ ルール 03</div><div style="font-size:1.2em;font-weight:bold;color:#e8f4ff;margin-bottom:0.5em;line-height:1.3;">事前にコンテキストを渡す</div><div style="color:rgba(232,244,255,0.65);font-size:0.95em;line-height:1.5;">ファイル・フォルダ・URL・エラーログ ── agent に探させないで済むものは全部。</div></div>
 </div>
 
 > 💡 **プロンプトは常時オン** ── 一度送ると、以降のターンすべてで system + tools と一緒に課金されます。だからこそ、丁寧に書く価値があります。
@@ -134,7 +137,7 @@ links:
 **タスクを分割統治する。** 調査・計画・実装を **1 セッション** でまとめてやらないでください。コンテキストが汚染され、エージェントが迷子になります。3 つの順次エージェントに分け、それぞれに必要最小限のコンテキストだけを渡します。
 
 <figure class="rpi-pipeline" style="margin:2em 0;">
-<svg viewBox="0 130 1100 475" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;font-family:'DotGothic16','Courier New',monospace;">
+<svg viewBox="0 130 1100 475" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;font-family: 'Noto Sans JP', sans-serif;">
 <rect x="155" y="150" width="320" height="68" rx="10" fill="#0a0e27" stroke="#ff2e88" stroke-width="2"/>
 <text x="175" y="180" fill="#e8f4ff" font-size="13" font-weight="bold">“I WANT TO CHANGE X.</text>
 <text x="175" y="202" fill="#e8f4ff" font-size="13" font-weight="bold">WHAT FILES ARE RELEVANT?”</text>
@@ -223,7 +226,7 @@ links:
 テスト・リンター・型チェック・セキュリティスキャンは「人間のためのチェック」だけではありません ── 1 回のバグ修正が 4 段重ねの劣化スパイラルになるのを止める **トークン節約のガードレール** です。あれば **入った同じループでエラーが捕まり**、無ければ CI 時間・Copilot レビュー往復・人間のトリアージ時間で支払う羽目になります。
 
 <figure class="rpi-pipeline" style="margin:2em 0;">
-<svg viewBox="0 140 1000 370" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;font-family:'DotGothic16','Courier New',monospace;">
+<svg viewBox="0 140 1000 370" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;font-family: 'Noto Sans JP', sans-serif;">
 <text x="20" y="183" fill="#e8f4ff" font-size="13" font-weight="bold">WITH</text>
 <text x="20" y="200" fill="#e8f4ff" font-size="13" font-weight="bold">UNIT TESTS</text>
 <rect x="160" y="160" width="95" height="55" rx="12" fill="#9bbc0f"/>
@@ -291,9 +294,9 @@ links:
 
 > 📊 **証拠**: Copilot CLI チームのコードベースは **半分以上がテスト** で構成されています。
 
-## Advice 6 — モデル選びと Auto モード
+## Advice 6 — モデル選びと Auto モード <a class="h2-doc" href="https://docs.github.com/copilot/concepts/models/auto-model-selection" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-ティア選びを間違えると、同じタスクでも **約 24 倍のコスト差** が出ます。typo 修正に Reasoning モデルを使ってしまうのが一番ありがちなムダです。意図的に選ぶ ── または Auto に任せましょう。
+タスクに合うモデルを選びましょう。typo 修正に Reasoning モデルの料金を払う必要はありません。
 
 <style>.advice6-models td:first-child,.advice6-models th:first-child{min-width:200px;white-space:nowrap;}</style>
 
@@ -301,20 +304,22 @@ links:
 
 | ティア | モデル | 用途 |
 | --- | --- | --- |
-| 🤖 **Auto モード** | _ものぐさのデフォルト_ | **タスクの意図** に応じてモデルを自動選択 ── プレミアムリクエストに **10% の割引** （<a class="retro-link" href="https://github.blog/changelog/2026-05-20-auto-model-selection-now-routes-based-on-your-task-in-vs-code/" target="_blank" rel="noopener">2026 年 5 月の Changelog ↗</a>） |
-| 🧠 **Reasoning** | `Opus 4.7` · `GPT-5.5` | 同期の設計・アーキテクチャ・デバッグ・難しいレビュー。⚠️ 実装には使わない ── 仕様を再考しがち |
-| ⚡ **Mid-tier** | `Sonnet` · `GPT-5.4` | 非同期の実装。Cloud Agent タスクの大半はここ |
-| 🪶 **Low-tier** | `Haiku` · `GPT-mini` | 小さなリファクタ、繰り返し作業、ドキュメント更新 |
+| 🤖 **Auto モード** | _タスクに応じて選択_ | Efficiency / Balance / Intelligence。有料プランのモデル利用料金は **10% 割引**。<a class="retro-link" href="https://github.blog/changelog/2026-09-14-configure-cost-and-quality-in-copilot-auto-model-selection/" target="_blank" rel="noopener noreferrer">9 月 14 日の Changelog ↗</a> |
+| 🧠 **Reasoning** | `Opus 4.7` · `GPT-5.5` | 計画、設計、難しいデバッグやレビュー |
+| ⚡ **Mid-tier** | `Sonnet` · `GPT-5.4` | 実装、Cloud Agent タスク |
+| 🪶 **Low-tier** | `Haiku` · `GPT-mini` | 小さなリファクタ、ドキュメント更新 |
 
 </div>
+
+> ⚠️ **毎プロンプトで即座に切り替わるとは限りません。** キャッシュの区切りで選択します。ただし CLI はコンパクション時だけではありません。<a class="retro-link" href="https://github.com/github/copilot-cli/releases/tag/v1.0.81" target="_blank" rel="noopener noreferrer">v1.0.81 で会話中の適応を追加 ↗</a>。
 
 ## Advice 7 — トークナイズは言語中立ではない
 
 同じ意味の文でも、日本語は英語の **約 2〜3 倍のトークン** を消費します。`copilot-instructions.md`・Skill の description・MCP のツール定義・コードコメントなど **常時オン** のテキストでは、この差が **毎ループに課税** されます。
 
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.2em;margin:1.8em 0;">
-<div style="padding:1.4em 1.2em;border:1px solid rgba(155,188,15,0.35);background:rgba(5,6,15,0.5);"><div style="font-family:'DotGothic16','Courier New',monospace;font-size:0.78em;letter-spacing:0.2em;color:#9bbc0f;text-transform:uppercase;margin-bottom:0.8em;">🇬🇧 ENGLISH</div><div style="font-size:1.05em;color:#e8f4ff;margin-bottom:1.2em;line-height:1.5;font-style:italic;">Always run tests before committing changes</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:1em;line-height:1.4;"><span style="background:#9bbc0f;color:#05060f;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">Always</span><span style="background:#9bbc0f;color:#05060f;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">·run</span><span style="background:#9bbc0f;color:#05060f;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">·tests</span><span style="background:#9bbc0f;color:#05060f;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">·before</span><span style="background:#9bbc0f;color:#05060f;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">·committing</span><span style="background:#9bbc0f;color:#05060f;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">·changes</span></div><div style="font-size:1.1em;color:#9bbc0f;font-weight:700;font-family:'JetBrains Mono',monospace;">= 6 トークン</div></div>
-<div style="padding:1.4em 1.2em;border:1px solid rgba(255,46,136,0.35);background:rgba(5,6,15,0.5);"><div style="font-family:'DotGothic16','Courier New',monospace;font-size:0.78em;letter-spacing:0.2em;color:#ff2e88;text-transform:uppercase;margin-bottom:0.8em;">🇯🇵 JAPANESE</div><div style="font-size:1.05em;color:#e8f4ff;margin-bottom:1.2em;line-height:1.5;font-style:italic;">変更をコミットする前に必ずテストを実行して</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:1em;line-height:1.4;"><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">変更</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">を</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">コミ</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">ット</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">する</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">前</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">に</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">必</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">ず</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">テ</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">スト</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">を</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">実</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">行</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">して</span></div><div style="font-size:1.1em;color:#ff2e88;font-weight:700;font-family:'JetBrains Mono',monospace;">= 15 トークン（約 2.5 倍）</div></div>
+<div style="padding:1.4em 1.2em;border:1px solid rgba(155,188,15,0.35);background:rgba(5,6,15,0.5);"><div style="font-family: 'Noto Sans JP', sans-serif;font-size:0.78em;letter-spacing:0.2em;color:#9bbc0f;text-transform:uppercase;margin-bottom:0.8em;">🇬🇧 ENGLISH</div><div style="font-size:1.05em;color:#e8f4ff;margin-bottom:1.2em;line-height:1.5;font-style:italic;">Always run tests before committing changes</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:1em;line-height:1.4;"><span style="background:#9bbc0f;color:#05060f;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">Always</span><span style="background:#9bbc0f;color:#05060f;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">·run</span><span style="background:#9bbc0f;color:#05060f;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">·tests</span><span style="background:#9bbc0f;color:#05060f;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">·before</span><span style="background:#9bbc0f;color:#05060f;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">·committing</span><span style="background:#9bbc0f;color:#05060f;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">·changes</span></div><div style="font-size:1.1em;color:#9bbc0f;font-weight:700;font-family:'JetBrains Mono',monospace;">= 6 トークン</div></div>
+<div style="padding:1.4em 1.2em;border:1px solid rgba(255,46,136,0.35);background:rgba(5,6,15,0.5);"><div style="font-family: 'Noto Sans JP', sans-serif;font-size:0.78em;letter-spacing:0.2em;color:#ff2e88;text-transform:uppercase;margin-bottom:0.8em;">🇯🇵 JAPANESE</div><div style="font-size:1.05em;color:#e8f4ff;margin-bottom:1.2em;line-height:1.5;font-style:italic;">変更をコミットする前に必ずテストを実行して</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:1em;line-height:1.4;"><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">変更</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">を</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">コミ</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">ット</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">する</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">前</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">に</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">必</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">ず</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">テ</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">スト</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">を</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">実</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">行</span><span style="background:#ff2e88;color:#e8f4ff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.82em;font-weight:600;">して</span></div><div style="font-size:1.1em;color:#ff2e88;font-weight:700;font-family:'JetBrains Mono',monospace;">= 15 トークン（約 2.5 倍）</div></div>
 </div>
 
 <div style="font-size:0.85em;color:rgba(232,244,255,0.55);margin:-0.5em 0 1.5em;font-style:italic;">トークン数は OpenAI の <code>o200k_base</code>（<strong>GPT-5.x・GPT-4o・o1・o3</strong> が使用するトークナイザ）で計測。旧 <code>cl100k_base</code>（GPT-4 / GPT-3.5）では日本語側が 22 トークン（約 3.7 倍）でした。</div>

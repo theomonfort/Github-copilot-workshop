@@ -26,6 +26,15 @@ links:
   - group: 📖 Official Documentation
     label: Actions runner pricing
     url: https://docs.github.com/en/billing/reference/actions-runner-pricing
+  - group: 💰 Billing
+    label: Set up budgets and alerts
+    url: https://docs.github.com/en/billing/how-tos/set-up-budgets
+  - group: 💰 Billing
+    label: Using soft budgets to monitor without blocking
+    url: https://docs.github.com/en/billing/tutorials/soft-budgets
+  - group: 💰 Billing
+    label: Actions usage metrics
+    url: https://docs.github.com/en/actions/concepts/metrics
   - group: 🛒 Marketplace
     label: GitHub Marketplace · Actions
     url: https://github.com/marketplace?type=actions
@@ -44,12 +53,58 @@ links:
 
 <div class="hero-quote">
   <p>
-    <strong>GitHub Actions</strong> is a CI/CD platform that automatically runs steps written as YAML inside your repository, triggered by events like push / PR / schedule.
+    <strong>GitHub Actions</strong> is a continuous integration and continuous delivery (CI/CD) platform.
   </p>
   <p>
-    Each job spins up a <strong>fresh, disposable VM</strong> (runner), clones the entire repository, runs the steps in order, and then discards the VM. You can automate tests, builds, deployments, releases, and issue management — anything goes.
+    But it <strong>goes beyond just DevOps</strong>: run workflows when <strong>any event happens in your repository</strong> — push, PR, issue, label, schedule, and more. It's automation for <strong>almost anything</strong>.
   </p>
 </div>
+
+## What workflow does it automate?
+
+Beyond CI/CD, GitHub Actions can automate **every stage of the SDLC**, all triggered by events.
+
+<img src="/github-actions-sdlc.svg" alt="GitHub Actions across the whole SDLC (Plan, Code, Build, Test, Release, Deploy, Operate, Monitor)" style="width:100%;max-width:760px;display:block;margin:1.2em auto;" />
+
+## The metrics it improves (DORA)
+
+The point of automation (CI/CD, tests, reviews) is to raise both **speed and stability**. The yardstick is the four <a class="retro-link" href="https://dora.dev/" target="_blank" rel="noopener noreferrer">DORA metrics ↗</a> — push them toward Elite.
+
+| DORA metric | 🟢 Elite | 🟣 High | 🟠 Medium | 🔴 Low |
+| --- | --- | --- | --- | --- |
+| 🚀 Deployment frequency | Multiple times/day | Once/day–once/week | Once/week–once/month | Once/month–once/6 months |
+| ⏱️ Lead time for changes | < 1 day | 1 day–1 week | 1 week–1 month | 1 month–6 months |
+| ❌ Change failure rate | 0–15% | 0–15% | 0–15% | 46–60% |
+| 🔧 Mean time to recovery | < 1 hour | < 1 day | < 1 day | 1 week–1 month |
+
+> 🎯 Automation's value: raise speed (frequency, lead time) and stability (failure rate, recovery) **at the same time**.
+
+## Architecture: clone → run → destroy
+
+Your GitHub repo is cloned onto a **disposable cloud VM**; steps (like tests) run there, results are sent back, and the **VM is destroyed**.
+
+```mermaid
+flowchart LR
+  REPO["🐙 GitHub<br/>📦 Repository"]
+  VM["☁️ Runner VM<br/>fresh &amp; disposable"]
+  RUN["▶️ Run steps<br/>✅ test · 🏗️ build"]
+  GONE["💥 VM destroyed"]
+  REPO -->|① event triggers| VM
+  VM -->|② clone repo| RUN
+  RUN -->|③ send results back| REPO
+  RUN -->|④ job ends| GONE
+
+  classDef gh fill:#0a0e27,stroke:#00f0ff,color:#00f0ff,stroke-width:2px
+  classDef vm fill:#1a0a2e,stroke:#ffb000,color:#ffb000,stroke-width:2px
+  classDef run fill:#0a1a14,stroke:#9bbc0f,color:#9bbc0f,stroke-width:2px
+  classDef gone fill:#2a0a0a,stroke:#ff5555,color:#ff5555,stroke-width:2px
+  class REPO gh
+  class VM vm
+  class RUN run
+  class GONE gone
+```
+
+> 🔁 Results return as checks, logs, and artifacts; the VM is discarded every run.
 
 ## How it works (core concepts)
 
@@ -151,6 +206,26 @@ The moment you push, execution logs appear in the **Actions tab**. Failures show
 > 🛠️ **Self-hosted runners incur no GitHub billing** (as of now). Running on your own server / k8s means execution time is free — you just pay for your own infrastructure and electricity.  
 > 🌍 Billing is **usage-time-based, not per active committer**. Even a solo developer who runs CI heavily will see charges.
 
-## Cloud Agent / Copilot Code Review also run here
+## Your CI is not the only thing burning minutes <a class="h2-doc" href="https://docs.github.com/en/billing/tutorials/soft-budgets" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-> 🤖 When **Copilot Cloud Agent** implements a task, or when **Copilot Code Review** reads a PR — both run as **GitHub Actions workflows** under the hood. They consume Actions free-tier minutes and appear as Actions logs. See <a class="retro-link" href="/en/playbook/cloud-agent/">Cloud Agent</a> and <a class="retro-link" href="/en/playbook/copilot-code-review/">Copilot Code Review</a> for details.
+Alongside the CI/CD you wrote yourself, the headline Copilot and GHAS features run on **the same GitHub-hosted runners** and turn **the same Actions meter**.
+
+<div class="tbl-compact">
+
+| What spends Actions minutes | How it is billed |
+| --- | --- |
+| 🤖 <a class="retro-link" href="/en/playbook/cloud-agent/">Cloud Agent</a> | Every task it implements |
+| 👀 <a class="retro-link" href="/en/playbook/copilot-code-review/">Copilot Code Review</a> | Every review on a private repo |
+| 🔍 <a class="retro-link" href="/en/playbook/code-scanning/">Code Scanning (CodeQL)</a> | Every push, PR and weekly scan |
+| 🩺 <a class="retro-link" href="/en/playbook/code-quality/">Code Quality</a> | Every scan it runs |
+| ⚙️ Your own CI/CD | Whatever your workflows do |
+
+</div>
+
+### A hard budget stops all of it at once
+
+Exhaust a budget that has **Stop usage when budget limit is reached** ticked and **every GitHub-hosted runner halts**. It is not just CI going red: CodeQL scanning and Copilot stop in the same instant.
+
+- ✅ **Prefer alert-only** — leave the box unticked for a "soft budget". Owners and billing managers are emailed at **75 / 90 / 100%** and nothing is blocked
+- 📊 **Measure before you cap** — <code>github.com/enterprises/&lt;enterprise slug&gt;/actions/metrics/usage</code> breaks minutes down by workflow, repo and OS
+- 🛠️ **Self-hosted runners are not billed** — the problem never arises there

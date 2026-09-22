@@ -231,7 +231,43 @@ GitHub 公式 MCP server は最初から接続済み。`gh` コマンドを叩�
 
 - **GitHub Org / Enterprise**：<a class="retro-link" href="https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-mcp-usage/configure-mcp-registry" target="_blank" rel="noopener noreferrer">レジストリを設定 ↗</a> し、<a class="retro-link" href="https://docs.github.com/en/copilot/reference/mcp-allowlist-enforcement" target="_blank" rel="noopener noreferrer">allowlist で強制 ↗</a>
 
-> 🔒 **公開とアクセスは別物：** Azure API Center に登録した server は、カタログに到達できる人には **誰でも見える**。ただし公開されるのは **メタデータだけ**。実際の **ダウンロード／接続は別で制御** できる — 社内向けの自前 server なら、stdio server は **プライベートなパッケージレジストリ**（GitHub Packages / GHCR / Azure Artifacts など）に公開し、HTTP server は **社内ネットワーク / VPN 内**に置けば、認証済みの社員だけが取得・接続できる。
+## 社内 server を非公開に保つ仕組み
+
+**カタログは公開** — 守るのは **配布元（ソース）**。Azure API Center に登録した server はカタログに到達できる人には見えるが、公開されるのは **メタデータだけ**。実際の **ダウンロード／接続は別で制御** できる。
+
+```mermaid
+flowchart LR
+  DEV["👤 開発者<br/>VS Code / Copilot<br/>@mcp を開く"]
+  AC["🌐 Azure API Center<br/>カタログ = 公開<br/>メタデータだけ（コードなし）"]
+  STDIO["◆ stdio → 🔒 プライベートレジストリ<br/>GitHub Packages / GHCR / Azure Artifacts<br/>認証トークンが必要"]
+  HTTP["◆ HTTP → 🏢 社内ネット / VPN<br/>公開インターネットから到達不可<br/>前段に SSO / ネットワーク認証"]
+  EMP1["✅ 社員は取得"]
+  OUT1["⛔ 部外者 → 401"]
+  EMP2["✅ 社員は接続"]
+  OUT2["⛔ 部外者 → 遮断"]
+  DEV --> AC
+  AC -->|パッケージ参照| STDIO
+  AC -->|リモート URL| HTTP
+  STDIO --> EMP1
+  STDIO --> OUT1
+  HTTP --> EMP2
+  HTTP --> OUT2
+
+  classDef dev fill:#0a0e27,stroke:#00f0ff,color:#00f0ff,stroke-width:2px
+  classDef cat fill:#1a0a2e,stroke:#ffb000,color:#ffb000,stroke-width:2px
+  classDef stdio fill:#0a0e27,stroke:#00f0ff,color:#00f0ff,stroke-width:2px
+  classDef http fill:#1a0a2e,stroke:#ff2e97,color:#ff2e97,stroke-width:2px
+  classDef ok fill:#0a1a14,stroke:#9bbc0f,color:#9bbc0f,stroke-width:2px
+  classDef deny fill:#2a0a0a,stroke:#ff5555,color:#ff5555,stroke-width:2px
+  class DEV dev
+  class AC cat
+  class STDIO stdio
+  class HTTP http
+  class EMP1,EMP2 ok
+  class OUT1,OUT2 deny
+```
+
+> ✅ カタログは **配布元を指すだけ**。**配布元を守れば → 実行できるのは認証済みの社員だけ**。
 
 ## MCP Registry をローカルで試す
 
@@ -244,6 +280,6 @@ GitHub 公式 MCP server は最初から接続済み。`gh` コマンドを叩�
 3. **HTTPS トンネル** — `cloudflared tunnel --url http://localhost:8080` → `https://<random>.trycloudflare.com`
 4. **接続** — トンネル URL を **MCP Registry URL** に設定（`/v0.1/servers` は付けない。Copilot が自動付与）。**Org** は Settings → Copilot → **Policies** → MCP、**Enterprise** は **AI controls** → MCP
 5. **VS Code をリロード & 確認** — Developer: Reload Window → `@mcp` で自分の registry の server だけが表示される。`Cmd + ,`（設定）で MCP 設定が **「managed by your organization」** バッジ付き（＝ Org ポリシーが効いている）か確認
-6. **GitHub Registry から seed** — `go run scripts/mirror_data/fetch_production_data.go` + `load_production_data.go`（source: `https://api.mcp.github.com/v0.1/servers`）
+6. **GitHub Registry から seed** — `go run scripts/mirror_data/fetch_production_data.go` + `load_production_data.go`（source: `https://registry.modelcontextprotocol.io/v0/servers`）
 
 > ⚠️ VS Code が **この Org の Copilot ライセンス** を使っているか確認（別アカウント/個人プランだと Org のポリシーが効かない）。`mirror_data` スクリプトは as-is なので、許可したい server に合わせて絞り込む。

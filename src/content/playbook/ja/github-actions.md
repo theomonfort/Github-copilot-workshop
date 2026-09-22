@@ -26,6 +26,15 @@ links:
   - group: 📖 公式ドキュメント
     label: Actions runner pricing
     url: https://docs.github.com/en/billing/reference/actions-runner-pricing
+  - group: 💰 課金
+    label: Set up budgets and alerts
+    url: https://docs.github.com/en/billing/how-tos/set-up-budgets
+  - group: 💰 課金
+    label: Using soft budgets to monitor without blocking
+    url: https://docs.github.com/en/billing/tutorials/soft-budgets
+  - group: 💰 課金
+    label: Actions usage metrics
+    url: https://docs.github.com/en/actions/concepts/metrics
   - group: 🛒 Marketplace
     label: GitHub Marketplace · Actions
     url: https://github.com/marketplace?type=actions
@@ -44,12 +53,58 @@ links:
 
 <div class="hero-quote">
   <p>
-    <strong>GitHub Actions</strong> は、リポジトリの中に YAML で書いた手順を、push / PR / schedule などのイベントで自動実行する CI/CD プラットフォーム。
+    <strong>GitHub Actions</strong> は「継続的インテグレーション / 継続的デリバリー(CI/CD)」のプラットフォーム。
   </p>
   <p>
-    ジョブごとに <strong>使い捨ての VM</strong>(runner)が立ち上がり、リポジトリ全体が clone されてから手順を順に実行 → 終わったら VM は破棄される。テスト・ビルド・デプロイ・リリース・Issue 自動化まで何でも書ける。
+    でも <strong>DevOps だけじゃない</strong>。push・PR・issue・label・schedule など <strong>リポジトリで起きるあらゆるイベント</strong> で workflow を走らせられる = <strong>ほぼ何でも自動化</strong> できる基盤。
   </p>
 </div>
+
+## どんな workflow を自動化できる?
+
+CI/CD だけでなく、**SDLC のあらゆる工程** をイベント起点で自動化できる。
+
+<img src="/github-actions-sdlc.svg" alt="GitHub Actions が SDLC 全体（Plan・Code・Build・Test・Release・Deploy・Operate・Monitor）で使える様子" style="width:100%;max-width:760px;display:block;margin:1.2em auto;" />
+
+## 改善する指標(DORA メトリクス)
+
+自動化(CI/CD・テスト・レビュー)の狙いは、開発の **スピードと安定性** を両立させること。ものさしは <a class="retro-link" href="https://dora.dev/" target="_blank" rel="noopener noreferrer">DORA の 4 指標 ↗</a>、これを Elite に近づける。
+
+| DORA 指標 | 🟢 Elite | 🟣 High | 🟠 Medium | 🔴 Low |
+| --- | --- | --- | --- | --- |
+| 🚀 デプロイ頻度 | 1 日に複数回 | 1 日〜1 週に 1 回 | 1 週〜1 月に 1 回 | 1 月〜6 月に 1 回 |
+| ⏱️ リードタイム | < 1 日 | 1 日〜1 週 | 1 週〜1 月 | 1 月〜6 月 |
+| ❌ 変更失敗率 | 0–15% | 0–15% | 0–15% | 46–60% |
+| 🔧 平均復旧時間(MTTR) | < 1 時間 | < 1 日 | < 1 日 | 1 週〜1 月 |
+
+> 🎯 スピード(頻度・リードタイム)と安定性(失敗率・復旧時間)を **同時に** 上げるのが自動化の価値。
+
+## アーキテクチャ:clone → 実行 → 破棄
+
+GitHub 上の repo が **クラウドの使い捨て VM** に clone され、そこで test 等を実行 → 結果を返して **VM は破棄** される。
+
+```mermaid
+flowchart LR
+  REPO["🐙 GitHub<br/>📦 Repository"]
+  VM["☁️ Runner VM<br/>使い捨て・クラウド"]
+  RUN["▶️ steps 実行<br/>✅ test ・ 🏗️ build"]
+  GONE["💥 VM 破棄"]
+  REPO -->|① event で起動| VM
+  VM -->|② repo を clone| RUN
+  RUN -->|③ 結果・ログを返す| REPO
+  RUN -->|④ 完了| GONE
+
+  classDef gh fill:#0a0e27,stroke:#00f0ff,color:#00f0ff,stroke-width:2px
+  classDef vm fill:#1a0a2e,stroke:#ffb000,color:#ffb000,stroke-width:2px
+  classDef run fill:#0a1a14,stroke:#9bbc0f,color:#9bbc0f,stroke-width:2px
+  classDef gone fill:#2a0a0a,stroke:#ff5555,color:#ff5555,stroke-width:2px
+  class REPO gh
+  class VM vm
+  class RUN run
+  class GONE gone
+```
+
+> 🔁 結果は checks・ログ・artifact として GitHub に戻り、VM は毎回破棄される。
 
 ## 仕組み(コアコンセプト)
 
@@ -151,7 +206,27 @@ push した瞬間から **Actions タブ** で実行ログが見える。失敗�
 > 🛠️ **Self-hosted runner は GitHub 課金なし**(現時点)。自前サーバー / k8s に建てれば実行時間は無料、ただしメンテと電気代は自分持ち。  
 > 🌍 課金は **active committer ベースではなく実行時間ベース**。1 人開発でも CI を回しまくれば請求が来る。
 
-## Cloud Agent / Copilot Code Review もここで動く
+## Actions 分を使うのは CI だけではない <a class="h2-doc" href="https://docs.github.com/en/billing/tutorials/soft-budgets" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-> 🤖 **Copilot Cloud Agent** がタスクを実装する時、**Copilot Code Review** が PR を読みに行く時 — どちらも裏側では **GitHub Actions の workflow** として動いている。Actions の無料枠を消費し、Actions のログとして表示される。詳細は <a class="retro-link" href="/playbook/cloud-agent/">Cloud Agent</a> ・ <a class="retro-link" href="/playbook/copilot-code-review/">Copilot Code Review</a> 参照。
+自作の CI/CD に加えて、Copilot と GHAS の主要機能が **同じ GitHub-hosted runner** の上で動き、**同じ Actions メーター** を回している。
+
+<div class="tbl-compact">
+
+| 何が Actions 分を使うか | 課金のされ方 |
+| --- | --- |
+| 🤖 <a class="retro-link" href="/playbook/cloud-agent/">Cloud Agent</a> | タスクを実装するたびに消費 |
+| 👀 <a class="retro-link" href="/playbook/copilot-code-review/">Copilot Code Review</a> | private repo のレビューで消費 |
+| 🔍 <a class="retro-link" href="/playbook/code-scanning/">Code Scanning (CodeQL)</a> | push / PR / 週次スキャンで消費 |
+| 🩺 <a class="retro-link" href="/playbook/code-quality/">Code Quality</a> | スキャンのたびに消費 |
+| ⚙️ 自作の CI/CD | workflow の定義どおり |
+
+</div>
+
+### hard budget は全部まとめて止める
+
+**Stop usage when budget limit is reached** を付けた予算を使い切ると、**GitHub-hosted runner が一斉に止まる**。CI が落ちるだけでなく、CodeQL のスキャンも Copilot も同時に止まる。
+
+- ✅ **推奨は alert only** — チェックを外せば「soft budget」。**75 / 90 / 100%** で owner と billing manager に通知が飛び、実行は止まらない
+- 📊 **止める前に実測** — <code>github.com/enterprises/&lt;enterprise slug&gt;/actions/metrics/usage</code> で workflow / repo / OS 別の内訳が見える
+- 🛠️ **self-hosted runner は課金対象外** — そもそもこの問題が起きない
 

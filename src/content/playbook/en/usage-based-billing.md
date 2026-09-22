@@ -20,6 +20,9 @@ links:
   - group: 📰 Announcement
     label: GitHub Copilot is moving to usage-based billing
     url: https://github.blog/news-insights/company-news/github-copilot-is-moving-to-usage-based-billing/
+  - group: 📰 Announcement
+    label: "AI credit pools for cost centers in the billing UI (2026-07-20)"
+    url: https://github.blog/changelog/2026-07-20-ai-credit-pools-for-cost-centers-in-the-billing-ui/
   - group: 📖 Official docs
     label: Usage-based billing for organizations and enterprises
     url: https://docs.github.com/en/copilot/concepts/billing/usage-based-billing-for-organizations-and-enterprises
@@ -71,9 +74,9 @@ As GitHub Copilot supports more advanced AI workflows, usage-based billing ties 
 A token is the **unit of AI processing** (input, output, context).
 
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2em;margin:1.6em 0;">
-<div style="padding:1.3em 1.2em;border:1px solid rgba(155,188,15,0.4);background:rgba(5,6,15,0.5);"><div style="font-family:'DotGothic16','Courier New',monospace;font-size:0.78em;letter-spacing:0.15em;color:#9bbc0f;text-transform:uppercase;margin-bottom:0.6em;">👤 Input tokens</div><div style="color:rgba(232,244,255,0.7);font-style:italic;font-size:0.95em;margin-bottom:0.6em;">What you send:</div><ul style="margin:0;padding-left:1.1em;color:#e8f4ff;font-size:0.95em;line-height:1.55;"><li>The prompt and new context</li><li>Grows with large files or codebases</li></ul></div>
-<div style="padding:1.3em 1.2em;border:1px solid rgba(0,240,255,0.4);background:rgba(5,6,15,0.5);"><div style="font-family:'DotGothic16','Courier New',monospace;font-size:0.78em;letter-spacing:0.15em;color:#00f0ff;text-transform:uppercase;margin-bottom:0.6em;">🤖 Output tokens</div><div style="color:rgba(232,244,255,0.7);font-style:italic;font-size:0.95em;margin-bottom:0.6em;">What you receive:</div><ul style="margin:0;padding-left:1.1em;color:#e8f4ff;font-size:0.95em;line-height:1.55;"><li>The response the AI generates</li><li>Usually the highest compute cost</li></ul></div>
-<div style="padding:1.3em 1.2em;border:1px solid rgba(255,176,0,0.4);background:rgba(5,6,15,0.5);"><div style="font-family:'DotGothic16','Courier New',monospace;font-size:0.78em;letter-spacing:0.15em;color:#ffb000;text-transform:uppercase;margin-bottom:0.6em;">🔄 Cached tokens</div><div style="color:rgba(232,244,255,0.7);font-style:italic;font-size:0.95em;margin-bottom:0.6em;">What gets reused:</div><ul style="margin:0;padding-left:1.1em;color:#e8f4ff;font-size:0.95em;line-height:1.55;"><li>Context from past interactions</li><li>Improves speed and efficiency</li></ul></div>
+<div style="padding:1.3em 1.2em;border:1px solid rgba(155,188,15,0.4);background:rgba(5,6,15,0.5);"><div style="font-family: 'Noto Sans JP', sans-serif;font-size:0.78em;letter-spacing:0.15em;color:#9bbc0f;text-transform:uppercase;margin-bottom:0.6em;">👤 Input tokens</div><div style="color:rgba(232,244,255,0.7);font-style:italic;font-size:0.95em;margin-bottom:0.6em;">What you send:</div><ul style="margin:0;padding-left:1.1em;color:#e8f4ff;font-size:0.95em;line-height:1.55;"><li>The prompt and new context</li><li>Grows with large files or codebases</li></ul></div>
+<div style="padding:1.3em 1.2em;border:1px solid rgba(0,240,255,0.4);background:rgba(5,6,15,0.5);"><div style="font-family: 'Noto Sans JP', sans-serif;font-size:0.78em;letter-spacing:0.15em;color:#00f0ff;text-transform:uppercase;margin-bottom:0.6em;">🤖 Output tokens</div><div style="color:rgba(232,244,255,0.7);font-style:italic;font-size:0.95em;margin-bottom:0.6em;">What you receive:</div><ul style="margin:0;padding-left:1.1em;color:#e8f4ff;font-size:0.95em;line-height:1.55;"><li>The response the AI generates</li><li>Usually the highest compute cost</li></ul></div>
+<div style="padding:1.3em 1.2em;border:1px solid rgba(255,176,0,0.4);background:rgba(5,6,15,0.5);"><div style="font-family: 'Noto Sans JP', sans-serif;font-size:0.78em;letter-spacing:0.15em;color:#ffb000;text-transform:uppercase;margin-bottom:0.6em;">🔄 Cached tokens</div><div style="color:rgba(232,244,255,0.7);font-style:italic;font-size:0.95em;margin-bottom:0.6em;">What gets reused:</div><ul style="margin:0;padding-left:1.1em;color:#e8f4ff;font-size:0.95em;line-height:1.55;"><li>Context from past interactions</li><li>Improves speed and efficiency</li></ul></div>
 </div>
 
 > 🎯 **Takeaway**: every interaction consumes tokens based on **input, output, and context**.
@@ -153,11 +156,11 @@ A token is the **unit of AI processing** (input, output, context).
 
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.2em;margin:1.6em 0;">
 <div style="padding:1.3em 1.2em;border:1px solid rgba(0,240,255,0.4);background:rgba(5,6,15,0.5);">
-<div style="font-family:'DotGothic16','Courier New',monospace;font-size:0.85em;letter-spacing:0.12em;color:#00f0ff;text-transform:uppercase;margin-bottom:0.8em;">PRU model (old)</div>
+<div style="font-family: 'Noto Sans JP', sans-serif;font-size:0.85em;letter-spacing:0.12em;color:#00f0ff;text-transform:uppercase;margin-bottom:0.8em;">PRU model (old)</div>
 <div style="color:#e8f4ff;line-height:1.6;font-size:0.95em;"><strong>✅ Pro</strong><br/>One user can't burn through another user's allotment<br/><br/><strong>⚠️ Con</strong><br/>Overage can occur even while other users still have budget left</div>
 </div>
 <div style="padding:1.3em 1.2em;border:1px solid rgba(155,188,15,0.45);background:rgba(5,6,15,0.5);">
-<div style="font-family:'DotGothic16','Courier New',monospace;font-size:0.85em;letter-spacing:0.12em;color:#9bbc0f;text-transform:uppercase;margin-bottom:0.8em;">AI credit model (shared pool)</div>
+<div style="font-family: 'Noto Sans JP', sans-serif;font-size:0.85em;letter-spacing:0.12em;color:#9bbc0f;text-transform:uppercase;margin-bottom:0.8em;">AI credit model (shared pool)</div>
 <div style="color:#e8f4ff;line-height:1.6;font-size:0.95em;"><strong>✅ Pro</strong><br/>Less waste<br/><br/><strong>⚠️ Con</strong><br/>Consumption can skew toward certain users</div>
 </div>
 </div>
@@ -221,10 +224,10 @@ Controls the **total AI credits** a user can consume during a billing cycle (cov
 <div style="display:flex;flex-direction:column;border:1px solid rgba(255, 46, 136,0.4);background:rgba(5,6,15,0.85);">
 <div style="display:flex;align-items:center;justify-content:center;text-align:center;min-height:3.6em;padding:0.5em 0.6em;line-height:1.25;background:rgba(255, 46, 136,0.14);color:#ff2e88;font-weight:bold;border-bottom:1px solid rgba(255, 46, 136,0.3);">Cost center-level budget</div>
 <div style="padding:0.7em 0.6em;display:flex;flex-direction:column;flex:1;">
-<div style="color:#e8f4ff;font-size:0.92em;height:2.8em;margin-bottom:1.1em;">Caps the cost center's total overage</div>
+<div style="color:#e8f4ff;font-size:0.92em;height:2.8em;margin-bottom:1.1em;line-height:1.3;">Overage (budget) + <strong style="color:#ffb000;">[New] shared-pool cap</strong></div>
 <div style="height:200px;display:flex;flex-direction:column;">
-<div style="flex:1.4;background:#ff2e88;color:#05060f;font-weight:bold;display:flex;align-items:center;justify-content:center;">Overage only</div>
-<div style="flex:1;"></div>
+<div style="flex:1.4;background:#ff2e88;color:#05060f;font-weight:bold;display:flex;align-items:center;justify-content:center;">Overage</div>
+<div style="flex:1;background:rgba(255,176,0,0.28);border-top:2px solid #ffb000;color:#e8f4ff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.2;">Shared pool<br/><span style="font-size:0.78em;color:#ffb000;font-weight:bold;">[New] can cap</span></div>
 </div>
 </div>
 </div>
@@ -253,6 +256,8 @@ Controls the **total AI credits** a user can consume during a billing cycle (cov
 <div style="position:absolute;left:0;right:0;bottom:0;text-align:center;color:#ff2e88;font-weight:bold;font-size:0.95em;">Cost center usage can be excluded</div>
 </div>
 </div>
+
+<div style="background:rgba(255,176,0,0.08);border:1px solid rgba(255,176,0,0.4);padding:0.6em 0.9em;font-size:0.8em;color:rgba(232,244,255,0.9);line-height:1.6;margin-top:1.1em;"><strong style="color:#ffb000;">[New Jul 2026] AI credit pool cap:</strong> Limits how much of the shared <strong>included</strong> credit pool a cost center can draw, up to what its assigned licenses fund (cap auto-calculated). It is a <strong>separate control</strong> from the budget (which caps overage); on reaching the cap you can <strong>block</strong> or <strong>continue as additional spend</strong>. <strong>Only available on cost centers containing users or enterprise teams</strong>; organizations and repositories are not supported. You can now configure it directly in the <strong>Billing and licensing → Cost centers</strong> UI, or through the <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/rest/billing/cost-centers" target="_blank" rel="noopener noreferrer">REST API ↗</a>. <a class="retro-link" href="https://github.blog/changelog/2026-07-20-ai-credit-pools-for-cost-centers-in-the-billing-ui/" target="_blank" rel="noopener noreferrer">UI announcement ↗</a></div>
 
 ## Budget hierarchy
 
