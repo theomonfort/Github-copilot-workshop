@@ -78,7 +78,7 @@ The hands-on guide is organized as:
 
 1. **INTRO: 勉強会について** - workshop goal and prerequisites
 2. **INTRO: セットアップ** - create repo from template and open Codespaces
-3. **PLAN: MCP サーバー** - configure/use the GitHub MCP server
+3. **PLAN: MCP サーバー** - use Customizations > MCP Servers > Workspace; add only missing GitHub / Context7 HTTP servers to root `.mcp.json` (`mcpServers`), not User scope
 4. **PLAN: Instruction** - add repository instructions
 5. **PLAN: Skills** - install and use the `github-issues` skill
 6. **CODE: Copilot Chat** - plan and implement the Astro site
