@@ -22,5 +22,17 @@
     "kind": "quality",
     "file": "workshop-exercises/02-cloud-agent/quality-nan-comparison.ts",
     "rule": "js/comparison-with-nan"
+  },
+  {
+    "checkpoint": 3,
+    "kind": "security",
+    "file": "workshop-exercises/03-tests/security-weak-key.ts",
+    "rule": "js/insufficient-key-size"
+  },
+  {
+    "checkpoint": 3,
+    "kind": "quality",
+    "file": "workshop-exercises/03-tests/quality-ignored-array-result.ts",
+    "rule": "js/ignore-array-result"
   }
 ]

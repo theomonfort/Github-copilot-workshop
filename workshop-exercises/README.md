@@ -16,6 +16,8 @@ Each checkpoint adds one new security example and one new quality example. The e
 | 1 | `01-develop/quality-duplicate-condition.ts` | Quality: [js/duplicate-condition](https://codeql.github.com/codeql-query-help/javascript/js-duplicate-condition/) | 2 番目の条件が同じで到達不能 / Copy-paste condition makes the second branch unreachable | 2 番目を意図した状態 (`finished`) と比較する |
 | 2 | `02-cloud-agent/security-dom-xss.ts` | Security: [js/xss](https://codeql.github.com/codeql-query-help/javascript/js-xss/) | URL の内容を HTML として解釈 / URL-controlled text reaches an HTML sink | 文字列表示なら `textContent` を使う。教材をページに接続しない |
 | 2 | `02-cloud-agent/quality-nan-comparison.ts` | Quality: [js/comparison-with-nan](https://codeql.github.com/codeql-query-help/javascript/js-comparison-with-nan/) | `NaN` との等価比較は常に false / Equality cannot identify NaN | `Number.isNaN(value)` を使う |
+| 3 | `03-tests/security-weak-key.ts` | Security: [js/insufficient-key-size](https://codeql.github.com/codeql-query-help/javascript/js-insufficient-key-size/) | 1024-bit RSA は短すぎる / RSA key size is below the security baseline | 2048-bit 以上を使う。この教材の関数は実行せず、鍵を生成しない |
+| 3 | `03-tests/quality-ignored-array-result.ts` | Quality: [js/ignore-array-result](https://codeql.github.com/codeql-query-help/javascript/js-ignore-array-result/) | `concat` は元の配列を変更しない / Ignoring the returned array loses the update | `return labels.concat(items)` のように戻り値を使う |
 
 ## 実際の検出を確認する / Observe, do not assume
 
