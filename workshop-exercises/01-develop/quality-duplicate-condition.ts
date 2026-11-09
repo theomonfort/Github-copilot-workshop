@@ -1,0 +1,9 @@
+// 意図的な品質問題の教材。通常アプリから import / 実行しない。
+export function exerciseStatusLabel(status: string) {
+  if (status === 'ready') {
+    return 'Ready';
+  } else if (status === 'ready') {
+    return 'Finished';
+  }
+  return 'Waiting';
+}
