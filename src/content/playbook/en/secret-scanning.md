@@ -1,7 +1,7 @@
 ---
 title: Secret Scanning
 titleEn: Secret Scanning
-summary: GitHub's secret detection feature that automatically finds API keys and tokens mixed into commits, issues, PRs, and history. Push protection can block commits before they land. Free for public repos; push protection is also free for private repos on a per-user opt-in basis.
+summary: GitHub's secret detection feature that automatically finds API keys and tokens in commits, issues, PRs, and history. Core coverage is free for public repositories; private and internal repositories require Secret Protection.
 icon: /icons/secret-scanning.png
 color: cyan
 accent:
@@ -10,34 +10,67 @@ accent:
   glow: hover:shadow-neon-cyan
   shadow: shadow-neon-cyan
   hex: "#00f0ff"
-order: 19.6
+order: 19.4
 category: secure
 related: ['dependabot', 'github-advanced-security']
 links:
   - group: 📖 Official Documentation
-    label: About secret scanning
-    url: https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning
+    label: Secret scanning — core concepts
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/secret-scanning
   - group: 📖 Official Documentation
-    label: About push protection
-    url: https://docs.github.com/en/code-security/secret-scanning/introduction/about-push-protection
+    label: Push protection — core concepts
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/push-protection
   - group: 📖 Official Documentation
-    label: Supported secrets (provider patterns)
-    url: https://docs.github.com/en/code-security/secret-scanning/introduction/supported-secret-scanning-patterns
+    label: Full list of supported patterns (provider + generic)
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/reference/secret-security/supported-secret-scanning-patterns
   - group: 📖 Official Documentation
-    label: Defining custom patterns
-    url: https://docs.github.com/en/code-security/secret-scanning/using-advanced-secret-scanning-and-push-protection-features/custom-patterns/defining-custom-patterns-for-secret-scanning
+    label: Validity checks
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/validity-checks
   - group: 📖 Official Documentation
-    label: Enabling secret scanning for your repo
-    url: https://docs.github.com/en/code-security/secret-scanning/enabling-secret-scanning-features/enabling-secret-scanning-for-your-repository
+    label: Custom patterns
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/custom-patterns
+  - group: 📖 Official Documentation
+    label: Secret scanning partner program
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/tutorials/secret-scanning-partner-program
+  - group: 📖 Official Documentation
+    label: Public monitoring
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/public-monitoring
+  - group: 📖 Official Documentation
+    label: About GitHub Advanced Security products
+    url: https://docs.github.com/en/enterprise-cloud@latest/get-started/learning-about-github/about-github-advanced-security
+  - group: 🔧 How-to Guides
+    label: Enable secret scanning on a repository
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-your-secrets/detect-secret-leaks/enable-secret-scanning
+  - group: 🔧 How-to Guides
+    label: Define custom patterns
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-your-secrets/customize-leak-detection/define-custom-patterns
+  - group: 🔧 How-to Guides
+    label: Remediating a leaked secret
+    url: https://docs.github.com/en/code-security/tutorials/remediate-leaked-secrets/remediating-a-leaked-secret
+  - group: 🔎 Research and discussion
+    label: "Apiiro: coding agents and saved-command secrets (primary report)"
+    url: https://apiiro.com/blog/coding-agents-leaking-secrets-github-dont-ask-again
+  - group: 🔎 Research and discussion
+    label: "The Hacker News: reporting on Apiiro's findings (2026-11-07)"
+    url: https://thehackernews.com/2026/11/claude-codes-dont-ask-again-file.html
+  - group: 🔎 Research and discussion
+    label: Hacker News discussion and Claude Code team response
+    url: https://news.ycombinator.com/item?id=50407882
+  - group: 📰 Recent Changelog
+    label: "Block pull requests with exposed secrets from merging (2026-09-09)"
+    url: https://github.blog/changelog/2026-09-09-block-pull-requests-with-exposed-secrets-from-merging/
+  - group: 📰 Recent Changelog
+    label: "Secret scanning public monitoring for enterprises (2026-07-01)"
+    url: https://github.blog/changelog/2026-07-01-secret-scanning-public-monitoring-for-enterprises/
   - group: 📰 Recent Changelog
     label: "Secret scanning with GitHub MCP Server is now GA (2026-05-05)"
-    url: https://github.blog/changelog/2026-05-05-secret-scanning-with-github-mcp-server-is-now-generally-available
+    url: https://github.blog/changelog/2026-05-05-secret-scanning-with-github-mcp-server-is-now-generally-available/
   - group: 📰 Recent Changelog
     label: "Secret scanning pattern updates and product improvements (2026-04-14)"
-    url: https://github.blog/changelog/2026-04-14-secret-scanning-pattern-updates-and-product-improvements
+    url: https://github.blog/changelog/2026-04-14-secret-scanning-pattern-updates-and-product-improvements/
   - group: 📰 Recent Changelog
     label: "Secret scanning in AI coding agents via the GitHub MCP Server (2026-03-17)"
-    url: https://github.blog/changelog/2026-03-17-secret-scanning-in-ai-coding-agents-via-the-github-mcp-server
+    url: https://github.blog/changelog/2026-03-17-secret-scanning-in-ai-coding-agents-via-the-github-mcp-server/
 ---
 
 ## In a nutshell
@@ -47,113 +80,448 @@ links:
     <strong>Secret Scanning</strong> is GitHub's detection feature that automatically finds API keys, tokens, and connection strings lurking in your repository.
   </p>
   <p>
-    Secrets already committed get an <strong>alert</strong>; secrets about to be committed are blocked at `git push` time by <strong>Push protection</strong>. Stopping leaks before they happen is the core strategy.
+    Secrets already committed get an <strong>alert</strong>; secrets about to be pushed are blocked at <code>git push</code> time by <strong>Push protection</strong>. Stopping leaks before they happen is the core strategy.
   </p>
 </div>
 
-## Detection vs Push protection — what's the difference?
+## Why secrets matter in private / internal repos
 
-Secret Scanning operates in **two modes**. You should enable both.
+**Private does not mean the breach stays contained.** An attacker who compromises one developer account or runner can use internally exposed secrets to expand the attack. Keep secrets in a secret manager and block leaks with **Push protection**. Here are 8 reasons why.
 
-| Feature | When does it run? | What does it do? | Scope |
-| --- | --- | --- | --- |
-| 🔍 **Secret scanning alerts** | After commit (including history, continuously) | Notifies you of detected secrets in the Security tab | Commit history, Issues, PRs, descriptions, Wikis |
-| 🛡️ **Push protection** | Right before `git push` | Rejects pushes containing secrets (bypass is possible) | Incoming changes only |
-| ✅ **Validity checks** | When an alert fires | Asks the provider API whether the secret is still active | Select supported providers (AWS, GitHub, Slack, and others) |
-
-> 🔑 **Alerts** = find secrets already in the repo; **Push protection** = prevent them from getting in at all. Push protection is the most effective measure (no history rewriting needed).
-
-📘 Details: <a class="retro-link" href="https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning" target="_blank" rel="noopener noreferrer">About secret scanning ↗</a> · <a class="retro-link" href="https://docs.github.com/en/code-security/secret-scanning/introduction/about-push-protection" target="_blank" rel="noopener noreferrer">About push protection ↗</a>
-
-## What gets detected
-
-- 🏷️ **Provider patterns** — Regex patterns registered by 200+ partners including AWS, Azure, GCP, Stripe, Slack, OpenAI, and GitHub PATs. Extremely low false-positive rate
-- 🧪 Generic / non-provider patterns — `password = "..."`, HTTP basic auth, generic API key-like strings. AI-based detection (Copilot Secret Scanning) can also be enabled
-- 🛠️ **Custom patterns** — Define your own regex for proprietary token formats (requires GHAS)
-- 📚 Scope — Not just code: Issues, PRs, commit messages, descriptions, Wikis, and Gists are all scanned
-
-> 🤖 Generic secrets and AI detection tend to produce more false positives. Pairing them with **Push protection** means things get stopped at the moment someone tries to commit them — much easier to operate.
-
-📘 Details: <a class="retro-link" href="https://docs.github.com/en/code-security/secret-scanning/introduction/supported-secret-scanning-patterns" target="_blank" rel="noopener noreferrer">Supported secrets (provider patterns) ↗</a> · <a class="retro-link" href="https://docs.github.com/en/code-security/secret-scanning/using-advanced-secret-scanning-and-push-protection-features/custom-patterns/defining-custom-patterns-for-secret-scanning" target="_blank" rel="noopener noreferrer">Defining custom patterns ↗</a>
-
-## Response flow when a secret is exposed
-
-When a secret is found, **remediation matters more than detection**.
-
-1. 🚨 **Rotate / revoke immediately** — removing it from the repository is not enough (it remains in history and in other people's clones)
-2. 📣 GitHub notifies you — providers enrolled in the partner program may automatically invalidate the secret (AWS, GitHub PATs, and others)
-3. 🧹 Close the alert — mark it as `Revoked`, `False positive`, or `Used in tests`
-4. 🛡️ Enable Push protection to prevent recurrence
-
-## Getting started (fastest path)
-
-**Step 1 — Enable Push protection (highest priority first)**
-
-```
-Repo → Settings → Code security
-  ✅ Secret scanning
-  ✅ Push protection
-```
-
-Public repos have this **on by default and completely free**. Repo-level push protection for private repos requires Secret Protection / GHAS — but individual user opt-in is free on all plans (`User → Settings → Code security and analysis`).
-
-**Step 2 — Scan for existing leaks**
-
-Once enabled, past commit history is automatically scanned. Alerts will appear in the Security tab — work through them from the top, rotating each secret.
-
-**Step 3 — Add custom patterns**
-
-```
-Repo or Org → Settings → Code security → Secret scanning → Custom patterns
-```
-
-Register your own token format with a regex. Free for public repos; private repos require GHAS / Secret Protection. Use the dry-run feature to check for false positives before going live.
-
-**Step 4 — Enable org-wide / enterprise-wide**
-
-Use **default settings** in `Org → Settings → Code security` to apply to new and existing repositories at once.
-
-📘 Details: <a class="retro-link" href="https://docs.github.com/en/code-security/secret-scanning/enabling-secret-scanning-features/enabling-secret-scanning-for-your-repository" target="_blank" rel="noopener noreferrer">Enabling secret scanning for your repo ↗</a>
-
-## Eligibility and pricing
-
-| Feature | Public repo | Private repo (No GHAS / Secret Protection) | Private repo (With GHAS / Secret Protection) |
-| --- | :---: | :---: | :---: |
-| Push protection (user personal opt-in) | ✅ Free | ✅ Free (since 2024) | ✅ |
-| Push protection (repo / org level) | ✅ Free | ❌ | ✅ |
-| Secret scanning alerts | ✅ Free | ❌ | ✅ |
-| Partner secret invalidation | ✅ Automatic | ❌ | ✅ Automatic |
-| Validity checks | ✅ Free | ❌ | ✅ |
-| Custom patterns | ✅ Free | ❌ | ✅ |
-| AI detection (generic) | ✅ Free | ❌ | ✅ |
-
-> 💰 In 2025, **GHAS was split** — if you only need secret scanning, **Secret Protection** ($19/month/active committer) is enough (no full GHAS contract required). Combine with GitHub Code Security if you also want CodeQL.  
-> 🆓 Individuals can enable **user push protection** via `Settings → Code security` — this warns even on private repos without any license. Recommending this to all employees is the fastest way to prevent accidents.  
-> 🛡️ Push protection at the repo/org level is completely free and on by default for public repos. A Secret Protection / GHAS license is only needed when you want to enforce it org-wide on private / internal repos. See <a class="retro-link" href="https://docs.github.com/en/code-security/secret-scanning/introduction/about-push-protection" target="_blank" rel="noopener noreferrer">About push protection ↗</a>.
-
-📘 Details:
-- <a class="retro-link" href="https://github.blog/news-insights/product-news/push-protection-is-generally-available-and-free-for-all-public-repositories/" target="_blank" rel="noopener noreferrer">Push protection is GA & free for all public repos (GitHub Blog) ↗</a>
-- <a class="retro-link" href="https://github.blog/changelog/2024-02-29-push-protection-is-enabled-for-free-users-on-github/" target="_blank" rel="noopener noreferrer">Push protection enabled for free users (2024 Feb) ↗</a>
-- <a class="retro-link" href="https://github.blog/changelog/2025-03-04-introducing-github-secret-protection-and-github-code-security/" target="_blank" rel="noopener noreferrer">Introducing GitHub Secret Protection & Code Security (2025 Mar) ↗</a>
-- <a class="retro-link" href="https://docs.github.com/en/get-started/learning-about-github/githubs-plans" target="_blank" rel="noopener noreferrer">GitHub plans pricing ↗</a>
-
-## Secret Risk Assessment (free inventory scan)
-
-<div class="hero-quote">
-  <p>
-    <strong>Secret Risk Assessment</strong> performs a one-time scan of every repository in your org (public, private, internal, and archived) to make visible "what secrets are hiding and where."
-  </p>
-  <p>
-    <strong>No GHAS / Secret Protection required — completely free</strong> (since 2025), available to all Team and Enterprise orgs. Perfect for a pre-purchase inventory or an executive security report.
-  </p>
+<div class="risk-widget">
+<p class="risk-hint">▸ CLICK + TO REVEAL</p>
+<div class="risk-list">
+<details class="risk-item" name="risk-private">
+<summary class="risk-btn"><span class="risk-num">01</span><span class="risk-icon" aria-hidden="true">🌐</span><span class="risk-label">Internal repos, external developers</span><span class="risk-gauge" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="risk-toggle" aria-hidden="true"></span></summary>
+<p class="risk-why"><b>An internal repo does not mean an internal-only workforce.</b> Employees, contractors, systems integrators, and subcontractors with read access can all read committed secrets. Outsourcing extends access beyond your own employees and the devices you manage.</p>
+</details>
+<details class="risk-item" name="risk-private">
+<summary class="risk-btn"><span class="risk-num">02</span><span class="risk-icon" aria-hidden="true">🔓</span><span class="risk-label">One click from public</span><span class="risk-gauge" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="risk-toggle" aria-hidden="true"></span></summary>
+<p class="risk-why">A misclick, repo transfer, Org misconfiguration, or policy change flips it public. Attacker scanners detect new public repos <b>within seconds</b>; leaked tokens have been abused within 60 seconds.</p>
+</details>
+<details class="risk-item" name="risk-private">
+<summary class="risk-btn"><span class="risk-num">03</span><span class="risk-icon" aria-hidden="true">♾️</span><span class="risk-label">Git history is forever</span><span class="risk-gauge" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="risk-toggle" aria-hidden="true"></span></summary>
+<p class="risk-why">Deleting it in a later commit does not remove it. It stays in history, every local clone, forks, backups, and CI caches. The only fix is <b>rotation</b>, not file deletion.</p>
+</details>
+<details class="risk-item" name="risk-private">
+<summary class="risk-btn"><span class="risk-num">04</span><span class="risk-icon" aria-hidden="true">💻</span><span class="risk-label">Git distributes your secrets, too</span><span class="risk-gauge" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="risk-toggle" aria-hidden="true"></span></summary>
+<p class="risk-why">Git is a <b>distributed version control system</b>. A normal <code>git clone</code> copies code and history, including committed secrets, onto each developer's workstation, whether employee or contractor. Protecting the server is not enough. <b>Revoking repo access when a contract ends does not erase those local copies.</b></p>
+</details>
+<details class="risk-item" name="risk-private">
+<summary class="risk-btn"><span class="risk-num">05</span><span class="risk-icon" aria-hidden="true">🎣</span><span class="risk-label">Account compromise = instant access</span><span class="risk-gauge" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="risk-toggle" aria-hidden="true"></span></summary>
+<p class="risk-why">One phished developer exposes every secret in every repo they can read. The secrets themselves have <b>no extra protection</b> (no MFA, no self-managed encryption at rest, no expiry).</p>
+</details>
+<details class="risk-item" name="risk-private">
+<summary class="risk-btn"><span class="risk-num">06</span><span class="risk-icon" aria-hidden="true">🔗</span><span class="risk-label">Privilege escalation and lateral movement</span><span class="risk-gauge" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="risk-toggle" aria-hidden="true"></span></summary>
+<p class="risk-why">Once inside your network, attackers can steal secrets from private / internal repos to gain higher privileges and move into production, cloud, or artifact registries. <b>One compromised account can become an organization-wide breach, without any repo ever going public.</b> <a class="retro-link" href="https://attack.mitre.org/techniques/T1078/" target="_blank" rel="noopener noreferrer">MITRE ATT&amp;CK ↗</a></p>
+</details>
+<details class="risk-item" name="risk-private">
+<summary class="risk-btn"><span class="risk-num">07</span><span class="risk-icon" aria-hidden="true">📋</span><span class="risk-label">Compliance and audit</span><span class="risk-gauge" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="risk-toggle" aria-hidden="true"></span></summary>
+<p class="risk-why">ISO 27001, SOC 2, PCI-DSS, and ISMAP require central management, rotation, and access tracking. Plaintext secrets in Git fail all three, and <b>audit findings are guaranteed</b>.</p>
+</details>
+<details class="risk-item" name="risk-private">
+<summary class="risk-btn"><span class="risk-num">08</span><span class="risk-icon" aria-hidden="true">💸</span><span class="risk-label">The real cost of an incident</span><span class="risk-gauge" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="risk-toggle" aria-hidden="true"></span></summary>
+<p class="risk-why">Emergency rotation, production outage, forensics, customer notification. Compare that to the <b>30 minutes</b> it takes to set up a secret manager.</p>
+</details>
+</div>
 </div>
 
-- 🔎 Scope — all repos in the org (any visibility), including archived repos
-- 📊 Output — aggregated report showing secret type, count, and how many are in each repo (individual secret values are not exposed)
-- 🕒 Frequency — **a single point-in-time scan**; not continuous monitoring (buy Secret Protection for ongoing coverage)
-- 🔐 Privacy — detected secret values are not stored by GitHub. Only statistics are visible to org admins
-- 🚀 How to run — `Org → Settings → Code security → Secret risk assessment → Run assessment`
+## Main capabilities <input type="checkbox" id="demo-secret-scanning" class="demo-toggle" /><label class="h2-demo" for="demo-secret-scanning">&#9658; DEMO</label>
 
-> 📊 Use this first when you want to "just know how many secrets are leaking across the org" or "need numbers for a budget proposal." Review the results to decide whether to adopt **Secret Protection**.
+<div class="demo-panel">
+<label class="demo-scrim" for="demo-secret-scanning" aria-label="Close demo steps"></label>
+<div class="demo-window" role="group" aria-label="Demo steps">
+<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">Secret Scanning</span><span class="demo-note">FOR PRESENTER ONLY</span><label class="demo-close" for="demo-secret-scanning" aria-label="Close">&#10005;</label></div>
+<ol class="demo-steps">
+<li>
+<p class="demo-step-title">PUSH PROTECTION</p>
+<p>In <code class="demo-path">ghas-test-1</code>, push a generated secret.</p>
+<code class="demo-cmd">./demo/secret-scanning/01-push-protection.sh</code>
+<p class="demo-out">The push is <b>blocked</b> and the terminal prints an unblock URL.</p>
+<p>Show <b>which</b> patterns are push-protected, enterprise-wide: <a href="https://github.com/enterprises/octodemo/settings/security_analysis/pattern_configurations" target="_blank" rel="noopener noreferrer">octodemo → Pattern configurations ↗</a>. Flip a pattern in the <b>Enterprise setting</b> column; the <b>Alert total</b>, <b>False positives</b>, and <b>Bypass rate</b> columns back the noise-vs-risk call with real data.</p>
+<p>Jump directly to <a href="https://github.com/enterprises/octodemo/settings/security_analysis/pattern_configurations?query=github-default%3Adisabled&amp;page=0" target="_blank" rel="noopener noreferrer">patterns disabled by GitHub default ↗</a>. The filter is <code class="demo-path">github-default:disabled</code>: it filters GitHub defaults, not the current enterprise setting.</p>
+<p class="demo-out">Same page is revisited on the <b>What gets detected</b> slide, to dig out the generic patterns.</p>
+</li>
+<li>
+<p class="demo-step-title">BYPASS PUSH PROTECTION</p>
+<p>Open the <code class="demo-path">unblock-secret</code> URL from the block message in your browser, pick a reason and bypass.</p>
+<p>The reason decides what happens to the alert: <b>It's used in tests</b> creates a <b>closed</b> alert (resolved as "used in tests"), so nothing is left to triage. <b>I'll fix it later</b> creates an <b>open</b> alert that stays until someone revokes or rotates the secret.</p>
+<p class="demo-out">You get “secret can now be pushed”.</p>
+<p>Push the same branch again.</p>
+<code class="demo-cmd">git push origin HEAD</code>
+<p>Open the resulting alert under <b>Security → Secret scanning</b> and show <b>who</b> bypassed it and <b>why</b>.</p>
+<p>To keep bypasses under control: open <a href="https://github.com/theomonfort-org/ghas-test-1/settings/security_analysis" target="_blank" rel="noopener noreferrer">ghas-test-1 → Advanced Security ↗</a>, then set <b>Push protection → Who can bypass push protection for secret scanning</b> to <b>Specific roles or teams</b> (= Delegated bypass).</p>
+<p>Configure it across the org: open <a href="https://github.com/organizations/theomonfort-org/settings/security_products/configurations/edit/250834" target="_blank" rel="noopener noreferrer">theomonfort-org → Security configuration ↗</a>, set <b>Push protection</b> to <b>Enabled</b> and <b>Bypass privileges</b> to <b>Specific actors</b>, then select the actors. Click <b>Save configuration</b> and apply it to the target repos. Configuring delegated bypass at the org / enterprise level disables the repo-level setting.</p>
+<p>Demo the request flow as a <b>contributor without bypass privileges</b> (org owners / security managers can always bypass). Submit a request with a justification from the block page; reviewers receive an email notification.</p>
+<p>Review requests: <a href="https://github.com/theomonfort-org/ghas-test-1/security/secret_scanning/bypass_requests" target="_blank" rel="noopener noreferrer">ghas-test-1 → Push protection bypass requests ↗</a> (<b>Security and quality → Requests → Push protection bypass</b>). Filter by <b>All statuses → Open</b>, open a request, and show <b>Approve bypass request</b> / <b>Deny bypass request</b>. After approval, the requester pushes again.</p>
+<p>Gate the merge too: in <a href="https://github.com/theomonfort-org/ghas-test-1/settings/rules/new?target=branch&amp;enforcement=disabled" target="_blank" rel="noopener noreferrer">ghas-test-1 → New branch ruleset ↗</a>, turn on <b>Require secret scanning alerts are resolved</b> (Preview).</p>
+<p class="demo-out">An <b>I'll fix it later</b> secret is still an open alert, so the PR merge is blocked. <b>It's used in tests</b> doesn't block.</p>
+</li>
+<li>
+<p class="demo-step-title">VALIDITY CHECK</p>
+<p>In the default view under <b>Security → Secret scanning</b>, use the <b>Validity filter</b>.</p>
+<p class="demo-out">Triage by real risk: start with the secrets that are still live.</p>
+</li>
+</ol>
+</div>
+</div>
 
-📘 Details: <a class="retro-link" href="https://docs.github.com/en/code-security/how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/assess-your-secret-risk" target="_blank" rel="noopener noreferrer">Enabling Secret Risk Assessment ↗</a>
+**Push protection** checks pushes to all branches on GitHub, **not local commits at commit time**. **Merge protection** checks before PR merge.
+
+<div class="ctl-widget">
+<p class="ctl-hint">▸ CLICK + FOR DETAILS</p>
+<div class="ctl-list">
+<details class="ctl-item" name="ss-controls">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🛡️</span><span class="ctl-name">Push protection</span><span class="ctl-when">At <code>git push</code></span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/push-protection" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">What it does</span><span class="ctl-v"><b>Rejects the push on the spot</b> when it contains a secret. Bypass is possible, but the reason is recorded</span></p>
+<p class="ctl-row"><span class="ctl-k">Scope</span><span class="ctl-v"><b>Pushes to all branches</b> of a GitHub repository where protection is enabled. Unpushed local commits are not covered. <b>AI-detected secrets</b>: separate opt-in toggle, <b>private preview</b> (invited orgs only)</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ss-controls">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🚧</span><span class="ctl-name">Merge protection</span><span class="ctl-when">Before PR merge</span><a class="ctl-doc" href="https://github.blog/changelog/2026-09-09-block-pull-requests-with-exposed-secrets-from-merging/" target="_blank" rel="noopener noreferrer">Changelog</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Setup</span><span class="ctl-v">Add <b>Rulesets → Require secret scanning alerts are resolved</b> (Repo / Org / Enterprise)</span></p>
+<p class="ctl-row"><span class="ctl-k">Merge gate</span><span class="ctl-v">Head scan complete, <b>no open PR-introduced alerts</b>. Public preview, Secret Protection / GHAS. Ruleset bypass applies</span></p>
+<p class="ctl-row"><span class="ctl-k">Use case</span><span class="ctl-v"><b>Exclude generic patterns from push protection, but include them in this ruleset</b>: allow the push, require alert resolution before merge</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ss-controls">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🔍</span><span class="ctl-name">Secret scanning alerts</span><span class="ctl-when">After commit, continuous</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/secret-scanning" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">What it does</span><span class="ctl-v">Notifies you of detected secrets in the <b>Security and quality</b> tab</span></p>
+<p class="ctl-row"><span class="ctl-k">Scope</span><span class="ctl-v">Full Git history on all branches, Issues, PRs, GitHub Discussions, Wikis, secret gists. <b>Rescanned</b> as new secret types ship</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ss-controls">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">✅</span><span class="ctl-name">Validity checks</span><span class="ctl-when">When an alert fires</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/validity-checks" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">What it does</span><span class="ctl-v">Asks the provider API whether the secret is <b>still active</b>, so you can triage by real risk</span></p>
+<p class="ctl-row"><span class="ctl-k">Scope</span><span class="ctl-v">Select supported providers (AWS, GitHub, Slack, and others). <b>AI-detected passwords are not covered</b> (no provider to ask)</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ss-controls">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🤝</span><span class="ctl-name">Partner program</span><span class="ctl-when">Always on, public repos</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/tutorials/secret-scanning-partner-program" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">What it does</span><span class="ctl-v">When a partner secret leaks, GitHub <b>reports it straight to the provider</b>, who revokes or reissues it</span></p>
+<p class="ctl-row"><span class="ctl-k">Scope</span><span class="ctl-v">Public repos and public npm packages only. Reports <b>never appear in your alert list</b> (free, not configurable)</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ss-controls">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🌐</span><span class="ctl-name">Public monitoring</span><span class="ctl-when">Real-time across github.com</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/public-monitoring" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">What it does</span><span class="ctl-v">Detects secrets leaked <b>outside your own repos</b> (personal forks, OSS, public issues and PRs) and attributes them to your enterprise</span></p>
+<p class="ctl-row"><span class="ctl-k">Scope</span><span class="ctl-v">Public content only, and it <b>never scans private repos</b>. GHEC Enterprise</span></p>
+</div>
+</details>
+</div>
+</div>
+
+## What gets detected <input type="checkbox" id="demo-secret-detect" class="demo-toggle" /><label class="h2-demo" for="demo-secret-detect">&#9658; DEMO</label>
+
+<div class="demo-panel">
+<label class="demo-scrim" for="demo-secret-detect" aria-label="Close demo steps"></label>
+<div class="demo-window" role="group" aria-label="Demo steps">
+<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">Detection types</span><span class="demo-note">FOR PRESENTER ONLY</span><label class="demo-close" for="demo-secret-detect" aria-label="Close">&#10005;</label></div>
+<ol class="demo-steps">
+<li>
+<p class="demo-step-title">WHERE THE GENERIC PATTERNS HIDE</p>
+<p>Open <a href="https://github.com/enterprises/octodemo/settings/security_analysis/pattern_configurations?query=github-default%3Adisabled&amp;page=0" target="_blank" rel="noopener noreferrer">octodemo → Patterns disabled by GitHub default ↗</a>, prefiltered with <code class="demo-path">github-default:disabled</code>.</p>
+<p class="demo-out">It is one <b>flat list</b>, with no generic label. This filter matches the <b>GitHub default</b> value; it is not a generic-only filter.</p>
+<p>Point them out by name — these ten are the entire set:</p>
+<p><code class="demo-path">rsa_private_key</code> <code class="demo-path">openssh_private_key</code> <code class="demo-path">ec_private_key</code> <code class="demo-path">pgp_private_key</code> <code class="demo-path">generic_private_key</code> <code class="demo-path">mongodb_connection_string</code> <code class="demo-path">mysql_connection_url</code> <code class="demo-path">postgres_connection_string</code> <code class="demo-path">http_basic_authentication_header</code> <code class="demo-path">http_bearer_authentication_header</code></p>
+<p class="demo-out">Every one reads <b>Disabled</b> under <b>GitHub default</b>: detection is on, but push protection is off by default.</p>
+</li>
+<li>
+<p class="demo-step-title">CUSTOM PATTERN + DRY RUN</p>
+<p>Open <a href="https://github.com/theomonfort-org/ghas-test-1/settings/security_analysis/custom_patterns/new" target="_blank" rel="noopener noreferrer">ghas-test-1 → New pattern ↗</a> (<code class="demo-path">Settings → Advanced Security → Custom patterns → New pattern</code>).</p>
+<p>Matching secrets are already planted in the demo repo, so you only need to create the pattern:</p>
+<p><b>Pattern name</b> — <code class="demo-path">Octodemo internal service token</code></p>
+<p><b>Secret format</b> — <code class="demo-path">octodemo_(live|test)_[A-Za-z0-9]{32}</code></p>
+<p><b>Test string</b> — <code class="demo-path">octodemo_live_L1QNGy4DLxQJ8C85kfwP0lmvCHLDuVxJ</code></p>
+<p>The test string has to go green before the form will save. Then use <b>Save and dry run</b>.</p>
+<p class="demo-out">The dry run reports the planted secrets <b>without creating alerts</b>. Review the hits, then <b>Publish pattern</b>.</p>
+</li>
+<li>
+<p class="demo-step-title">ENABLE GENERIC / CUSTOM PATTERNS</p>
+<p>Open <a href="https://github.com/enterprises/octodemo/settings/security_analysis/pattern_configurations?query=&amp;page=0&amp;tab=native" target="_blank" rel="noopener noreferrer">octodemo → Pattern configurations ↗</a>.</p>
+<p><b>Generic:</b> In <b>Default patterns</b>, find a pattern such as <code class="demo-path">rsa_private_key</code> and set <b>Enterprise setting</b> to <b>Enabled</b>.</p>
+<p><b>Custom:</b> Switch to <b>Custom patterns</b>, choose a published enterprise pattern, and set <b>Enterprise setting</b> to <b>Enabled</b>. For the repository-scoped pattern created above, use <b>Push protection → Enable</b> in that repository's custom pattern settings instead.</p>
+<p class="demo-out">This enables <b>push protection</b>, not detection. New pushes containing a matching secret are blocked when the demo repository also has push protection enabled and no organization override disables the pattern.</p>
+</li>
+</ol>
+</div>
+</div>
+
+**Four** detection engines, layered from exact partner formats to unstructured secrets that only AI can catch.
+
+<div class="det-widget">
+<p class="det-hint">▸ CLICK FOR DETAILS</p>
+<div class="det-split">
+<div class="det-list">
+<details class="det-pick" name="ss-detect">
+<summary class="det-btn"><span class="det-icon" aria-hidden="true">🏷️</span><span class="det-name">Provider patterns</span></summary>
+<div class="det-pane">
+<p class="det-head"><span class="det-icon" aria-hidden="true">🏷️</span><span class="det-title">Provider patterns</span></p>
+<p class="det-why">Regex patterns registered by <b>200+ partners</b> including AWS, Azure, GCP, Stripe, Slack, OpenAI, and GitHub PATs. Extremely low false-positive rate.</p>
+<p class="det-doc"><a class="retro-link" href="https://docs.github.com/en/code-security/secret-scanning/introduction/supported-secret-scanning-patterns" target="_blank" rel="noopener noreferrer">📘 Supported secrets ↗</a></p>
+</div>
+</details>
+<details class="det-pick" name="ss-detect">
+<summary class="det-btn"><span class="det-icon" aria-hidden="true">🧪</span><span class="det-name">Generic patterns</span></summary>
+<div class="det-pane">
+<p class="det-head"><span class="det-icon" aria-hidden="true">🧪</span><span class="det-title">Generic patterns</span></p>
+<p class="det-why">Private keys, connection strings, HTTP basic auth, and other generic formats. A wider net by design, so expect more triage than provider patterns. <b>Not push-protected by default</b> — opt each pattern in under Pattern configurations.</p>
+</div>
+</details>
+<details class="det-pick" name="ss-detect">
+<summary class="det-btn"><span class="det-icon" aria-hidden="true">🤖</span><span class="det-name">AI-detected secrets</span></summary>
+<div class="det-pane">
+<p class="det-head"><span class="det-icon" aria-hidden="true">🤖</span><span class="det-title">AI-detected secrets</span></p>
+<p class="det-why">Uses AI to detect <b>unstructured secrets</b> such as passwords, covering the ground no regex can reach. <b>Push protection</b> is a separate toggle in <b>private preview</b> (invited orgs only). <b>No validity checks</b>, so triage these as alerts.<br>🔎 Alerts show up in the <b>Generic</b> tab.</p>
+</div>
+</details>
+<details class="det-pick" name="ss-detect">
+<summary class="det-btn"><span class="det-icon" aria-hidden="true">🛠️</span><span class="det-name">Custom patterns</span></summary>
+<div class="det-pane">
+<p class="det-head"><span class="det-icon" aria-hidden="true">🛠️</span><span class="det-title">Custom patterns</span></p>
+<p class="det-why">Define regexes for <b>your own token formats</b>: internal service tokens, legacy credentials, anything a partner will never register.<br>🔎 Listed under <b>Default</b>; filter by <b>Secret type</b>.</p>
+<p class="det-doc"><a class="retro-link" href="https://docs.github.com/en/code-security/secret-scanning/using-advanced-secret-scanning-and-push-protection-features/custom-patterns/defining-custom-patterns-for-secret-scanning" target="_blank" rel="noopener noreferrer">📘 Defining custom patterns ↗</a></p>
+</div>
+</details>
+</div>
+<div class="det-screen"><p class="det-empty">SELECT A TYPE ▸</p></div>
+</div>
+</div>
+
+## How to manage exposed secrets <input type="checkbox" id="demo-secret-campaign" class="demo-toggle" /><label class="h2-demo" for="demo-secret-campaign">&#9658; DEMO</label>
+
+<div class="demo-panel">
+<label class="demo-scrim" for="demo-secret-campaign" aria-label="Close demo steps"></label>
+<div class="demo-window" role="group" aria-label="Demo steps">
+<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">Security campaigns</span><span class="demo-note">FOR PRESENTER ONLY</span><label class="demo-close" for="demo-secret-campaign" aria-label="Close">&#10005;</label></div>
+<ol class="demo-steps">
+<li>
+<p class="demo-step-title">THE CAMPAIGNS TAB</p>
+<p>Open <a href="https://github.com/orgs/theomonfort-org/security/campaigns" target="_blank" rel="noopener noreferrer">theomonfort-org → Campaigns ↗</a>.</p>
+<p class="demo-out">The tracking view: each campaign with its <b>due date</b>, <b>manager</b>, and a burn-down of open vs closed alerts. The point to land: <b>alerts get an owner and a deadline here, not in a spreadsheet</b>.</p>
+</li>
+<li>
+<p class="demo-step-title">CREATE ONE FROM SECRET SCANNING FILTERS</p>
+<p><code class="demo-path">Create campaign → From secret scanning filters</code></p>
+<p>Build the filter live so they see the triage logic. Start from <code class="demo-path">is:open</code>, narrow to the repos that matter, then set <b>Validity</b> to <b>Active</b> and <b>Unknown</b>.</p>
+<p class="demo-out">Watch the alert count drop with each filter. That is the whole argument: <b>a finishable list instead of a backlog</b>. Must be <b>1000 alerts or fewer</b> to save.</p>
+</li>
+<li>
+<p class="demo-step-title">NAME IT, DATE IT, SHIP IT</p>
+<p><b>Save as → Draft campaign</b>, then fill in the name, description, <b>due date</b>, and <b>campaign manager</b>.</p>
+<p>Note the manager picker only offers <b>org owners and security managers</b>.</p>
+<p class="demo-out"><b>Review and publish</b> notifies everyone who can see the alerts, and the campaign shows up in each repo's Security tab. Mention secret campaigns are in <b>public preview</b>.</p>
+</li>
+</ol>
+</div>
+</div>
+
+When a secret is found, **remediation matters more than detection**. At scale, don't work the raw alert list, run it as a **security campaign**.
+
+<div class="rem-widget">
+<p class="rem-hint">▸ CLICK A STEP FOR DETAILS</p>
+<div class="rem-flow">
+<div class="rem-row">
+<details class="rem-slot" name="ss-remediate">
+<summary class="rem-btn"><span class="rem-icon" aria-hidden="true">🎯</span><span class="rem-name">SCOPE</span></summary>
+<div class="rem-plate">
+<p class="rem-title">🎯 SCOPE — critical repos first</p>
+<p class="rem-why"><code>Org → Security and quality → Campaigns → Create campaign → From secret scanning filters</code></p>
+<p class="rem-why">Not the whole org. Target the repos that matter, for example with a repository custom property (<code>props.BusinessPriority:Urgent</code>). Cap it at <b>1000 alerts</b>, which is also the hard limit.</p>
+</div>
+</details>
+<details class="rem-slot" name="ss-remediate">
+<summary class="rem-btn"><span class="rem-icon" aria-hidden="true">⚡</span><span class="rem-name">TRIAGE</span></summary>
+<div class="rem-plate">
+<p class="rem-title">⚡ TRIAGE — by real risk</p>
+<p class="rem-why">Filter validity to <b>Active</b> and <b>Unknown</b>. <b>Active</b> is a live key someone can use right now. <b>Unknown</b> means nobody could confirm it is dead, so treat it as live.</p>
+<p class="rem-why"><b>Inactive</b> can wait. This is what turns a backlog into a list worth someone's week.</p>
+</div>
+</details>
+<details class="rem-slot" name="ss-remediate">
+<summary class="rem-btn"><span class="rem-icon" aria-hidden="true">👤</span><span class="rem-name">OWN</span></summary>
+<div class="rem-plate">
+<p class="rem-title">👤 OWN — a name and a date</p>
+<p class="rem-why">Every campaign gets a <b>due date</b> and a <b>campaign manager</b>. The picker only offers <b>org owners and security managers</b>.</p>
+<p class="rem-why">Without both, nothing gets rotated. Publishing notifies everyone who can see the alerts, and the campaign appears in each repo's Security tab.</p>
+</div>
+</details>
+<details class="rem-slot" name="ss-remediate">
+<summary class="rem-btn"><span class="rem-icon" aria-hidden="true">🚨</span><span class="rem-name">ROTATE</span></summary>
+<div class="rem-plate">
+<p class="rem-title">🚨 ROTATE — then close it out</p>
+<p class="rem-why">Deleting it from the repo is not enough: it stays in the history and in everyone's clones.</p>
+<p class="rem-why">Partner secrets leaked in <b>public</b> repos are revoked provider-side and <b>never reach your alert list</b>. Then close each alert as <code>Revoked</code>, <code>False positive</code>, or <code>Used in tests</code> so the campaign burns down.</p>
+</div>
+</details>
+</div>
+<div class="rem-screen"><p class="rem-empty">SELECT A STEP ▸</p></div>
+</div>
+</div>
+
+## My recommended starting checklist <a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/secret-scanning" target="_blank" rel="noopener noreferrer">📖 Docs</a> <input type="checkbox" id="demo-secret-checklist" class="demo-toggle" /><label class="h2-demo" for="demo-secret-checklist">&#9658; DEMO</label>
+
+<div class="demo-panel">
+<label class="demo-scrim" for="demo-secret-checklist" aria-label="Close demo steps"></label>
+<div class="demo-window" role="group" aria-label="Demo steps">
+<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">Secret Scanning checklist</span><span class="demo-note">FOR PRESENTER ONLY</span><label class="demo-close" for="demo-secret-checklist" aria-label="Close">&#10005;</label></div>
+<ol class="demo-steps">
+<li>
+<p class="demo-step-title">1. INTERNAL SECRET PATTERNS</p>
+<p><a href="https://github.com/theomonfort-org/ghas-test-1/settings/security_analysis/custom_patterns/new" target="_blank" rel="noopener noreferrer">ghas-test-1 → New custom pattern ↗</a>: show <b>Secret format</b>, <b>Test string</b>, then <b>Save and dry run</b> before publishing.</p>
+</li>
+<li>
+<p class="demo-step-title">2. PUSH PROTECTION PATTERNS</p>
+<p><a href="https://github.com/enterprises/octodemo/settings/security_analysis/pattern_configurations" target="_blank" rel="noopener noreferrer">octodemo → Pattern configurations ↗</a>: review <b>False positives</b>, <b>Bypass rate</b>, and the <b>Enterprise setting</b> column.</p>
+</li>
+<li>
+<p class="demo-step-title">3. DIFFERENT RULES BEFORE MERGE</p>
+<p><a href="https://github.com/theomonfort-org/ghas-test-1/settings/rules/new?target=branch&amp;enforcement=disabled" target="_blank" rel="noopener noreferrer">ghas-test-1 → New branch ruleset ↗</a>: <b>Require secret scanning alerts are resolved → Generic patterns</b>. Target <code class="demo-path">main</code>; keep the ruleset disabled for a walkthrough.</p>
+</li>
+<li>
+<p class="demo-step-title">4. PUSH PROTECTION BYPASS</p>
+<p><a href="https://github.com/enterprises/octodemo/settings/security_analysis" target="_blank" rel="noopener noreferrer">octodemo → Security configurations ↗</a>: open the intended configuration, then <b>Push protection → Bypass privileges → Specific actors</b>.</p>
+<p class="demo-out">Enterprise settings can affect other repositories. Do not save or apply changes during a read-only demo.</p>
+</li>
+<li>
+<p class="demo-step-title">5. SECRET REMEDIATION CAMPAIGN</p>
+<p><a href="https://github.com/orgs/theomonfort-org/security/campaigns" target="_blank" rel="noopener noreferrer">theomonfort-org → Campaigns ↗</a>: <b>Create campaign → From secret scanning filters</b>. Scope to <b>ghas-test-1</b> and save as a draft.</p>
+<p><a href="https://github.com/theomonfort-org/ghas-test-1/security/secret-scanning" target="_blank" rel="noopener noreferrer">ghas-test-1 → Secret scanning alerts ↗</a></p>
+</li>
+<li>
+<p class="demo-step-title">6. STORE WORKFLOW SECRETS</p>
+<p><a href="https://github.com/theomonfort-org/ghas-test-1/settings/secrets/actions" target="_blank" rel="noopener noreferrer">ghas-test-1 → Actions secrets ↗</a>: show <b>New repository secret</b>. Do not enter a real secret during screen sharing.</p>
+</li>
+</ol>
+</div>
+</div>
+
+With **Secret Protection and push protection enabled**, this is the order I recommend.
+
+<div class="ctl-widget">
+<p class="ctl-hint">▸ CHECK COMPLETED STEPS. OPEN A STEP FOR SETTINGS</p>
+<div class="ctl-list">
+<details class="ctl-item" name="ss-start">
+<summary class="ctl-btn"><input type="checkbox" class="ctl-check" aria-labelledby="ss-start-1" /><span class="ctl-icon">1</span><span class="ctl-name" id="ss-start-1">Add patterns for internal secrets, if any</span><span class="ctl-when">CUSTOM PATTERNS</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-your-secrets/customize-leak-detection/define-custom-patterns" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Configure</span><span class="ctl-v"><a class="retro-link" href="https://github.com/OWNER/REPO/settings/security_analysis/custom_patterns/new" target="_blank" rel="noopener noreferrer">New custom pattern ↗</a>: dry-run your token formats, then publish.</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ss-start">
+<summary class="ctl-btn"><input type="checkbox" class="ctl-check" aria-labelledby="ss-start-2" /><span class="ctl-icon">2</span><span class="ctl-name" id="ss-start-2">Choose what push protection blocks</span><span class="ctl-when">PATTERNS</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-at-scale/configure-enterprise-security/establish-complete-coverage/configure-additional-settings#specifying-patterns-to-include-in-push-protection-for-your-enterprise" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Review</span><span class="ctl-v"><a class="retro-link" href="https://github.com/enterprises/ENTERPRISE/settings/security_analysis/pattern_configurations" target="_blank" rel="noopener noreferrer">Pattern dashboard ↗</a>: check false positives and bypass rates, then choose which patterns to block.</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ss-start">
+<summary class="ctl-btn"><input type="checkbox" class="ctl-check" aria-labelledby="ss-start-3" /><span class="ctl-icon">3</span><span class="ctl-name" id="ss-start-3">Add different rules before merge</span><span class="ctl-when">MERGE PROTECTION</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-your-secrets/prevent-future-leaks/block-merges-with-secrets" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Example</span><span class="ctl-v"><a class="retro-link" href="https://github.com/OWNER/REPO/settings/rules" target="_blank" rel="noopener noreferrer">Rulesets ↗</a>: <b>Require secret scanning alerts are resolved → Generic patterns</b>. Allow push; resolve alerts before merge to <code>main</code>. Separate ruleset bypass. Public preview.</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ss-start">
+<summary class="ctl-btn"><input type="checkbox" class="ctl-check" aria-labelledby="ss-start-4" /><span class="ctl-icon">4</span><span class="ctl-name" id="ss-start-4">Choose who can bypass push protection</span><span class="ctl-when">ENTERPRISE</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-your-secrets/manage-bypass-requests/enable-delegated-bypass#enabling-delegated-bypass-for-an-enterprise" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Restrict</span><span class="ctl-v"><a class="retro-link" href="https://github.com/enterprises/ENTERPRISE/settings/security_analysis" target="_blank" rel="noopener noreferrer">Enterprise configurations ↗</a>: <b>Bypass privileges → Specific actors</b>. Save and apply the configuration.</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ss-start">
+<summary class="ctl-btn"><input type="checkbox" class="ctl-check" aria-labelledby="ss-start-5" /><span class="ctl-icon">5</span><span class="ctl-name" id="ss-start-5">Create a campaign for existing secrets</span><span class="ctl-when">CAMPAIGNS</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/manage-security-alerts/remediate-alerts-at-scale/creating-managing-security-campaigns" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Remediate</span><span class="ctl-v"><a class="retro-link" href="https://github.com/orgs/ORG/security/campaigns" target="_blank" rel="noopener noreferrer">Security campaigns ↗</a>: select secret scanning alerts, assign owners and a deadline, then revoke or rotate.</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ss-start">
+<summary class="ctl-btn"><input type="checkbox" class="ctl-check" aria-labelledby="ss-start-6" /><span class="ctl-icon">6</span><span class="ctl-name" id="ss-start-6">Store workflow secrets in GitHub, not code</span><span class="ctl-when">ACTIONS SECRETS</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets#creating-secrets-for-a-repository" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Store</span><span class="ctl-v"><a class="retro-link" href="https://github.com/OWNER/REPO/settings/secrets/actions" target="_blank" rel="noopener noreferrer">Actions secrets ↗</a>: Settings → Secrets and variables → Actions → <b>New repository secret</b>.</span></p>
+</div>
+</details>
+</div>
+</div>
+
+URL templates: replace `ENTERPRISE`, `ORG`, `OWNER`, `REPO`.
+
+## Availability by product
+
+<table class="availability-table">
+<thead>
+<tr>
+<th>Feature</th>
+<th>Public repo</th>
+<th>Private / internal<br>without product</th>
+<th>Secret Protection / GHAS</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>Secret scanning alerts</td><td>✅ Free</td><td>❌</td><td>✅ Included</td></tr>
+<tr><td>Push protection (repo / org)</td><td>✅ Free</td><td>❌</td><td>✅ Included</td></tr>
+<tr><td>Partner program alerts (sent to the provider)</td><td>✅ Free, always on</td><td>❌</td><td>❌ Public repos only</td></tr>
+<tr><td>Validity checks</td><td>❌</td><td>❌</td><td>✅ Supported providers</td></tr>
+<tr><td>Generic patterns</td><td>❌</td><td>❌</td><td>✅ Included</td></tr>
+<tr><td>Custom patterns</td><td>❌</td><td>❌</td><td>✅ Included</td></tr>
+<tr><td>AI-detected secrets</td><td>❌</td><td>❌</td><td>✅ Included</td></tr>
+<tr><td>Public monitoring</td><td>❌</td><td>❌</td><td>✅ GHEC Enterprise</td></tr>
+</tbody>
+</table>
+
+> 🆓 **User push protection** is free and enabled by default on all plans, but only covers pushes to public repositories. **Partner alerts** also notify providers only about leaks in public repositories and public npm packages — always on, and not configurable.
+>
+> 👤 **User-owned repositories** are a special case: alerts require GHEC with **Enterprise Managed Users**, or GHES with Secret Protection enabled on the enterprise. Org-owned private / internal repos only need Secret Protection on Team or GHEC.
+>
+> 💰 Generic, custom, and AI detection, validity checks, and private / internal repository coverage require **Secret Protection or a legacy GHAS license**. **Public monitoring** is an enterprise-wide feature for GHEC Enterprise.
+
+📘 Details: <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/get-started/learning-about-github/about-github-advanced-security" target="_blank" rel="noopener noreferrer">Advanced Security products ↗</a> / <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/tutorials/secret-scanning-partner-program" target="_blank" rel="noopener noreferrer">Partner program ↗</a> / <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/public-monitoring" target="_blank" rel="noopener noreferrer">Public monitoring ↗</a>
+
+## Public monitoring (NEW) <a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/public-monitoring" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+- 🌐 **Public only** — git, PR comments, issues, discussions. Never your private repos.
+- ⚡ Real time. Needs Secret Protection or GHAS. Public preview, no extra cost.
+- 🧩 **No setup** — enable it and existing findings appear straight away.
+
+<div class="tbl-compact">
+
+| Attributed by | What it checks | Catches |
+| --- | --- | --- |
+| 👤 Member | Committer is a member | Managed and known accounts |
+| 🌐 Verified domain | Email on your domain | Personal account, work email |
+
+</div>
+
+<div class="cal-compact">
+
+> ⚙️ Turned on under **Security and quality**, by an enterprise owner or security manager.
+
+</div>
+
+## Secret Risk Assessment <a class="h2-doc" href="https://docs.github.com/en/code-security/how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/assess-your-secret-risk" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+Scans every org repo to show what secrets sit where. **Free for Team and Enterprise orgs.**
+
+- 🔎 **Scope** — every repo, any visibility, archived included
+- 📊 **Output** — secret types and counts per repo. Values are never stored or shown.
+- 🕒 **Frequency** — point-in-time, rerunnable every 90 days. Not continuous monitoring.
+- 🚀 **Run it** — `Org → Security and quality → Assessments → Scan your organization`. The first run also starts the free code security assessment.
+
+<div class="cal-compact">
+
+> 📊 Answers "how many secrets are leaking?" and gives you the numbers for a budget case.
+
+</div>
+
+## AI workflows can commit secrets too <a class="h2-doc" href="https://docs.github.com/en/code-security/tutorials/remediate-leaked-secrets/remediating-a-leaked-secret" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+**Review agent-generated config, not just application code.** <a class="retro-link" href="https://thehackernews.com/2026/11/claude-codes-dont-ask-again-file.html" target="_blank" rel="noopener noreferrer">Reporting on Apiiro's research ↗</a> describes secrets in saved approval commands in <code>.claude/settings.local.json</code> reaching public Git history.
+
+The <a class="retro-link" href="https://news.ycombinator.com/item?id=50408126" target="_blank" rel="noopener noreferrer">Claude Code team's HN response ↗</a> says this file is intended to stay local and ignored. This is a reported workflow risk, not proof that every agent leaks secrets.
+
+- **Review** staged files and `git diff --cached` before committing.
+- **Keep local** secret-bearing config: verify ignore rules and that the file is untracked. Use a secret manager, not literal credentials in commands.
+- **Detect / block** with secret scanning + push protection where available. Coverage is not a guarantee.
+- **If exposed**, revoke or rotate the credential first, then clean up. Deleting the file does not erase Git history.
