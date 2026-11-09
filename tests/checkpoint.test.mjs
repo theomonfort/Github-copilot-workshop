@@ -7,7 +7,8 @@ import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 
 const project = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const files = ['checkpoint1', 'checkpoint2', 'checkpoint3', 'scripts/checkpoint.mjs'];
+const files = ['checkpoint1', 'checkpoint2', 'checkpoint3', 'scripts/checkpoint.mjs', 'scripts/checkpoint-issues.mjs', 'scripts/checkpoint-issues.json'];
+const catalogue = JSON.parse(readFileSync(join(project, 'scripts/checkpoint-issues.json'), 'utf8'));
 const stages = ['01-develop', '02-cloud-agent', '03-tests'];
 const titles = ['Website scaffold', 'Website with presentation mode', 'Complete website with tests and CI'];
 
@@ -27,6 +28,7 @@ function fixture(t, { copied = false, https = false } = {}) {
     GIT_SSH_COMMAND: join(bin, 'ssh'), GIT_SSH_VARIANT: 'ssh',
     PATH: `${bin}:${process.env.PATH}`, TEST_ORIGIN: origin, TEST_SOURCE: source,
     TEST_GH_LOG: join(sandbox, 'gh.log'), TEST_SSH_LOG: join(sandbox, 'ssh.log'),
+    TEST_ISSUES: join(sandbox, 'issues.json'),
   };
   function git(cwd, ...args) {
     const result = spawnSync('git', args, { cwd, env, encoding: 'utf8' });
@@ -36,13 +38,37 @@ function fixture(t, { copied = false, https = false } = {}) {
   git(sandbox, 'config', '--global', 'url.git@github.com:.insteadOf', 'https://github.com/');
   git(sandbox, 'config', '--global', 'init.defaultBranch', 'main');
   git(sandbox, 'config', '--global', 'commit.gpgsign', 'false');
+  writeFileSync(env.TEST_ISSUES, '[]');
   writeFileSync(join(bin, 'gh'), `#!/usr/bin/env node
 const fs = require('node:fs');
 const a = process.argv.slice(2);
 fs.appendFileSync(process.env.TEST_GH_LOG, JSON.stringify(a) + '\\n');
 if (a[0] === 'auth') process.exit(process.env.FAIL_AUTH ? 1 : 0);
 if (a[0] === 'api') {
-  console.log(JSON.stringify({clone_url: 'https://github.com/' + (process.env.REDIRECT_SOURCE ? 'theomonfort/Github-copilot-workshop' : 'workshop-tests/participant') + '.git', permissions: {push: !process.env.NO_PUSH}, archived: false}));
+  if (a[a.indexOf('--hostname') + 1] !== 'github.com') process.exit(90);
+  const endpoint = a.find(arg => arg.startsWith('repos/'));
+  if (endpoint === 'repos/workshop-tests/participant') {
+    console.log(JSON.stringify({id: 314, clone_url: 'https://github.com/' + (process.env.REDIRECT_SOURCE ? 'theomonfort/Github-copilot-workshop' : 'workshop-tests/participant') + '.git', permissions: {push: !process.env.NO_PUSH}, archived: false, has_issues: !process.env.ISSUES_DISABLED}));
+  } else if (endpoint === 'repos/workshop-tests/participant/issues' && a[a.indexOf('--method') + 1] === 'POST') {
+    const field = name => a.find(arg => arg.startsWith(name + '='))?.slice(name.length + 1);
+    const title = field('title'), body = field('body');
+    const key = title.slice('[playbook:'.length, title.indexOf(']'));
+    if (process.env.FAIL_ISSUE_CREATE || process.env.FAIL_ISSUE_KEY === key) { console.error('Simulated issue create permission failure (HTTP 403)'); process.exit(1); }
+    const issues = JSON.parse(fs.readFileSync(process.env.TEST_ISSUES, 'utf8'));
+    const number = Math.max(40, ...issues.map(issue => issue.number)) + 3;
+    const issue = {number, title, body, state: 'open', html_url: 'https://github.com/workshop-tests/participant/issues/' + number};
+    issues.push(issue);
+    fs.writeFileSync(process.env.TEST_ISSUES, JSON.stringify(issues));
+    if (process.env.LOSE_ISSUE_RESPONSE_KEY === key) { console.error('Simulated connection lost after issue creation'); process.exit(1); }
+    console.log(JSON.stringify(issue));
+  } else if (endpoint === 'repos/workshop-tests/participant/issues?state=all&per_page=100&sort=created&direction=asc') {
+    if (!a.includes('--paginate') || !a.includes('--slurp')) process.exit(90);
+    if (process.env.FAIL_ISSUE_READ) { console.error('Simulated issue read permission failure (HTTP 403)'); process.exit(1); }
+    const issues = JSON.parse(fs.readFileSync(process.env.TEST_ISSUES, 'utf8'));
+    const pages = [];
+    for (let i = 0; i < issues.length; i += 2) pages.push(issues.slice(i, i + 2));
+    console.log(JSON.stringify(pages.length ? pages : [[]]));
+  } else process.exit(90);
 } else if (a[0] === 'pr' && a[1] === 'create') {
   if (a[a.indexOf('--repo') + 1] !== 'github.com/workshop-tests/participant' || a[a.indexOf('--base') + 1] !== 'main') process.exit(90);
   if (process.env.FAIL_PR) { console.error('Simulated PR failure'); process.exit(1); }
@@ -137,7 +163,10 @@ process.exit(r.status ?? 1);
     const requests = readFileSync(env.TEST_SSH_LOG, 'utf8').trim().split('\n').map(JSON.parse);
     assert(!requests.some(([service, repo]) => service === 'git-receive-pack' && repo.startsWith('theomonfort/')));
   };
-  return { sandbox, participant, origin, source, canonical, env, bin, initial, snapshots, copiedSHA, git, run, calls, head, remoteRef, assertStable };
+  const issues = () => JSON.parse(readFileSync(env.TEST_ISSUES, 'utf8'));
+  const saveIssues = (value) => writeFileSync(env.TEST_ISSUES, JSON.stringify(value));
+  const receiptPath = join(participant, '.git', 'workshop-issues', 'github.com-314.json');
+  return { sandbox, participant, origin, source, canonical, env, bin, initial, snapshots, copiedSHA, git, run, calls, head, remoteRef, assertStable, issues, saveIssues, receiptPath };
 }
 
 function assertPullRequest(f, number, base) {
@@ -262,12 +291,15 @@ test('sequential imports preserve titles/commits and provide useful stage-specif
 test('later checkpoints describe the complete snapshot when imported without merging earlier stages', (t) => {
   const f = fixture(t);
   for (const number of [2, 3]) {
-    const result = f.run(number);
+    const result = f.run(number, { ISSUES_DISABLED: '1', FAIL_ISSUE_READ: '1', FAIL_ISSUE_CREATE: '1' });
     assert.equal(result.status, 0, result.output);
     assert.equal(f.git(f.participant, 'rev-parse', 'HEAD^'), f.initial);
     assertPullRequest(f, number, f.initial);
     f.assertStable();
   }
+  assert.equal(f.issues().length, 0);
+  assert(!f.calls().some((args) => args.some((arg) => arg.includes('/issues'))));
+  assert(!existsSync(f.receiptPath));
 });
 
 test('existing local/remote work branches and repeated invocations get fresh branch names', (t) => {
@@ -283,6 +315,7 @@ test('existing local/remote work branches and repeated invocations get fresh bra
   }
   assert.equal(f.git(f.participant, 'rev-parse', 'workshop-checkpoint1'), existing);
   assert.equal(f.remoteRef('workshop-checkpoint1-2'), f.initial);
+  assert.equal(f.issues().length, catalogue.length);
   f.git(f.participant, 'branch', 'workshop-checkpoint2/topic');
   f.git(f.sandbox, '--git-dir=' + f.origin, 'update-ref', 'refs/heads/WORKSHOP-CHECKPOINT2-2', f.initial);
   const nested = f.run(2);
@@ -304,6 +337,7 @@ test('canonical origin, alternate push destination, and redirected canonical rep
   assert.equal(f.head(), before);
   assert.equal(f.git(f.participant, 'stash', 'list'), '');
   assert(!f.calls().some((args) => args[0] === 'pr'));
+  assert.equal(f.issues().length, 0);
 });
 
 test('missing Node/git/gh, missing authentication and push permission stop before saving work', (t) => {
@@ -340,9 +374,193 @@ test('ignored collisions and in-progress Git operations stop without discarding 
   assert.match(result.output, /Ignored files would be replaced/);
   assert.equal(readFileSync(join(f.participant, 'site.txt'), 'utf8'), 'ignored work');
   assert.equal(f.git(f.participant, 'stash', 'list'), '');
+  assert.equal(f.issues().length, 0);
   writeFileSync(join(f.participant, '.git', 'MERGE_HEAD'), f.initial + '\n');
   assert.match(f.run(1).output, /Finish the existing Git operation/);
   assert.equal(f.head(), before);
+});
+
+test('checkpoint1 prepares the exact current Japanese catalogue before Git writes, independent of local edits', (t) => {
+  const f = fixture(t);
+  writeFileSync(join(f.participant, 'scripts/checkpoint-issues.json'), 'unfinished local catalogue');
+  const result = f.run(1);
+  assert.equal(result.status, 0, result.output);
+  assert.equal(catalogue.length, 8);
+  assert.deepEqual(catalogue.map((item) => item.key), [
+    'presentation-core', 'presentation-content', 'mermaid-rendering', 'responsive-navigation',
+    'presentation-tests', 'playbook-3d', 'galaxy-audio', 'daily-repo-status',
+  ]);
+  assert.deepEqual(f.issues().map(({ title, body }) => ({ title, body })),
+    catalogue.map(({ title, body }) => ({ title, body })));
+  const receipt = JSON.parse(readFileSync(f.receiptPath, 'utf8'));
+  for (const [index, item] of catalogue.entries()) {
+    assert.equal(receipt.issues[item.key], f.issues()[index].number);
+    assert(result.output.includes(f.issues()[index].html_url));
+  }
+  assert(result.output.indexOf('Workshop issues ready: 8 created') < result.output.indexOf('Saved tracked'));
+  assert.equal(f.git(f.participant, 'show', 'refs/stash:scripts/checkpoint-issues.json'), 'unfinished local catalogue');
+  assert.equal(f.git(f.participant, 'ls-tree', 'HEAD', '--', '.git/workshop-issues'), '');
+  assertPullRequest(f, 1, f.initial);
+  assert(!existsSync(`${f.receiptPath}.lock`));
+  assert(!existsSync(`${f.receiptPath}.tmp`));
+  f.assertStable();
+});
+
+test('reruns preserve edited/closed issues and recover marker-free identities from receipts without duplicates', (t) => {
+  const f = fixture(t);
+  const first = f.run(1);
+  assert.equal(first.status, 0, first.output);
+  f.git(f.sandbox, '--git-dir=' + f.origin, 'update-ref', 'refs/heads/main', f.head());
+  const issues = f.issues();
+  issues[0].title = 'My edited title';
+  issues[0].body = 'My edited body without markers';
+  issues[1].state = 'closed';
+  issues[1].title = 'Closed and edited title';
+  issues[2].body = 'Only the title key remains';
+  const receipt = JSON.parse(readFileSync(f.receiptPath, 'utf8'));
+  delete receipt.issues[catalogue[2].key];
+  writeFileSync(f.receiptPath, JSON.stringify(receipt));
+  issues.push({ ...issues[3], number: 123, pull_request: {}, title: catalogue[0].title, body: catalogue[0].body });
+  f.saveIssues(issues);
+  writeFileSync(join(f.participant, 'site.txt'), 'unfinished site work');
+  writeFileSync(join(f.participant, 'notes.txt'), 'untracked notes');
+  const before = f.git(f.participant, 'status', '--porcelain');
+  const head = f.head();
+  const result = f.run(1);
+  assert.equal(result.status, 0, result.output);
+  assert.match(result.output, /0 created, 8 reused/);
+  assert.match(result.output, /already matches/);
+  assert.deepEqual(f.issues(), issues);
+  assert.equal(f.calls().filter((args) => args.includes('POST')).length, 8);
+  assert.equal(f.calls().filter((args) => args[0] === 'pr').length, 1);
+  assert.equal(f.git(f.participant, 'status', '--porcelain'), before);
+  assert.equal(f.git(f.participant, 'stash', 'list'), '');
+  assert.equal(f.head(), head);
+});
+
+test('an already-imported main still prepares missing issues and reuses paginated existing closed issues', (t) => {
+  const f = fixture(t);
+  f.git(f.participant, 'fetch', f.source, 'refs/heads/checkpoint/01-develop');
+  const imported = f.git(f.participant, 'commit-tree', `${f.snapshots[0]}^{tree}`, '-p', f.initial, '-m', 'Already imported');
+  f.git(f.participant, 'push', '--no-follow-tags', 'origin', `${imported}:refs/heads/main`);
+  const existing = catalogue.slice(0, 3).map((item, index) => ({
+    number: 140 + index, title: 'User title', body: `${item.body}\nUser notes`, state: 'closed',
+    html_url: `https://github.com/workshop-tests/participant/issues/${140 + index}`,
+  }));
+  f.saveIssues(existing);
+  writeFileSync(join(f.participant, 'notes.txt'), 'keep local work');
+  const before = f.git(f.participant, 'status', '--porcelain');
+  const head = f.head();
+  const result = f.run(1);
+  assert.equal(result.status, 0, result.output);
+  assert.match(result.output, /5 created, 3 reused/);
+  assert.match(result.output, /already matches/);
+  assert.deepEqual(f.issues().slice(0, 3), existing);
+  assert.equal(f.issues().length, 8);
+  assert.equal(f.head(), head);
+  assert.equal(f.remoteRef('main'), imported);
+  assert.equal(f.git(f.participant, 'status', '--porcelain'), before);
+  assert.equal(f.git(f.participant, 'stash', 'list'), '');
+  assert(!f.calls().some((args) => args[0] === 'pr'));
+});
+
+test('disabled issues and missing issue permissions stop before stashing or publishing', (t) => {
+  const f = fixture(t);
+  writeFileSync(join(f.participant, 'notes.txt'), 'leave untouched');
+  const head = f.head();
+  for (const extra of [{ ISSUES_DISABLED: '1' }, { FAIL_ISSUE_READ: '1' }, { FAIL_ISSUE_CREATE: '1' }]) {
+    const result = f.run(1, extra);
+    assert.notEqual(result.status, 0, result.output);
+    assert.match(result.output, /Issues enabled|issue read permission failure|issue create permission failure/);
+    assert.equal(f.head(), head);
+    assert.equal(f.git(f.participant, 'stash', 'list'), '');
+    assert.equal(readFileSync(join(f.participant, 'notes.txt'), 'utf8'), 'leave untouched');
+    assert.equal(f.issues().length, 0);
+    assert(!f.calls().some((args) => args[0] === 'pr'));
+    assert(!existsSync(`${f.receiptPath}.lock`));
+  }
+  f.assertStable();
+});
+
+test('partial issue failures and lost creation responses resume without duplicate issues or checkout changes', (t) => {
+  const f = fixture(t);
+  writeFileSync(join(f.participant, 'notes.txt'), 'keep until successful issue preparation');
+  const head = f.head();
+  const failed = f.run(1, { FAIL_ISSUE_KEY: 'mermaid-rendering' });
+  assert.notEqual(failed.status, 0);
+  assert.equal(f.issues().length, 2);
+  assert.match(failed.output, /Created issue presentation-core: #43/);
+  assert.match(failed.output, /rerun \.\/checkpoint1/);
+  assert.equal(f.head(), head);
+  assert.equal(f.git(f.participant, 'stash', 'list'), '');
+  const lost = f.run(1, { LOSE_ISSUE_RESPONSE_KEY: 'mermaid-rendering' });
+  assert.notEqual(lost.status, 0);
+  assert.equal(f.issues().length, 3);
+  assert.match(lost.output, /request may have succeeded/);
+  assert.equal(f.head(), head);
+  assert.equal(f.git(f.participant, 'stash', 'list'), '');
+  const completed = f.run(1);
+  assert.equal(completed.status, 0, completed.output);
+  assert.match(completed.output, /5 created, 3 reused/);
+  assert.equal(f.issues().length, 8);
+  assert.deepEqual(f.issues().map((issue) => issue.title), catalogue.map((item) => item.title));
+  assert.equal(f.calls().filter((args) => args[0] === 'pr').length, 1);
+  assert.equal(f.git(f.participant, 'show', 'refs/stash^3:notes.txt'), 'keep until successful issue preparation');
+  assert(!existsSync(`${f.receiptPath}.lock`));
+  assert(!existsSync(`${f.receiptPath}.tmp`));
+  f.assertStable();
+});
+
+test('ambiguous identities, missing recorded issues and existing locks never trigger replacement creation', (t) => {
+  const f = fixture(t);
+  const matching = [71, 72].map((number) => ({
+    number, title: catalogue[0].title, body: catalogue[0].body, state: 'open',
+    html_url: `https://github.com/workshop-tests/participant/issues/${number}`,
+  }));
+  f.saveIssues(matching);
+  const duplicate = f.run(1);
+  assert.notEqual(duplicate.status, 0);
+  assert.match(duplicate.output, /Multiple issues match presentation-core: #71, #72/);
+  f.saveIssues([{ ...matching[0], body: catalogue[0].body + catalogue[1].body }]);
+  const conflicting = f.run(1);
+  assert.notEqual(conflicting.status, 0);
+  assert.match(conflicting.output, /matches multiple catalogue keys/);
+  writeFileSync(f.receiptPath, JSON.stringify({ version: 1, issues: { 'presentation-core': 73 } }));
+  f.saveIssues([]);
+  const missing = f.run(1);
+  assert.notEqual(missing.status, 0);
+  assert.match(missing.output, /Recorded issue #73.*missing or transferred/);
+  writeFileSync(`${f.receiptPath}.lock`, 'other-process\n');
+  const locked = f.run(1);
+  assert.notEqual(locked.status, 0);
+  assert.match(locked.output, /Issue preparation is locked/);
+  assert.equal(readFileSync(`${f.receiptPath}.lock`, 'utf8'), 'other-process\n');
+  assert(!f.calls().some((args) => args.includes('POST') || args[0] === 'pr'));
+  assert.equal(f.git(f.participant, 'stash', 'list'), '');
+  f.assertStable();
+});
+
+test('invalid local receipts and canonical catalogue data stop explicitly without remote mutations', (t) => {
+  const f = fixture(t);
+  mkdirSync(dirname(f.receiptPath), { recursive: true });
+  for (const invalid of ['{', '{"version":1,"issues":{"presentation-core":"not-a-number"}}']) {
+    writeFileSync(f.receiptPath, invalid);
+    const result = f.run(1);
+    assert.notEqual(result.status, 0);
+    assert(result.output.includes(f.receiptPath));
+    assert.equal(readFileSync(f.receiptPath, 'utf8'), invalid);
+    assert(!existsSync(`${f.receiptPath}.lock`));
+  }
+  writeFileSync(f.receiptPath, '{"version":1,"issues":{}}');
+  writeFileSync(join(f.canonical, 'scripts/checkpoint-issues.json'), JSON.stringify([{ ...catalogue[0], body: 'Missing identity marker' }]));
+  f.git(f.canonical, 'commit', '-am', 'Invalid fixture catalogue');
+  f.git(f.canonical, 'push', f.source, 'HEAD:refs/heads/checkpoint/01-develop');
+  const invalid = f.run(1);
+  assert.notEqual(invalid.status, 0);
+  assert.match(invalid.output, /canonical issue catalogue is invalid/);
+  assert(!f.calls().some((args) => args.includes('POST') || args[0] === 'pr'));
+  assert.equal(f.git(f.participant, 'stash', 'list'), '');
+  f.assertStable();
 });
 
 test('fetch failure leaves the checkout unchanged; push/PR failures retain recoverable commits and stash', (t) => {

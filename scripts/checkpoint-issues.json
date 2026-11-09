@@ -1,0 +1,42 @@
+[
+  {
+    "key": "presentation-core",
+    "title": "[playbook:presentation-core] プレゼンモードと目次ナビゲーションを作る",
+    "body": "<!-- workshop-issue:presentation-core -->\n## 段階\nCloud Agent (Part 8)。基本サイト (Part 6 / checkpoint1) のレビューとマージ後に実装。checkpoint2 の到達点。\n\n## 完了条件\n- `/playbook` の一覧と Markdown 詳細を残し、カードから `/playbook/<slug>/?present=1` を開ける。\n- 本文の各 H2 をスライドにし、frontmatter のタイトルを先頭に表示する。矢印キーで移動、Esc で一覧へ戻り、現在のエントリとスライドを URL に保持する。\n- `src/lib/playbook-categories.ts` を使ったカテゴリ別目次で現在地を示し、別エントリの先頭へプレゼン状態を保って移動できる。\n\n参考: https://theomonfort.github.io/theomonfort/playbook/github/?present=1"
+  },
+  {
+    "key": "presentation-content",
+    "title": "[playbook:presentation-content] スライドの本文とヒーローとリンク集を整える",
+    "body": "<!-- workshop-issue:presentation-content -->\n## 段階\nCloud Agent (Part 8)。`presentation-core` 完了後。checkpoint2 の到達点。\n\n## 完了条件\n- 最初の「一言で」セクションをカテゴリの Octocat と吹き出しで表示し、独立した重複タイトルスライドを増やさない。\n- frontmatter の `links` を `group` ごとに最終スライドへまとめる。リンクがなければ追加しない。\n- 既存のカテゴリ別背景、暗いオーバーレイ、レトロ配色を使い、1440×900 で本文、表、コードを読める配置にする。長い内容はスライド内でスクロールできる。\n\n参考: https://theomonfort.github.io/theomonfort/playbook/github/?present=1"
+  },
+  {
+    "key": "mermaid-rendering",
+    "title": "[playbook:mermaid-rendering] Markdown とスライドの Mermaid 図を描画する",
+    "body": "<!-- workshop-issue:mermaid-rendering -->\n## 段階\nCloud Agent (Part 8)。`presentation-core` 完了後。checkpoint2 の到達点。\n\n## 完了条件\n- Mermaid コードブロックを通常の詳細ページとプレゼンモードで図として描画する。\n- 先頭以外のスライドへ移動、別エントリへ切り替え、深いリンクを再読み込みしても図が表示される。\n- 描画中の未完成な図を見せず、失敗時はエラーを示して本文やナビゲーションを使える状態に保つ。\n\n参考: https://theomonfort.github.io/theomonfort/playbook/cloud-agent/?present=1"
+  },
+  {
+    "key": "responsive-navigation",
+    "title": "[playbook:responsive-navigation] モバイル表示とプレゼン切り替えを安定させる",
+    "body": "<!-- workshop-issue:responsive-navigation -->\n## 段階\nCloud Agent (Part 8)。`presentation-core` 完了後。checkpoint2 の到達点。\n\n## 完了条件\n- 狭い画面でも一覧と詳細を読めるようにし、プレゼンには通常の詳細表示へのフォールバックを用意する。\n- 目次でエントリを切り替えても通常ページが一瞬表示されず、目次のスクロール位置を保つ。\n- デスクトップでスライドの深いリンクと再読み込みを確認し、モバイルで横方向のはみ出しがないことを確認する。\n\n参考: https://theomonfort.github.io/theomonfort/playbook/"
+  },
+  {
+    "key": "presentation-tests",
+    "title": "[playbook:presentation-tests] Playwright と PR 用 CI でプレゼン操作を守る",
+    "body": "<!-- workshop-issue:presentation-tests -->\n## 段階\nTest & Secure (Part 11)。プレゼン機能をマージ後、または checkpoint2 から開始。checkpoint3 の到達点。\n\n## 完了条件\n- `tests/e2e/presentation.spec.ts` で `/playbook` のカードからプレゼンに入り、矢印キー、目次での切り替え、Esc、深いリンクを検証する。プレゼンを既定のトップページと仮定しない。\n- Playwright の `webServer` で本番ビルドとテスト専用の preview を起動し、既存の開発サーバーを再利用せずローカルでテストが通る。\n- PR の作成 / 更新時に `npm ci`、Chromium のインストール、テストを実行する `.github/workflows/test.yml` を追加し、失敗時のレポートを保存する。\n\n参考: https://theomonfort.github.io/theomonfort/handson/test-secure-actions/"
+  },
+  {
+    "key": "playbook-3d",
+    "title": "[playbook:playbook-3d] 既存の 3D ギャラクシービューを再現する",
+    "body": "<!-- workshop-issue:playbook-3d -->\n## 段階\nCLI (Part 13) の追加実装。checkpoint3 の後に取り組む。checkpoint1〜3 には 3D は含まれない。\n\n## 完了条件\n- 既存サイトの 2D / 3D 切り替えを再現し、Three.js で中央の SDLC 太陽、Plan / Develop / Review / Secure / Operate の5惑星、Introduction の出発ステーション、Administration の母艦を表示する。新しい別デザインにはしない。\n- Markdown とカテゴリメタデータを共有し、惑星の選択から記事の衛星 / ミッション一覧、概要、通常の詳細ページへ進める。\n- ドラッグ回転、ズーム、パン、カメラボタンと全体図への復帰を用意し、`?view=3d&sector=plan` のような URL で選択を復元する。\n- キーボード操作、動きの停止、reduced-motion、狭い画面を確認する。3D を遅延読込し、WebGL 失敗時はエラーと使える 2D カタログを残す。\n\n画面: https://theomonfort.github.io/theomonfort/playbook/?view=3d\n実装参考: https://github.com/theomonfort/theomonfort/blob/main/src/components/interactive/PlaybookExplorer.astro\nシーン参考: https://github.com/theomonfort/theomonfort/blob/main/src/lib/playbook-galaxy-scene.ts"
+  },
+  {
+    "key": "galaxy-audio",
+    "title": "[playbook:galaxy-audio] 3D ギャラクシーの環境音と終了処理を整える",
+    "body": "<!-- workshop-issue:galaxy-audio -->\n## 段階\nCLI (Part 13) の追加実装。`playbook-3d` のマージ後に開始。同時に実装しない。\n\n## 完了条件\n- 既存ギャラクシーを参考に、ユーザー操作後に再生できる環境音と Music ON / OFF を用意する。\n- カメラ移動に環境音を追従させ、音声エラーを表示しても 3D ナビゲーションを妨げない。\n- 2D へ戻るときとページ離脱時に音声と描画リソースを停止 / 解放し、再入場で重複再生しない。\n\n参考: https://github.com/theomonfort/theomonfort/blob/main/src/lib/playbook-galaxy-audio.ts"
+  },
+  {
+    "key": "daily-repo-status",
+    "title": "[playbook:daily-repo-status] 日次の開発状況を報告する Agentic Workflow を作る",
+    "body": "<!-- workshop-issue:daily-repo-status -->\n## 段階\nOperate (Part 14)。Part 14 のポリシーと権限の確認後に実施。checkpoint1〜3 には含まれない。\n\n## 完了条件\n- `.github/workflows/daily-repo-status.md` で日次スケジュールと手動実行を定義し、Issue / PR / コード変更を要約する。\n- Part 14 の権限と safe-outputs を使い、`[repo-status]` で始まるレポート Issue を作る。資格情報をコミットしない。\n- `gh aw compile` で生成した lockfile を含む PR をレビュー / マージし、手動実行のレポートを確認する。\n\n参考: https://theomonfort.github.io/theomonfort/handson/operate-agentic-workflow/"
+  }
+]
