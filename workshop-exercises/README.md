@@ -14,6 +14,8 @@ Each checkpoint adds one new security example and one new quality example. The e
 | --- | --- | --- | --- | --- |
 | 1 | `01-develop/security-disabled-tls.ts` | Security: [js/disabling-certificate-validation](https://codeql.github.com/codeql-query-help/javascript/js-disabling-certificate-validation/) | 接続先の証明書を検証しない / TLS peer identity is not verified | `rejectUnauthorized: false` を削除し、既定の検証を使う |
 | 1 | `01-develop/quality-duplicate-condition.ts` | Quality: [js/duplicate-condition](https://codeql.github.com/codeql-query-help/javascript/js-duplicate-condition/) | 2 番目の条件が同じで到達不能 / Copy-paste condition makes the second branch unreachable | 2 番目を意図した状態 (`finished`) と比較する |
+| 2 | `02-cloud-agent/security-dom-xss.ts` | Security: [js/xss](https://codeql.github.com/codeql-query-help/javascript/js-xss/) | URL の内容を HTML として解釈 / URL-controlled text reaches an HTML sink | 文字列表示なら `textContent` を使う。教材をページに接続しない |
+| 2 | `02-cloud-agent/quality-nan-comparison.ts` | Quality: [js/comparison-with-nan](https://codeql.github.com/codeql-query-help/javascript/js-comparison-with-nan/) | `NaN` との等価比較は常に false / Equality cannot identify NaN | `Number.isNaN(value)` を使う |
 
 ## 実際の検出を確認する / Observe, do not assume
 
