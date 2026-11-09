@@ -55,13 +55,20 @@ test('SARIF の実際の検出だけを記録し、security と quality を分�
   }));
   const sarif = { version: '2.1.0', runs: [{ tool: { driver: { name: 'CodeQL', rules } }, results }] };
   writeFileSync(input, JSON.stringify(sarif));
-  const report = () => execFileSync(process.execPath, [join(root, 'scripts/report-exercises.mjs'), input, output]);
+  const report = () => execFileSync(process.execPath, [join(root, 'scripts/report-exercises.mjs'), input, output],
+    { stdio: 'pipe' });
   report();
   assert.ok(JSON.parse(readFileSync(join(output, 'findings.json'))).matrix.every(item => item.observedLines[0] === 5));
   for (const kind of ['security', 'quality']) {
     assert.deepEqual(JSON.parse(readFileSync(join(output, `${kind}.sarif`))).runs[0].results.map(item => item.ruleId),
       expected.filter(item => item.kind === kind).map(item => item.rule));
   }
+  sarif.runs[0].tool.driver.rules = [];
+  sarif.runs[0].tool.extensions = [{ name: 'codeql/javascript-queries', rules }];
+  writeFileSync(input, JSON.stringify(sarif));
+  report();
+  assert.deepEqual(JSON.parse(readFileSync(join(output, 'security.sarif'))).runs[0].results.map(item => item.ruleId),
+    expected.filter(item => item.kind === 'security').map(item => item.rule));
   sarif.runs[0].results = [];
   writeFileSync(input, JSON.stringify(sarif));
   report();

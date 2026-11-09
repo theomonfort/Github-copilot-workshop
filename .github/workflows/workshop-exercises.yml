@@ -57,6 +57,8 @@ jobs:
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: workshop-exercise-findings
-          path: ${{ runner.temp }}/exercise-results/
+          path: |
+            ${{ runner.temp }}/exercise-results/
+            ${{ runner.temp }}/exercise-sarif/
           retention-days: 7
           if-no-files-found: warn

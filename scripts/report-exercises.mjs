@@ -35,7 +35,9 @@ for (const kind of ['security', 'quality']) {
     runs: sarif.runs.map(run => ({
       ...run,
       results: run.results.filter(result => {
-        const rule = run.tool.driver.rules.find(rule => rule.id === result.ruleId);
+        const rule = [run.tool.driver, ...(run.tool.extensions ?? [])]
+          .flatMap(component => component.rules ?? [])
+          .find(rule => rule.id === result.ruleId);
         if (!rule) throw new Error(`Missing SARIF rule metadata: ${result.ruleId}`);
         return rule.properties?.tags?.includes(kind);
       }),
