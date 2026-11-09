@@ -1,0 +1,4 @@
+#!/bin/sh
+set -eu
+command -v node >/dev/null 2>&1 || { echo "Node.js 22.12+ is required." >&2; exit 1; }
+exec node "$(dirname "$0")/scripts/checkpoint.mjs" 1
