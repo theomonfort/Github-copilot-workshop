@@ -16,12 +16,14 @@
   },
   "dependencies": {
     "astro": "6.4.8",
-    "mermaid": "11.15.0"
+    "mermaid": "11.15.0",
+    "three": "^0.180.0"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.12",
     "@playwright/test": "1.58.2",
     "@types/node": "^22.20.5",
+    "@types/three": "^0.180.0",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.6",
     "tailwindcss": "3.4.19",

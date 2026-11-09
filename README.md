@@ -22,7 +22,15 @@ PLAN のハーネスと、日本語 Playbook の基本サイトを含みます�
 - Mermaid 図の描画 (後続スライドを含む)、スクロール可能なコード / テーブル
 - 幅 768px 未満では通常の Markdown 詳細に戻るモバイルフォールバック
 
-**02-cloud-agent** に Playwright E2E と `.github/workflows/test.yml` を追加しています。TOC のデザイン案 10 種、CLI 用の追加機能、元サイトの英語切替 / BGM は含めません。
+**02-cloud-agent** に、元サイトの 3D ギャラクシー、Playwright E2E と `.github/workflows/test.yml` を追加しています。2D の一覧 / 詳細とプレゼンはそのまま利用できます。TOC のデザイン案 10 種、元サイトの英語切替 / BGM / 環境音は含めません。
+
+## 3D ギャラクシー
+
+`/playbook/` の **3D** ボタン、または `/playbook/?view=3d` から開きます。元サイトと同じ Three.js の立体モデル、中央の SDLC 太陽、5 惑星、Introduction の出発ステーション、Administration の母艦、記事の衛星と移動する小型船を使います。新しい別デザインや画像の疑似 3D ではありません。
+
+惑星から衛星 / ミッションを選ぶと概要と通常の記事リンクを表示します。ドラッグ回転、スクロールでズーム、右ドラッグでパン、カメラボタン、全体図への復帰に対応します。`?view=3d&sector=plan` は目的地の深いリンクです。キーボード操作、Esc、動きの停止、reduced-motion、モバイル表示を維持しています。
+
+描画は 3D を開いたときだけ読み込み、2D への復帰やページ移動時に終了します。対応する WebGL 2 ブラウザが必要です。初期化失敗 / コンテキスト喪失時はエラーを表示して 2D に戻り、JavaScript なしでも基本カタログを利用できます。**音声は含めず、`galaxy-audio` の別課題として残します。** 既存 Issue の状態は自動で変更しません。
 
 ## E2E / PR テスト
 
@@ -38,6 +46,8 @@ Linux でブラウザのシステム依存が足りない場合は `npx playwrig
 テストは production build を作り、専用ポート **44321** で preview を起動・終了します。既存のサーバーは再利用しません。ポートが使用中なら先に競合を解消してください。
 
 `tests/e2e/presentation.spec.ts` は、通常の一覧 / 詳細を入口として、スライドの前後移動、TOC 切替とスクロール位置、深いリンク、進捗バー、リンク集、後続 Mermaid スライド、Esc、モバイルフォールバック、全詳細のローカルリンク / 画像を検証します。外部フォントへの通信はテスト中だけ差し替えます。
+
+`tests/e2e/galaxy.spec.ts` は、実際の WebGL 描画と色付きピクセル、目的地 / 衛星 / 記事への移動、URL 復元、カメラ操作、モバイル、動きの停止、失敗時の 2D 復帰、遅延読込の中断と描画終了を検証します。CI でも GPU に依存せず検証できるよう、テスト用 Chromium にだけ SwiftShader を指定します。アプリのブラウザ設定は変更しません。
 
 PR の作成 / 更新時に GitHub Actions が Node.js 22、`npm ci`、Chromium、型チェック、E2E を実行します。失敗時は HTML レポート / trace / スクリーンショットを artifact に保存します。Actions の実行許可、外部 PR の承認、必須チェックの branch protection は各自のリポジトリで設定してください。Security のアカウント設定はこの checkpoint に含まれません。
 
@@ -129,6 +139,7 @@ Keep the printed stash SHA; return to the original branch and use the printed `g
 
 ## 再利用元
 
+- 3D ギャラクシー: [theomonfort/theomonfort](https://github.com/theomonfort/theomonfort/tree/1ef7a254bd9a6eb2fdb29f13212e9054d6c75813), commit `1ef7a254bd9a6eb2fdb29f13212e9054d6c75813`。`PlaybookExplorer.astro` と `playbook-galaxy{,-scene,-models}.ts` を再利用し、日本語とルートパス用に接続。元の手続き型モデルをそのまま利用し、音声の UI / import / コールバックだけを分離。追加の glTF / テクスチャ素材は不要です。
 - サイト / PLAN 手順: [theomonfort/theomonfort](https://github.com/theomonfort/theomonfort/tree/bd8b98d4f00060979e782e95d60ea74709b54da4), commit `bd8b98d4f00060979e782e95d60ea74709b54da4`。Playbook のカード / 詳細 / スタイルを抽出し、日本語・npm・ルートパス用に調整。ホームのゲーム、BGM、装備所、英語 UI は含めません。
 - Skills: [theomonfort/skills](https://github.com/theomonfort/skills/tree/a8f7e7c092d3ed3e45860d416aec32fb115a4e21), commit `a8f7e7c092d3ed3e45860d416aec32fb115a4e21`。MIT ライセンスは `.agents/skills/LICENSE`。helper の案内はこの checkpoint 順序に合わせて調整しています。
 - スターター: `v1.0.0`, commit `8145d5464c0265e1724807bb2cf1cca5f609640d`。
