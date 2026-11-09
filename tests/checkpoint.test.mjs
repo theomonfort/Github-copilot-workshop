@@ -9,6 +9,7 @@ import test from 'node:test';
 const project = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const files = ['checkpoint1', 'checkpoint2', 'checkpoint3', 'scripts/checkpoint.mjs'];
 const stages = ['01-develop', '02-cloud-agent', '03-tests'];
+const titles = ['Website scaffold', 'Website with presentation mode', 'Complete website with tests and CI'];
 
 function fixture(t, { copied = false, https = false } = {}) {
   const sandbox = mkdtempSync(join(tmpdir(), 'workshop-checkpoint-test-'));
@@ -139,6 +140,54 @@ process.exit(r.status ?? 1);
   return { sandbox, participant, origin, source, canonical, env, bin, initial, snapshots, copiedSHA, git, run, calls, head, remoteRef, assertStable };
 }
 
+function assertPullRequest(f, number, base) {
+  const args = f.calls().filter((args) => args[0] === 'pr').at(-1);
+  assert.equal(args[args.indexOf('--title') + 1], titles[number - 1]);
+  assert.equal(args[args.indexOf('--head') + 1], `workshop-checkpoint${number}`);
+  const body = args[args.indexOf('--body') + 1];
+  const sections = body.split('<details>');
+  assert.equal(sections.length, 2);
+  const [visible, details] = sections;
+  assert.equal(visible.trim().split('\n\n').length, 5);
+  assert.match(visible, /PLAN ハーネス/);
+  assert.match(visible, [
+    /Playbook の一覧 \/ 詳細を備えた基本サイトの完成例/,
+    /一覧 \/ 詳細 \/ プレゼンを備えたサイトの完成例/,
+    /プレゼン対応サイト、Playwright テスト、PR CI の完成例/,
+  ][number - 1]);
+  assert.match(visible, /`npm ci` → `npm run dev`/);
+  assert.match(visible, /表示 URL（Codespaces は転送 URL）の `\/playbook\/`/);
+  assert.match(visible, /全追跡ファイルを置換.*独自変更と削除を確認/);
+  assert.match(visible, /意図的な脆弱性と品質問題はサイトから隔離/);
+  assert.match(visible, /検出例は `workshop-exercises\/README.md`/);
+  assert.match(visible, /必須チェックは回避せず、依存監査の警告とは分けて確認/);
+  assert.doesNotMatch(body, /\[x\]|tests passed|checks passed|production-secure|テスト成功|テスト済み|検証済み/i);
+  assert.deepEqual([...body.matchAll(/npm run ([a-z0-9:-]+)/g)].map(match => match[1]),
+    number === 3 ? ['dev', 'check', 'test:e2e'] : ['dev', 'check', 'build']);
+  if (number === 3) {
+    assert.match(details, /npx playwright install chromium/);
+    assert.match(details, /Linux: `npx playwright install --with-deps chromium`/);
+    assert.match(details, /PR の CI 結果も確認/);
+  } else {
+    assert.doesNotMatch(body, /playwright|test:e2e/i);
+    assert.match(visible, number === 1 ? /一覧と詳細を確認/ : /カードからプレゼンを開き、移動と目次を確認/);
+  }
+  const checkpoint = `checkpoint/${stages[number - 1]}`;
+  const source = 'https://github.com/theomonfort/Github-copilot-workshop.git';
+  const snapshot = f.snapshots[number - 1];
+  for (const value of [checkpoint, source, snapshot, base]) {
+    assert.ok(!visible.includes(value));
+    assert.ok(details.includes(value));
+  }
+  assert.match(details, /<summary>取り込み元と確認コマンド<\/summary>/);
+  assert.match(details, /前段の取り込みは不要.*ファイルのみ.*履歴はマージしません/);
+  assert.match(details, /別ターミナル.*取り込みスクリプトでは未実行/);
+  assert.ok(details.endsWith('</details>'));
+  assert.equal(f.git(f.participant, 'log', '-1', '--format=%s'), `Import workshop ${checkpoint}`);
+  assert.equal(f.git(f.participant, 'log', '-1', '--format=%b'),
+    `Import files from ${source} at ${snapshot} (${checkpoint}). Based on participant main ${base}; canonical history is not merged. Review this snapshot before merging.`);
+}
+
 test('main-only HTTPS/SSH origins: exact snapshots on participant history, despite replacing running files', (t) => {
   const f = fixture(t, { https: true });
   const result = f.run(1);
@@ -185,9 +234,8 @@ test('preserves staged, unstaged, untracked and non-colliding ignored work witho
   f.assertStable();
 });
 
-test('sequential imports preserve commit metadata and use the exact PR titles; an existing snapshot is a no-op', (t) => {
+test('sequential imports preserve titles/commits and provide useful stage-specific PR descriptions; a matching snapshot is a no-op', (t) => {
   const f = fixture(t);
-  const titles = ['Website scaffold', 'Website with presentation mode', 'Complete website with tests and CI'];
   let previous = f.initial;
   for (const number of [1, 2, 3]) {
     const result = f.run(number);
@@ -195,14 +243,7 @@ test('sequential imports preserve commit metadata and use the exact PR titles; a
     assert.equal(f.git(f.participant, 'rev-parse', 'HEAD^'), previous);
     const prs = f.calls().filter((args) => args[0] === 'pr');
     assert.equal(prs.length, number);
-    const args = prs.at(-1);
-    assert.equal(args[args.indexOf('--title') + 1], titles[number - 1]);
-    assert.equal(args[args.indexOf('--head') + 1], `workshop-checkpoint${number}`);
-    const checkpoint = `checkpoint/${stages[number - 1]}`;
-    const body = `Import files from https://github.com/theomonfort/Github-copilot-workshop.git at ${f.snapshots[number - 1]} (${checkpoint}). Based on participant main ${previous}; canonical history is not merged. Review this snapshot before merging.`;
-    assert.equal(args[args.indexOf('--body') + 1], body);
-    assert.equal(f.git(f.participant, 'log', '-1', '--format=%s'), `Import workshop ${checkpoint}`);
-    assert.equal(f.git(f.participant, 'log', '-1', '--format=%b'), body);
+    assertPullRequest(f, number, previous);
     previous = f.head();
     f.git(f.sandbox, '--git-dir=' + f.origin, 'update-ref', 'refs/heads/main', previous);
   }
@@ -216,6 +257,17 @@ test('sequential imports preserve commit metadata and use the exact PR titles; a
   assert.equal(f.head(), previous);
   assert.equal(f.calls().filter((args) => args[0] === 'pr').length, 3);
   assert.equal(f.git(f.participant, 'stash', 'list'), '');
+});
+
+test('later checkpoints describe the complete snapshot when imported without merging earlier stages', (t) => {
+  const f = fixture(t);
+  for (const number of [2, 3]) {
+    const result = f.run(number);
+    assert.equal(result.status, 0, result.output);
+    assert.equal(f.git(f.participant, 'rev-parse', 'HEAD^'), f.initial);
+    assertPullRequest(f, number, f.initial);
+    f.assertStable();
+  }
 });
 
 test('existing local/remote work branches and repeated invocations get fresh branch names', (t) => {
@@ -305,13 +357,15 @@ test('fetch failure leaves the checkout unchanged; push/PR failures retain recov
   assert.notEqual(push.status, 0);
   assert.match(push.output, /retry the create-only push/);
   assert.match(push.output, /git stash apply --index/);
-  assert.match(push.output, /'--title' 'Website scaffold' '--body' 'Import files from/);
+  assert.match(push.output, /'--title' 'Website scaffold' '--body' 'PLAN ハーネス/);
+  assert.match(push.output, /<summary>取り込み元と確認コマンド<\/summary>/);
   assert.equal(f.git(f.participant, 'rev-parse', 'HEAD^'), f.initial);
   assert(!f.calls().some((args) => args[0] === 'pr'));
   const pr = f.run(2, { FAIL_PR: '1' });
   assert.notEqual(pr.status, 0);
   assert.match(pr.output, /Check for an existing PR before retrying/);
-  assert.match(pr.output, /'--title' 'Website with presentation mode' '--body' 'Import files from/);
+  assert.match(pr.output, /'--title' 'Website with presentation mode' '--body' 'PLAN ハーネス/);
+  assertPullRequest(f, 2, f.initial);
   assert.equal(f.remoteRef('workshop-checkpoint2'), f.head());
   assert.equal(f.git(f.participant, 'show', 'refs/stash^3:notes.txt'), 'recover me');
   f.assertStable();
