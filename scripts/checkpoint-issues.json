@@ -27,12 +27,12 @@
   {
     "key": "playbook-3d",
     "title": "[playbook:playbook-3d] 既存の 3D ギャラクシービューを再現する",
-    "body": "<!-- workshop-issue:playbook-3d -->\n## 段階\nCLI (Part 13) の追加実装。checkpoint3 の後に取り組む。checkpoint1〜3 には 3D は含まれない。\n\n## 完了条件\n- 既存サイトの 2D / 3D 切り替えを再現し、Three.js で中央の SDLC 太陽、Plan / Develop / Review / Secure / Operate の5惑星、Introduction の出発ステーション、Administration の母艦を表示する。新しい別デザインにはしない。\n- Markdown とカテゴリメタデータを共有し、惑星の選択から記事の衛星 / ミッション一覧、概要、通常の詳細ページへ進める。\n- ドラッグ回転、ズーム、パン、カメラボタンと全体図への復帰を用意し、`?view=3d&sector=plan` のような URL で選択を復元する。\n- キーボード操作、動きの停止、reduced-motion、狭い画面を確認する。3D を遅延読込し、WebGL 失敗時はエラーと使える 2D カタログを残す。\n\n画面: https://theomonfort.github.io/theomonfort/playbook/?view=3d\n実装参考: https://github.com/theomonfort/theomonfort/blob/main/src/components/interactive/PlaybookExplorer.astro\nシーン参考: https://github.com/theomonfort/theomonfort/blob/main/src/lib/playbook-galaxy-scene.ts"
+    "body": "<!-- workshop-issue:playbook-3d -->\n## 段階\nCLI (Part 13) で手動実装する場合の作業。checkpoint1 / checkpoint2 には含まれず、checkpoint3 には実装済み。checkpoint3 を使う場合は完了条件を確認し、作り直さず既存実装を再利用する。\n\n## 完了条件\n- 既存サイトの 2D / 3D 切り替えを再現し、Three.js で中央の SDLC 太陽、Plan / Develop / Review / Secure / Operate の5惑星、Introduction の出発ステーション、Administration の母艦を表示する。新しい別デザインにはしない。\n- Markdown とカテゴリメタデータを共有し、惑星の選択から記事の衛星 / ミッション一覧、概要、通常の詳細ページへ進める。\n- ドラッグ回転、ズーム、パン、カメラボタンと全体図への復帰を用意し、`?view=3d&sector=plan` のような URL で選択を復元する。\n- キーボード操作、動きの停止、reduced-motion、狭い画面を確認する。3D を遅延読込し、WebGL 失敗時はエラーと使える 2D カタログを残す。\n\n画面: https://theomonfort.github.io/theomonfort/playbook/?view=3d\n実装参考: https://github.com/theomonfort/theomonfort/blob/main/src/components/interactive/PlaybookExplorer.astro\nシーン参考: https://github.com/theomonfort/theomonfort/blob/main/src/lib/playbook-galaxy-scene.ts"
   },
   {
     "key": "galaxy-audio",
     "title": "[playbook:galaxy-audio] 3D ギャラクシーの環境音と終了処理を整える",
-    "body": "<!-- workshop-issue:galaxy-audio -->\n## 段階\nCLI (Part 13) の追加実装。`playbook-3d` のマージ後に開始。同時に実装しない。\n\n## 完了条件\n- 既存ギャラクシーを参考に、ユーザー操作後に再生できる環境音と Music ON / OFF を用意する。\n- カメラ移動に環境音を追従させ、音声エラーを表示しても 3D ナビゲーションを妨げない。\n- 2D へ戻るときとページ離脱時に音声と描画リソースを停止 / 解放し、再入場で重複再生しない。\n\n参考: https://github.com/theomonfort/theomonfort/blob/main/src/lib/playbook-galaxy-audio.ts"
+    "body": "<!-- workshop-issue:galaxy-audio -->\n## 段階\nCLI (Part 13) の追加実装。手動で実装した `playbook-3d` または checkpoint3 の PR をマージ後に開始。3D と同時に実装しない。checkpoint3 に環境音は含まれない。\n\n## 完了条件\n- 既存ギャラクシーを参考に、ユーザー操作後に再生できる環境音と Music ON / OFF を用意する。\n- カメラ移動に環境音を追従させ、音声エラーを表示しても 3D ナビゲーションを妨げない。\n- 2D へ戻るときとページ離脱時に音声と描画リソースを停止 / 解放し、再入場で重複再生しない。\n\n参考: https://github.com/theomonfort/theomonfort/blob/main/src/lib/playbook-galaxy-audio.ts"
   },
   {
     "key": "daily-repo-status",

@@ -23,8 +23,8 @@ const stages = [
   {
     name: '03-tests',
     title: 'Complete website with tests and CI',
-    summary: 'PLAN ハーネスとプレゼン対応サイト、Playwright テスト、PR CI の完成例です。',
-    inspect: '一覧、詳細、プレゼンを確認',
+    summary: 'PLAN ハーネスと 2D / 3D / プレゼン対応サイト、Playwright テスト、PR CI の完成例です。',
+    inspect: '2D / 3D、詳細、プレゼンを確認',
   },
 ];
 const state = { completed: [], step: 'checking prerequisites' };

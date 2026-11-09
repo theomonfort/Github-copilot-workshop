@@ -86,13 +86,13 @@ GitHub MCP (`github-mcp-server`, `https://api.githubcopilot.com/mcp/`) と Conte
 |---|---|
 | `./checkpoint1` | 基本サイト + 開発課題の Issue / `checkpoint/01-develop` |
 | `./checkpoint2` | プレゼン機能 / `checkpoint/02-cloud-agent` |
-| `./checkpoint3` | E2E / PR テスト / `checkpoint/03-tests` |
+| `./checkpoint3` | 3D ギャラクシー + E2E / PR テスト / `checkpoint/03-tests` |
 
 **解析教材 / Analysis exercises:** checkpoint 1 / 2 / 3 には、意図的なセキュリティ問題と品質問題が各 1 / 2 / 3 件、アプリから隔離して含まれます。製品に出荷せず、import / 実行しないでください。Snapshots include cumulative, intentionally flawed static-analysis exercises, not application code. The proof workflow runs only in the canonical template; participant repositories keep their existing CodeQL setup.
 
 **`checkpoint1` のみ:** 事前確認後、stash や checkout の変更前に、自分のリポジトリへ [Part 6 と共通の日本語 Issue 8 件](scripts/checkpoint-issues.json)を準備します。Issues の有効化と `gh` の Issue 読み取り / 作成権限が必要です。既存の open / closed Issue は再利用し、編集内容や状態を変えません。実際の番号と URL を表示するため、Issue 番号を 1 からと仮定しないでください。`checkpoint2` / `checkpoint3` は Issue を作りません。
 
-課題はプレゼンの基本 / 本文 / Mermaid / レスポンシブ (Cloud Agent、checkpoint2)、テスト / CI (Part 11、checkpoint3)、既存 3D ギャラクシーの再現と音声 (Part 13)、日次レポート (Part 14) です。基本サイトは checkpoint1 に含まれるため重複課題にしません。3D / 音声 / 日次レポートは checkpoint1〜3 には含まれず、音声は 3D のマージ後に進めます。Issue 作成だけでは実装・自動割り当て・完了処理はしません。
+課題はプレゼンの基本 / 本文 / Mermaid / レスポンシブ (Cloud Agent、checkpoint2)、テスト / CI (Part 11、checkpoint3)、既存 3D ギャラクシーの再現と音声 (Part 13)、日次レポート (Part 14) です。基本サイトは checkpoint1 に含まれるため重複課題にしません。**3D は checkpoint3 に実装済み**です。checkpoint1 / checkpoint2 から手動実装する場合だけ `playbook-3d` に取り組み、checkpoint3 を使う場合は完了条件を確認して既存実装を再利用します。音声 / 日次レポートは snapshot に含まれず、音声は手動 3D PR または checkpoint3 PR のマージ後に進めます。既存 Issue の本文や状態は変えず、自動割り当て・完了処理もしません。
 
 各コマンドは変更済み・未追跡ファイルを必要に応じて名前付き stash に保存し、取得した **自分の `origin/main`** から新しい `workshop-checkpointN` ブランチを作ります。使用済みの名前には `-2` などを付け、既存ブランチは変更しません。
 
@@ -112,7 +112,7 @@ push / PR 作成に失敗しても、自動 reset やブランチ削除はしま
 
 **English:** Save editor buffers, then run one command above in your own repository (or invoke it by path from another directory). Requires Node.js 22.12+, Git 2.23+, authenticated `gh`, and push access. It saves tracked/untracked edits in a named stash, creates a fresh branch from your current remote `main`, imports only the current canonical checkpoint's files, commits, pushes that new branch, and opens a PR against your `main`. Review the PR, including deletions, and merge it yourself when ready.
 
-Only `checkpoint1` also prepares the eight Japanese build-step issues from the current canonical catalogue, before stashing or changing the checkout. It requires Issues enabled and read/create access, reuses open/closed issues without editing or reopening them, and prints their actual numbers/URLs. Presentation work maps to checkpoint2, tests/CI to checkpoint3; 3D, its dependent audio work, and daily reporting are later extensions, not snapshot features. No implementation or assignment is triggered. `checkpoint2` and `checkpoint3` never seed issues.
+Only `checkpoint1` also prepares the eight Japanese build-step issues from the current canonical catalogue, before stashing or changing the checkout. It requires Issues enabled and read/create access, reuses open/closed issues without editing or reopening them, and prints their actual numbers/URLs. Presentation work maps to checkpoint2; tests/CI and visual 3D are included in checkpoint3. Build 3D manually from checkpoint1/2, or inspect and reuse checkpoint3 instead. Audio and daily reporting remain separate extensions; start audio after merging either the manual 3D PR or checkpoint3 PR. Existing issue bodies and states are preserved; no automatic assignment or completion is triggered. `checkpoint2` and `checkpoint3` never seed issues.
 
 Copied template branches have unrelated histories; these commands deliberately do not use them. A main-only copy works. Existing branches/tags are preserved. An identical snapshot on main skips Git/PR writes but `checkpoint1` still prepares missing issues. If issue preparation fails, keep successful issues, fix the reported error and rerun `./checkpoint1`; it rechecks all pages/states before creating missing items, including after an uncertain response. Preserve the body marker or title key for reuse in other clones; local receipts in Git metadata additionally preserve identities after edits. Missing recorded issues, duplicate identities and invalid receipts stop rather than creating replacements. Do not run imports concurrently, even from different clones.
 
