@@ -6,7 +6,11 @@ import { fileURLToPath } from 'node:url';
 // Node loads this module before switch/restore can replace its on-disk files.
 const root = realpathSync(resolve(dirname(fileURLToPath(import.meta.url)), '..'));
 const source = 'https://github.com/theomonfort/Github-copilot-workshop.git';
-const stages = ['01-develop', '02-cloud-agent', '03-tests'];
+const stages = [
+  { name: '01-develop', title: 'Website scaffold' },
+  { name: '02-cloud-agent', title: 'Website with presentation mode' },
+  { name: '03-tests', title: 'Complete website with tests and CI' },
+];
 const state = { completed: [], step: 'checking prerequisites' };
 const env = { ...process.env, GIT_TERMINAL_PROMPT: '0', GH_PROMPT_DISABLED: '1' };
 const quote = (value) => `'${value.replaceAll("'", "'\\''")}'`;
@@ -95,7 +99,8 @@ function main() {
     'Your gh account needs push access to an active participant repository.');
   state.original = git(['symbolic-ref', '--quiet', '--short', 'HEAD'], [0, 1]).text;
   state.originalHead = git(['rev-parse', 'HEAD']).text;
-  const checkpoint = `checkpoint/${stages[Number(number) - 1]}`;
+  const stage = stages[Number(number) - 1];
+  const checkpoint = `checkpoint/${stage.name}`;
   state.repo = `${target.host}/${target.path}`;
   state.step = 'fetching participant main';
   const fetchOptions = ['fetch', '--no-tags', '--no-prune', '--no-recurse-submodules', '--refmap='];
@@ -145,9 +150,9 @@ function main() {
   requireThat(git(['write-tree']).text === tree, 'The staged tree differs from the canonical snapshot; inspect git status.');
   done('Imported checkpoint files only; canonical commit history was not merged.');
   state.step = 'committing the snapshot';
-  state.title = `Import workshop ${checkpoint}`;
+  state.title = stage.title;
   state.body = `Import files from ${source} at ${snapshot} (${checkpoint}). Based on participant main ${base}; canonical history is not merged. Review this snapshot before merging.`;
-  git(['commit', '-m', state.title, '-m', state.body]);
+  git(['commit', '-m', `Import workshop ${checkpoint}`, '-m', state.body]);
   state.commit = git(['rev-parse', 'HEAD']).text;
   requireThat(git(['rev-parse', 'HEAD^{tree}']).text === tree, 'A commit hook changed the snapshot; inspect the commit before publishing.');
   done(`Committed ${state.commit}.`);
