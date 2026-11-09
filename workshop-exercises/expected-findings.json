@@ -1,0 +1,26 @@
+[
+  {
+    "checkpoint": 1,
+    "kind": "security",
+    "file": "workshop-exercises/01-develop/security-disabled-tls.ts",
+    "rule": "js/disabling-certificate-validation"
+  },
+  {
+    "checkpoint": 1,
+    "kind": "quality",
+    "file": "workshop-exercises/01-develop/quality-duplicate-condition.ts",
+    "rule": "js/duplicate-condition"
+  },
+  {
+    "checkpoint": 2,
+    "kind": "security",
+    "file": "workshop-exercises/02-cloud-agent/security-dom-xss.ts",
+    "rule": "js/xss"
+  },
+  {
+    "checkpoint": 2,
+    "kind": "quality",
+    "file": "workshop-exercises/02-cloud-agent/quality-nan-comparison.ts",
+    "rule": "js/comparison-with-nan"
+  }
+]

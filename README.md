@@ -96,6 +96,12 @@ Copied template branches have unrelated histories; these commands deliberately d
 
 メンテナー用テスト / Maintainer tests: `node --test tests/checkpoint.test.mjs` (isolated local repositories, fake GitHub CLI, no live PRs).
 
+## 意図的な解析演習 / Intentional analysis exercises
+
+`workshop-exercises/` に、各 checkpoint で新しいセキュリティ問題 1 件と品質問題 1 件を追加します (累積 1 / 2 / 3 件ずつ)。**製品用コードではなく、通常アプリから import / 実行しません。** [講師用マップ、修正方法、実際の検出の見方](workshop-exercises/README.md)を確認してください。
+
+**English:** Each checkpoint adds one inert security example and one quality example outside the application. The proof workflow runs only in the canonical template, separating actual CodeQL security alerts from quality-rule artifacts. It is skipped in participant copies to preserve existing default setup. GitHub Code Quality requires separate enablement and licensing; this template does not enable it. Required checks and security policies still apply. Later imports restore canonical examples, including any you previously fixed.
+
 ## 手動の前提条件
 
 - VS Code と GitHub Copilot にサインインし、対象リポジトリへの権限を確認してください。

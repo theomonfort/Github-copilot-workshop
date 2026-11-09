@@ -1,0 +1,64 @@
+name: Workshop exercise analysis
+
+on:
+  pull_request:
+    branches: [main, 'checkpoint/**']
+  push:
+    branches: [main, 'checkpoint/**', 'workshop-exercises-verify']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: workshop-exercises-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    name: CodeQL exercise rules (security and quality)
+    if: github.repository == 'theomonfort/Github-copilot-workshop' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: github/codeql-action/init@33d7b85da1a04171e211befe2c739303b9a4c066 # v4
+        with:
+          languages: javascript-typescript
+          build-mode: none
+          config: |
+            name: Intentional workshop exercises only
+            paths:
+              - workshop-exercises
+            queries:
+              - uses: security-and-quality
+      - uses: github/codeql-action/analyze@33d7b85da1a04171e211befe2c739303b9a4c066 # v4
+        with:
+          output: ${{ runner.temp }}/exercise-sarif
+          upload: false
+      - name: 検出結果を分類する (教材の関数は実行しない)
+        run: |
+          node scripts/report-exercises.mjs \
+            "$RUNNER_TEMP/exercise-sarif/javascript.sarif" \
+            "$RUNNER_TEMP/exercise-results"
+          cat "$RUNNER_TEMP/exercise-results/summary.md" >> "$GITHUB_STEP_SUMMARY"
+      - name: セキュリティ検出だけを code scanning に送信
+        uses: github/codeql-action/upload-sarif@33d7b85da1a04171e211befe2c739303b9a4c066 # v4
+        with:
+          sarif_file: ${{ runner.temp }}/exercise-results/security.sarif
+          category: workshop-exercises
+      - name: 実際の検出結果を保存
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: workshop-exercise-findings
+          path: |
+            ${{ runner.temp }}/exercise-results/
+            ${{ runner.temp }}/exercise-sarif/
+          retention-days: 7
+          if-no-files-found: warn
