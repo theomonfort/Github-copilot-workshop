@@ -19,7 +19,9 @@ links:
   - label: GitHub Docs — MCP
     url: https://docs.github.com/en/copilot/concepts/context/mcp
   - label: VS Code — MCP servers
-    url: https://code.visualstudio.com/docs/copilot/customization/mcp-servers
+    url: https://code.visualstudio.com/docs/agent-customization/mcp-servers
+  - label: GitHub Docs - Copilot CLI MCP configuration
+    url: https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference#mcp-server-configuration
   - label: GitHub 公式 MCP server
     url: https://github.com/github/github-mcp-server
   - label: GitHub Docs — Configure MCP server access (org/enterprise)
@@ -150,35 +152,34 @@ MCP サーバーの実行場所は **2 種類** あります。
   </div>
 </div>
 
-## VS Code での設定
+## VS Code での設定 <a class="h2-doc" href="https://code.visualstudio.com/docs/agent-customization/mcp-servers" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-VS Code の **Marketplace から MCP サーバーをインストール** する時、2 つのスコープを選べる：
+**Copilot ハーネス** で **Customizations → MCP Servers** を開きます。
 
-- **`Install`** → **個人設定** ファイル（User Settings）に追加
-- **`Install Workspace`** → **リポジトリ設定** ファイル（`.vscode/mcp.json`）に追加
+**Workspace +**（User ではない）→ **HTTP** → サーバーの URL と ID を入力。信頼やサインインの確認に対応します。
 
 <div class="setup-cards">
   <div class="setup-card">
     <div class="setup-card-head">
-      <code>.vscode/mcp.json</code>
+      <code>.mcp.json</code>
       <span class="setup-card-tag tag-cyan">▸ リポジトリ共有</span>
     </div>
-    <p>Git に含まれるので、<strong>チーム全員</strong> で MCP を揃えられる。メンバーが repo を clone すると VS Code が <strong>「有効化しますか？」</strong> と確認してくる。</p>
+    <p><strong>Workspace</strong>：repo のルートに保存し、トップレベルの <code>mcpServers</code> に設定。Git で共有するが、認証情報は含めない。</p>
   </div>
   <div class="setup-card">
     <div class="setup-card-head">
-      <code>User Settings</code>
+      <code>User</code>
       <span class="setup-card-tag tag-magenta">▸ 自分の PC のみ</span>
     </div>
-    <p><strong>個人用</strong> / 全プロジェクト共通で使いたい時。Git には含まれない。</p>
-    <ul class="setup-card-paths">
-      <li>📁 <strong>Mac</strong>：<code>~/.config/Code/User/settings.json</code></li>
-      <li>🪟 <strong>Windows</strong>：<code>%APPDATA%\Code\User\settings.json</code></li>
-    </ul>
+    <p><strong>Global → Copilot Global</strong>：ワークスペース共通の個人設定。通常は <code>~/.copilot/mcp-config.json</code> に保存し、プロジェクトにはコミットしない。</p>
   </div>
 </div>
 
-## Copilot CLI で始める
+> ⚠️ ルートへの保存には **`chat.mcp.workspaceRootConfig.enabled`**（Experimental）を有効化。Local 互換用の `.vscode/mcp.json` は `servers` を使い、追加画面では deprecated と表示されます。
+
+## Copilot CLI で始める <a class="h2-doc" href="https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference#mcp-server-configuration" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+CLI も、フォルダーを信頼するとルートの **`.mcp.json`**（トップレベルは **`mcpServers`**）を読み込みます。`.vscode/mcp.json` から移行する場合は、ファイル名だけでなく `servers` を `mcpServers` に変更します。
 
 ```bash
 # MCP server を追加
@@ -231,7 +232,43 @@ GitHub 公式 MCP server は最初から接続済み。`gh` コマンドを叩�
 
 - **GitHub Org / Enterprise**：<a class="retro-link" href="https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-mcp-usage/configure-mcp-registry" target="_blank" rel="noopener noreferrer">レジストリを設定 ↗</a> し、<a class="retro-link" href="https://docs.github.com/en/copilot/reference/mcp-allowlist-enforcement" target="_blank" rel="noopener noreferrer">allowlist で強制 ↗</a>
 
-> 🔒 **公開とアクセスは別物：** Azure API Center に登録した server は、カタログに到達できる人には **誰でも見える**。ただし公開されるのは **メタデータだけ**。実際の **ダウンロード／接続は別で制御** できる — 社内向けの自前 server なら、stdio server は **プライベートなパッケージレジストリ**（GitHub Packages / GHCR / Azure Artifacts など）に公開し、HTTP server は **社内ネットワーク / VPN 内**に置けば、認証済みの社員だけが取得・接続できる。
+## 社内 server を非公開に保つ仕組み
+
+**カタログは公開** — 守るのは **配布元（ソース）**。Azure API Center に登録した server はカタログに到達できる人には見えるが、公開されるのは **メタデータだけ**。実際の **ダウンロード／接続は別で制御** できる。
+
+```mermaid
+flowchart LR
+  DEV["👤 開発者<br/>VS Code / Copilot<br/>@mcp を開く"]
+  AC["🌐 Azure API Center<br/>カタログ = 公開<br/>メタデータだけ（コードなし）"]
+  STDIO["◆ stdio → 🔒 プライベートレジストリ<br/>GitHub Packages / GHCR / Azure Artifacts<br/>認証トークンが必要"]
+  HTTP["◆ HTTP → 🏢 社内ネット / VPN<br/>公開インターネットから到達不可<br/>前段に SSO / ネットワーク認証"]
+  EMP1["✅ 社員は取得"]
+  OUT1["⛔ 部外者 → 401"]
+  EMP2["✅ 社員は接続"]
+  OUT2["⛔ 部外者 → 遮断"]
+  DEV --> AC
+  AC -->|パッケージ参照| STDIO
+  AC -->|リモート URL| HTTP
+  STDIO --> EMP1
+  STDIO --> OUT1
+  HTTP --> EMP2
+  HTTP --> OUT2
+
+  classDef dev fill:#0a0e27,stroke:#00f0ff,color:#00f0ff,stroke-width:2px
+  classDef cat fill:#1a0a2e,stroke:#ffb000,color:#ffb000,stroke-width:2px
+  classDef stdio fill:#0a0e27,stroke:#00f0ff,color:#00f0ff,stroke-width:2px
+  classDef http fill:#1a0a2e,stroke:#ff2e97,color:#ff2e97,stroke-width:2px
+  classDef ok fill:#0a1a14,stroke:#9bbc0f,color:#9bbc0f,stroke-width:2px
+  classDef deny fill:#2a0a0a,stroke:#ff5555,color:#ff5555,stroke-width:2px
+  class DEV dev
+  class AC cat
+  class STDIO stdio
+  class HTTP http
+  class EMP1,EMP2 ok
+  class OUT1,OUT2 deny
+```
+
+> ✅ カタログは **配布元を指すだけ**。**配布元を守れば → 実行できるのは認証済みの社員だけ**。
 
 ## MCP Registry をローカルで試す
 
@@ -244,6 +281,6 @@ GitHub 公式 MCP server は最初から接続済み。`gh` コマンドを叩�
 3. **HTTPS トンネル** — `cloudflared tunnel --url http://localhost:8080` → `https://<random>.trycloudflare.com`
 4. **接続** — トンネル URL を **MCP Registry URL** に設定（`/v0.1/servers` は付けない。Copilot が自動付与）。**Org** は Settings → Copilot → **Policies** → MCP、**Enterprise** は **AI controls** → MCP
 5. **VS Code をリロード & 確認** — Developer: Reload Window → `@mcp` で自分の registry の server だけが表示される。`Cmd + ,`（設定）で MCP 設定が **「managed by your organization」** バッジ付き（＝ Org ポリシーが効いている）か確認
-6. **GitHub Registry から seed** — `go run scripts/mirror_data/fetch_production_data.go` + `load_production_data.go`（source: `https://api.mcp.github.com/v0.1/servers`）
+6. **GitHub Registry から seed** — `go run scripts/mirror_data/fetch_production_data.go` + `load_production_data.go`（source: `https://registry.modelcontextprotocol.io/v0/servers`）
 
 > ⚠️ VS Code が **この Org の Copilot ライセンス** を使っているか確認（別アカウント/個人プランだと Org のポリシーが効かない）。`mirror_data` スクリプトは as-is なので、許可したい server に合わせて絞り込む。
