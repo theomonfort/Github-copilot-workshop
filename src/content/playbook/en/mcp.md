@@ -19,7 +19,9 @@ links:
   - label: GitHub Docs — MCP
     url: https://docs.github.com/en/copilot/concepts/context/mcp
   - label: VS Code — MCP servers
-    url: https://code.visualstudio.com/docs/copilot/customization/mcp-servers
+    url: https://code.visualstudio.com/docs/agent-customization/mcp-servers
+  - label: GitHub Docs - Copilot CLI MCP configuration
+    url: https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference#mcp-server-configuration
   - label: GitHub official MCP server
     url: https://github.com/github/github-mcp-server
   - label: GitHub Docs — Configure MCP server access (org/enterprise)
@@ -150,35 +152,34 @@ Choose based on your use case and security requirements.
   </div>
 </div>
 
-## Configuration in VS Code
+## Configuration in VS Code <a class="h2-doc" href="https://code.visualstudio.com/docs/agent-customization/mcp-servers" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-When **installing an MCP server from the Marketplace** in VS Code, you can choose between two scopes:
+For the **Copilot harness**, open **Customizations → MCP Servers**.
 
-- **`Install`** → Added to your **personal settings** file (User Settings)
-- **`Install Workspace`** → Added to the **repository settings** file (`.vscode/mcp.json`)
+**Workspace +** (not User) → **HTTP** → server URL and ID. Review any trust or sign-in prompts.
 
 <div class="setup-cards">
   <div class="setup-card">
     <div class="setup-card-head">
-      <code>.vscode/mcp.json</code>
+      <code>.mcp.json</code>
       <span class="setup-card-tag tag-cyan">▸ Shared with repo</span>
     </div>
-    <p>Included in Git, so <strong>the whole team</strong> shares the same MCP setup. When a member clones the repo, VS Code asks <strong>"Would you like to enable it?"</strong>.</p>
+    <p><strong>Workspace</strong>: save at the repo root, with a top-level <code>mcpServers</code> object. Share via Git, never include credentials.</p>
   </div>
   <div class="setup-card">
     <div class="setup-card-head">
-      <code>User Settings</code>
+      <code>User</code>
       <span class="setup-card-tag tag-magenta">▸ Your machine only</span>
     </div>
-    <p>For <strong>personal</strong> use or when you want the same setup across all projects. Not included in Git.</p>
-    <ul class="setup-card-paths">
-      <li>📁 <strong>Mac</strong>：<code>~/.config/Code/User/settings.json</code></li>
-      <li>🪟 <strong>Windows</strong>：<code>%APPDATA%\Code\User\settings.json</code></li>
-    </ul>
+    <p><strong>Global → Copilot Global</strong>: personal setup across workspaces, normally in <code>~/.copilot/mcp-config.json</code>. Not committed to the project.</p>
   </div>
 </div>
 
-## Getting started with Copilot CLI
+> ⚠️ Root-file destination: enable **`chat.mcp.workspaceRootConfig.enabled`** (Experimental). Local compatibility: `.vscode/mcp.json` uses `servers` (labeled deprecated in the guided flow).
+
+## Getting started with Copilot CLI <a class="h2-doc" href="https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference#mcp-server-configuration" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+The CLI also reads workspace-root **`.mcp.json`** with a top-level **`mcpServers`** object after you trust the folder. Migrating from `.vscode/mcp.json` requires changing `servers` to `mcpServers`, not just renaming the file.
 
 ```bash
 # Add an MCP server
@@ -231,7 +232,43 @@ Two hosting options — both can be consumed and enforced from VS Code / Org / E
 
 - **GitHub Org / Enterprise**: <a class="retro-link" href="https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-mcp-usage/configure-mcp-registry" target="_blank" rel="noopener noreferrer">configure the registry ↗</a> and <a class="retro-link" href="https://docs.github.com/en/copilot/reference/mcp-allowlist-enforcement" target="_blank" rel="noopener noreferrer">enforce via allowlist ↗</a>
 
-> 🔒 **Visibility ≠ access:** anything listed in Azure API Center is **visible to anyone** who can reach the catalog — but the catalog only exposes **metadata**. The actual **download / connection is gated separately**: for an internal server, publish a stdio server to a **private package registry** (GitHub Packages, GHCR, Azure Artifacts…) or keep an HTTP server **inside your network / VPN**, so only authenticated employees can pull or connect.
+## Keeping internal servers private
+
+**The catalog is public** — what you protect is the **source (distribution)**. A server registered in Azure API Center is visible to anyone who can reach the catalog, but only its **metadata** is exposed. The actual **download / connection is gated separately**.
+
+```mermaid
+flowchart LR
+  DEV["👤 Developer<br/>VS Code / Copilot<br/>opens @mcp"]
+  AC["🌐 Azure API Center<br/>catalog = public<br/>metadata only (no code)"]
+  STDIO["◆ stdio → 🔒 private registry<br/>GitHub Packages / GHCR / Azure Artifacts<br/>auth token required"]
+  HTTP["◆ HTTP → 🏢 internal net / VPN<br/>unreachable from public internet<br/>SSO / network auth in front"]
+  EMP1["✅ Employee pulls"]
+  OUT1["⛔ Outsider → 401"]
+  EMP2["✅ Employee connects"]
+  OUT2["⛔ Outsider → blocked"]
+  DEV --> AC
+  AC -->|package ref| STDIO
+  AC -->|remote URL| HTTP
+  STDIO --> EMP1
+  STDIO --> OUT1
+  HTTP --> EMP2
+  HTTP --> OUT2
+
+  classDef dev fill:#0a0e27,stroke:#00f0ff,color:#00f0ff,stroke-width:2px
+  classDef cat fill:#1a0a2e,stroke:#ffb000,color:#ffb000,stroke-width:2px
+  classDef stdio fill:#0a0e27,stroke:#00f0ff,color:#00f0ff,stroke-width:2px
+  classDef http fill:#1a0a2e,stroke:#ff2e97,color:#ff2e97,stroke-width:2px
+  classDef ok fill:#0a1a14,stroke:#9bbc0f,color:#9bbc0f,stroke-width:2px
+  classDef deny fill:#2a0a0a,stroke:#ff5555,color:#ff5555,stroke-width:2px
+  class DEV dev
+  class AC cat
+  class STDIO stdio
+  class HTTP http
+  class EMP1,EMP2 ok
+  class OUT1,OUT2 deny
+```
+
+> ✅ The catalog **only points to the source**. **Protect the source → only authenticated employees can run it**.
 
 ## Trying an MCP Registry locally
 
@@ -244,6 +281,6 @@ The flow to stand up a registry locally, expose it over HTTPS, connect it to my 
 3. **HTTPS tunnel** — `cloudflared tunnel --url http://localhost:8080` → `https://<random>.trycloudflare.com`
 4. **Connect** — set the tunnel URL as **MCP Registry URL** (no `/v0.1/servers` suffix — Copilot appends it). **Org**: Settings → Copilot → **Policies** → MCP; **Enterprise**: **AI controls** → MCP
 5. **Reload VS Code & verify** — Developer: Reload Window → `@mcp` shows only the servers from my registry. Open `Cmd + ,` (Settings) and confirm the MCP settings carry a **“managed by your organization”** badge (= the Org policy is applied)
-6. **Seed from the GitHub Registry** — `go run scripts/mirror_data/fetch_production_data.go` + `load_production_data.go` (source: `https://api.mcp.github.com/v0.1/servers`)
+6. **Seed from the GitHub Registry** — `go run scripts/mirror_data/fetch_production_data.go` + `load_production_data.go` (source: `https://registry.modelcontextprotocol.io/v0/servers`)
 
 > ⚠️ Make sure VS Code uses **this Org's Copilot license** (a different account / personal plan won't get the Org policy). The `mirror_data` scripts are as-is — filter them down to the servers you actually want to allow.
