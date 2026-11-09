@@ -182,7 +182,7 @@ function assertPullRequest(f, number, base) {
   assert.match(visible, [
     /Playbook の一覧 \/ 詳細を備えた基本サイトの完成例/,
     /一覧 \/ 詳細 \/ プレゼンを備えたサイトの完成例/,
-    /プレゼン対応サイト、Playwright テスト、PR CI の完成例/,
+    /2D \/ 3D \/ プレゼン対応サイト、Playwright テスト、PR CI の完成例/,
   ][number - 1]);
   assert.match(visible, /`npm ci` → `npm run dev`/);
   assert.match(visible, /表示 URL（Codespaces は転送 URL）の `\/playbook\/`/);
@@ -194,10 +194,12 @@ function assertPullRequest(f, number, base) {
   assert.deepEqual([...body.matchAll(/npm run ([a-z0-9:-]+)/g)].map(match => match[1]),
     number === 3 ? ['dev', 'check', 'test:e2e'] : ['dev', 'check', 'build']);
   if (number === 3) {
+    assert.match(visible, /2D \/ 3D、詳細、プレゼンを確認/);
     assert.match(details, /npx playwright install chromium/);
     assert.match(details, /Linux: `npx playwright install --with-deps chromium`/);
     assert.match(details, /PR の CI 結果も確認/);
   } else {
+    assert.doesNotMatch(visible, /3D/);
     assert.doesNotMatch(body, /playwright|test:e2e/i);
     assert.match(visible, number === 1 ? /一覧と詳細を確認/ : /カードからプレゼンを開き、移動と目次を確認/);
   }
