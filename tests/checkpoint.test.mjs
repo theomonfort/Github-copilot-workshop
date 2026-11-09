@@ -185,13 +185,24 @@ test('preserves staged, unstaged, untracked and non-colliding ignored work witho
   f.assertStable();
 });
 
-test('sequential imports use newly fetched main; already-present snapshot is a clean no-op', (t) => {
+test('sequential imports preserve commit metadata and use the exact PR titles; an existing snapshot is a no-op', (t) => {
   const f = fixture(t);
+  const titles = ['Website scaffold', 'Website with presentation mode', 'Complete website with tests and CI'];
   let previous = f.initial;
   for (const number of [1, 2, 3]) {
     const result = f.run(number);
     assert.equal(result.status, 0, result.output);
     assert.equal(f.git(f.participant, 'rev-parse', 'HEAD^'), previous);
+    const prs = f.calls().filter((args) => args[0] === 'pr');
+    assert.equal(prs.length, number);
+    const args = prs.at(-1);
+    assert.equal(args[args.indexOf('--title') + 1], titles[number - 1]);
+    assert.equal(args[args.indexOf('--head') + 1], `workshop-checkpoint${number}`);
+    const checkpoint = `checkpoint/${stages[number - 1]}`;
+    const body = `Import files from https://github.com/theomonfort/Github-copilot-workshop.git at ${f.snapshots[number - 1]} (${checkpoint}). Based on participant main ${previous}; canonical history is not merged. Review this snapshot before merging.`;
+    assert.equal(args[args.indexOf('--body') + 1], body);
+    assert.equal(f.git(f.participant, 'log', '-1', '--format=%s'), `Import workshop ${checkpoint}`);
+    assert.equal(f.git(f.participant, 'log', '-1', '--format=%b'), body);
     previous = f.head();
     f.git(f.sandbox, '--git-dir=' + f.origin, 'update-ref', 'refs/heads/main', previous);
   }
@@ -294,11 +305,13 @@ test('fetch failure leaves the checkout unchanged; push/PR failures retain recov
   assert.notEqual(push.status, 0);
   assert.match(push.output, /retry the create-only push/);
   assert.match(push.output, /git stash apply --index/);
+  assert.match(push.output, /'--title' 'Website scaffold' '--body' 'Import files from/);
   assert.equal(f.git(f.participant, 'rev-parse', 'HEAD^'), f.initial);
   assert(!f.calls().some((args) => args[0] === 'pr'));
   const pr = f.run(2, { FAIL_PR: '1' });
   assert.notEqual(pr.status, 0);
   assert.match(pr.output, /Check for an existing PR before retrying/);
+  assert.match(pr.output, /'--title' 'Website with presentation mode' '--body' 'Import files from/);
   assert.equal(f.remoteRef('workshop-checkpoint2'), f.head());
   assert.equal(f.git(f.participant, 'show', 'refs/stash^3:notes.txt'), 'recover me');
   f.assertStable();
