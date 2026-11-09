@@ -3,7 +3,9 @@ import { render } from 'astro:content';
 import Layout from '../../components/layout/Layout.astro';
 import { accentColorValues } from '../../lib/theme';
 import { getPlaybookEntries } from '../../lib/playbook';
+import { categories } from '../../lib/playbook-categories';
 import '../../styles/playbook.css';
+import '../../styles/presentation.css';
 
 export async function getStaticPaths() {
   return (await getPlaybookEntries()).map((item) => ({
@@ -20,6 +22,12 @@ const idx = all.findIndex((e) => e.slug === item.slug);
 const prev = idx > 0 ? all[idx - 1] : null;
 const next = idx < all.length - 1 ? all[idx + 1] : null;
 const accent = accentColorValues[entry.data.color];
+const category = categories.find((cat) => cat.id === entry.data.category)!;
+const hasNutshell = /^##\s+(一言で|In a nutshell)\s*$/im.test(entry.body ?? '');
+const tocGroups = categories.map((cat) => ({
+  ...cat,
+  items: all.filter((e) => e.entry.data.category === cat.id),
+}));
 const linkGroups: { name: string; items: typeof entry.data.links }[] = [];
 for (const link of entry.data.links) {
   const name = link.group ?? '';
@@ -33,7 +41,21 @@ for (const link of entry.data.links) {
 ---
 
 <Layout title={`${entry.data.title} | Playbook`} description={entry.data.summary}>
-  <section class="max-w-5xl mx-auto px-4 py-12 playbook-detail" data-category={entry.data.category} style={`--entry-accent:${accent}`}>
+  <script is:inline data-astro-rerun>
+    if (new URLSearchParams(location.search).get('present') === '1' && matchMedia('(min-width: 768px)').matches) {
+      document.documentElement.classList.add('present-mode', 'slide-preparing');
+      document.body.classList.add('present-mode', 'slide-preparing');
+    }
+  </script>
+  <section
+    class="max-w-5xl mx-auto px-4 py-12 playbook-detail"
+    data-category={entry.data.category}
+    data-prev={prev ? `/playbook/${prev.slug}/` : ''}
+    data-next={next ? `/playbook/${next.slug}/` : ''}
+    data-index="/playbook/"
+    data-has-nutshell={hasNutshell}
+    style={`--entry-accent:${accent};--hero-avatar:url('${category.avatar}')`}
+  >
     <a href="/playbook/" class="text-neon-cyan hover:underline">◀ Playbook に戻る</a>
     <header class="mt-6 mb-8 pb-6 border-b-2 border-dashed" style={`border-color:${accent}`}>
       <p class="text-sm mb-2" style={`color:${accent}`}>NO.{String(entry.data.order).padStart(2, '0')}</p>
@@ -44,7 +66,7 @@ for (const link of entry.data.links) {
         {entry.data.title}
       </h1>
       {entry.data.titleEn && <p class="text-phosphor/70">{entry.data.titleEn}</p>}
-      <p class="mt-4">{entry.data.summary}</p>
+      <p class="entry-summary mt-4">{entry.data.summary}</p>
     </header>
     <article class="prose-akq" data-category={entry.data.category} style={`--entry-accent:${accent}`}>
       <Content />
@@ -68,5 +90,41 @@ for (const link of entry.data.links) {
       {prev ? <a href={`/playbook/${prev.slug}/`} class="p-3 border border-neon-cyan">◀ {prev.entry.data.title}</a> : <span />}
       {next ? <a href={`/playbook/${next.slug}/`} class="p-3 border border-neon-magenta text-right">{next.entry.data.title} ▶</a> : <span />}
     </nav>
+    <button type="button" id="present-toggle" class="present-hint" aria-label="プレゼンモードを開始">
+      <span class="key">P</span> プレゼンモード
+    </button>
+    <div class="present-overlay-hint">
+      <button type="button" class="key key-button" data-slide-action="prev" aria-label="前のスライド">◀</button>
+      <button type="button" class="key key-button" data-slide-action="next" aria-label="次のスライド">▶</button>
+      <button type="button" class="present-action-btn" data-slide-action="exit" aria-label="プレゼンテーションを終了">Esc 終了</button>
+      <button type="button" class="present-toc-toggle" data-toc-toggle aria-label="目次の表示切り替え">T 目次</button>
+    </div>
+    <div class="slide-progress" role="tablist" aria-label="スライド"></div>
+    <div class="slide-counter" role="status" aria-label="現在のスライド"><span class="slide-counter-text"></span></div>
+    <div class="slide-title-tag" aria-hidden="true"></div>
+    <nav class="present-toc" aria-label="プレゼン目次" data-current-id={item.slug} transition:persist="present-toc-ja">
+      {tocGroups.filter((group) => group.items.length > 0).map((group) => (
+        <>
+          <div class="toc-section" style={`color:${accentColorValues[group.color]};border-color:${accentColorValues[group.color]}`}>
+            {group.icon} {group.labelJa}
+          </div>
+          {group.items.map((e) => (
+            <a href={`/playbook/${e.slug}/?present=1`} class="toc-item" data-id={e.slug} style={`--cat-color:${accentColorValues[group.color]}`}>
+              <span class="toc-num">{String(e.entry.data.order).padStart(2, '0')}</span>
+              <span class="toc-text">
+                {/\.(svg|png|jpg|jpeg|webp|gif)$/i.test(e.entry.data.icon)
+                  ? <img src={e.entry.data.icon} alt="" class="inline h-4 w-4 mr-2" />
+                  : <span>{e.entry.data.icon} </span>}
+                {e.entry.data.title}
+              </span>
+            </a>
+          ))}
+        </>
+      ))}
+    </nav>
   </section>
 </Layout>
+
+<script>
+  import '../../scripts/presentation';
+</script>

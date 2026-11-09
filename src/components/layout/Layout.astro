@@ -1,5 +1,6 @@
 ---
 import '../../styles/globals.css';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
   title: string;
@@ -16,6 +17,7 @@ const { title, description = 'GitHub Copilot ハンズオンの Playbook サイ�
     <meta name="description" content={description} />
     <meta name="theme-color" content="#0a0e27" />
     <title>{title}</title>
+    <ClientRouter />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

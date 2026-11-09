@@ -1,0 +1,641 @@
+  /* ── Presentation-mode toggle button (subtle hint) ── */
+  .present-hint {
+    position: fixed;
+    right: 16px;
+    bottom: 64px;
+    padding: 8px 12px;
+    background: rgba(10, 14, 39, 0.9);
+    color: #00f0ff;
+    border: 2px solid #00f0ff;
+    cursor: pointer;
+    z-index: 60;
+    box-shadow: 4px 4px 0 #05060f, 0 0 8px rgba(0, 240, 255, 0.4);
+    transition: transform 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .present-hint:hover { transform: translate(-2px, -2px); color: #ff2e88; border-color: #ff2e88; }
+  .present-hint .key {
+    display: inline-block;
+    padding: 1px 6px;
+    margin-right: 6px;
+    background: #00f0ff;
+    color: #0a0e27;
+    font-weight: bold;
+  }
+  .present-hint:hover .key { background: #ff2e88; }
+
+  .present-overlay-hint {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    display: none;
+    gap: 16px;
+    color: var(--entry-accent, #00f0ff);
+    z-index: 60;
+    opacity: 0.6;
+  }
+  .present-overlay-hint .key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    font-size: 11px;
+    line-height: 1;
+    background: color-mix(in srgb, var(--entry-accent, #00f0ff) 15%, transparent);
+    border: 1px solid var(--entry-accent, #00f0ff);
+    margin: 0 2px;
+  }
+  .present-overlay-hint button.key-button {
+    font-family: inherit;
+    color: inherit;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  }
+  .present-overlay-hint button.key-button:hover {
+    background: rgba(255, 46, 136, 0.2);
+    border-color: #ff2e88;
+    color: #ff2e88;
+    transform: translate(-1px, -1px);
+  }
+  .present-overlay-hint button.key-button:focus-visible {
+    outline: 2px solid #ff2e88;
+    outline-offset: 2px;
+  }
+  .present-overlay-hint button.key-button:active { transform: translate(0, 0); }
+
+  .present-overlay-hint .present-action-btn {
+    display: inline-flex;
+    align-items: center;
+    background: transparent;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    pointer-events: auto;
+    padding: 0;
+    transition: color 0.15s, transform 0.15s;
+  }
+  .present-overlay-hint .present-action-btn:hover { color: #ff2e88; transform: translate(-1px, -1px); }
+  .present-overlay-hint .present-action-btn:hover .key { background: rgba(255, 46, 136, 0.15); border-color: #ff2e88; color: #ff2e88; }
+  .present-overlay-hint .present-action-btn:focus-visible {
+    outline: 2px solid #ff2e88;
+    outline-offset: 2px;
+  }
+  .present-overlay-hint .present-lang-toggle {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: color 0.15s, transform 0.15s;
+  }
+  .present-overlay-hint .present-lang-toggle:hover { color: #ff2e88; transform: translate(-1px, -1px); }
+  .present-overlay-hint .present-lang-toggle:hover .key { background: rgba(255, 46, 136, 0.15); border-color: #ff2e88; }
+
+  /* ── Presentation mode ── */
+  body.present-mode { background: #05060f !important; overflow: hidden; }
+  body.present-mode .site-header,
+  body.present-mode nav,
+  body.present-mode footer,
+  body.present-mode .bgm-player,
+  body.present-mode .bgm-bug-report,
+  body.present-mode .crt-overlay { display: none !important; }
+  body.present-mode .present-hint { display: none; }
+  body.present-mode .present-overlay-hint { display: flex; }
+
+  body.present-mode [data-has-nutshell="true"] .entry-summary { display: none; }
+  body.present-mode.slide-cover .hero-quote::before {
+    background-image: var(--hero-avatar);
+  }
+  body.present-mode [data-has-nutshell="false"] .entry-summary {
+    padding: 1.5rem;
+    border: 2px solid var(--entry-accent);
+    background: #05060fcc;
+    font-size: 1.5rem;
+  }
+  @media (max-width: 767px) {
+    .present-hint { display: none; }
+  }
+
+  /* Per-category pixel-art backdrops for present mode.
+     Shared positioning rule + per-category background-image overrides.
+     Cover slide (body.slide-cover) uses a lighter overlay so the artwork breathes.
+     NOTE: do NOT use background-attachment: fixed — the slide-in @keyframes
+     uses filter: blur(...) which creates a containing block and intermittently
+     breaks fixed backgrounds (per CSS spec). */
+  body.present-mode .playbook-detail[data-category="introduction"],
+  body.present-mode .playbook-detail[data-category="plan"],
+  body.present-mode .playbook-detail[data-category="develop"],
+  body.present-mode .playbook-detail[data-category="review"],
+  body.present-mode .playbook-detail[data-category="secure"],
+  body.present-mode .playbook-detail[data-category="operate"],
+  body.present-mode .playbook-detail[data-category="administration"] {
+    background-color: #05060f;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+
+  /* INTRODUCTION → spaceport with category-planets */
+  body.present-mode .playbook-detail[data-category="introduction"] {
+    background-image:
+      linear-gradient(180deg, rgba(5, 6, 15, 0.86) 0%, rgba(5, 6, 15, 0.90) 55%, rgba(5, 6, 15, 0.94) 100%),
+      url('/slide-bg-introduction.webp');
+  }
+  body.present-mode.slide-cover .playbook-detail[data-category="introduction"] {
+    background-image:
+      linear-gradient(180deg, rgba(5, 6, 15, 0.55) 0%, rgba(5, 6, 15, 0.68) 55%, rgba(5, 6, 15, 0.82) 100%),
+      url('/slide-bg-introduction.webp');
+  }
+
+  /* PLAN → greenhouse with architect/planner */
+  body.present-mode .playbook-detail[data-category="plan"] {
+    background-image:
+      linear-gradient(180deg, rgba(5, 6, 15, 0.86) 0%, rgba(5, 6, 15, 0.90) 55%, rgba(5, 6, 15, 0.94) 100%),
+      url('/slide-bg-plan.webp');
+  }
+  body.present-mode.slide-cover .playbook-detail[data-category="plan"] {
+    background-image:
+      linear-gradient(180deg, rgba(5, 6, 15, 0.55) 0%, rgba(5, 6, 15, 0.68) 55%, rgba(5, 6, 15, 0.82) 100%),
+      url('/slide-bg-plan.webp');
+  }
+
+  /* DEVELOP → volcanic forge */
+  body.present-mode .playbook-detail[data-category="develop"] {
+    background-image:
+      linear-gradient(180deg, rgba(5, 6, 15, 0.86) 0%, rgba(5, 6, 15, 0.90) 55%, rgba(5, 6, 15, 0.94) 100%),
+      url('/slide-bg-develop.webp');
+  }
+  body.present-mode.slide-cover .playbook-detail[data-category="develop"] {
+    background-image:
+      linear-gradient(180deg, rgba(5, 6, 15, 0.55) 0%, rgba(5, 6, 15, 0.68) 55%, rgba(5, 6, 15, 0.82) 100%),
+      url('/slide-bg-develop.webp');
+  }
+
+  /* REVIEW → desert oasis watchtower */
+  body.present-mode .playbook-detail[data-category="review"] {
+    background-image:
+      linear-gradient(180deg, rgba(5, 6, 15, 0.86) 0%, rgba(5, 6, 15, 0.90) 55%, rgba(5, 6, 15, 0.94) 100%),
+      url('/slide-bg-review.webp');
+  }
+  body.present-mode.slide-cover .playbook-detail[data-category="review"] {
+    background-image:
+      linear-gradient(180deg, rgba(5, 6, 15, 0.55) 0%, rgba(5, 6, 15, 0.68) 55%, rgba(5, 6, 15, 0.82) 100%),
+      url('/slide-bg-review.webp');
+  }
+
+  /* SECURE → frozen castle */
+  body.present-mode .playbook-detail[data-category="secure"] {
+    background-image:
+      linear-gradient(180deg, rgba(5, 6, 15, 0.86) 0%, rgba(5, 6, 15, 0.90) 55%, rgba(5, 6, 15, 0.94) 100%),
+      url('/slide-bg-secure.webp');
+  }
+  body.present-mode.slide-cover .playbook-detail[data-category="secure"] {
+    background-image:
+      linear-gradient(180deg, rgba(5, 6, 15, 0.55) 0%, rgba(5, 6, 15, 0.68) 55%, rgba(5, 6, 15, 0.82) 100%),
+      url('/slide-bg-secure.webp');
+  }
+
+  /* OPERATE → Yggdrasil world-tree */
+  body.present-mode .playbook-detail[data-category="operate"] {
+    background-image:
+      linear-gradient(180deg, rgba(5, 6, 15, 0.86) 0%, rgba(5, 6, 15, 0.90) 55%, rgba(5, 6, 15, 0.94) 100%),
+      url('/slide-bg-operate.webp');
+  }
+  body.present-mode.slide-cover .playbook-detail[data-category="operate"] {
+    background-image:
+      linear-gradient(180deg, rgba(5, 6, 15, 0.55) 0%, rgba(5, 6, 15, 0.68) 55%, rgba(5, 6, 15, 0.82) 100%),
+      url('/slide-bg-operate.webp');
+  }
+
+  /* ADMINISTRATION → grand library / archive */
+  body.present-mode .playbook-detail[data-category="administration"] {
+    background-image:
+      linear-gradient(180deg, rgba(5, 6, 15, 0.86) 0%, rgba(5, 6, 15, 0.90) 55%, rgba(5, 6, 15, 0.94) 100%),
+      url('/slide-bg-administration.webp');
+  }
+  body.present-mode.slide-cover .playbook-detail[data-category="administration"] {
+    background-image:
+      linear-gradient(180deg, rgba(5, 6, 15, 0.55) 0%, rgba(5, 6, 15, 0.68) 55%, rgba(5, 6, 15, 0.82) 100%),
+      url('/slide-bg-administration.webp');
+  }
+
+  body.present-mode .playbook-detail {
+    max-width: none !important;
+    width: 100vw !important;
+    height: 100vh;
+    max-height: 100vh;
+    padding: 5rem 2.5rem 3rem;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: safe center;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  body.present-mode .playbook-detail > header {
+    max-width: 72rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+  }
+  body.present-mode .playbook-detail > a:first-child,
+  body.present-mode .playbook-detail > nav:not(.present-toc),
+  body.present-mode .playbook-detail > aside:not(.akq-slide-active) { display: none !important; }
+  body.present-mode .playbook-detail > aside.akq-slide-active { display: block !important; }
+  body.present-mode .playbook-detail > aside.links-aside.akq-slide-active {
+    max-width: 72rem;
+    width: 100%;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  body.present-mode.slide-preparing .playbook-detail > header,
+  body.present-mode.slide-preparing .playbook-detail > article.prose-akq > *,
+  body.present-mode.slide-preparing .playbook-detail > aside.links-aside {
+    visibility: hidden !important;
+  }
+  body.present-mode .slide-title-tag { display: none !important; }
+
+  /* Subtle scrollbars in present mode (override global magenta chunky bars) */
+  html.present-mode,
+  body.present-mode,
+  html.present-mode *,
+  body.present-mode * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.15) transparent;
+  }
+  html.present-mode ::-webkit-scrollbar,
+  body.present-mode ::-webkit-scrollbar { width: 6px; height: 6px; }
+  html.present-mode ::-webkit-scrollbar-track,
+  body.present-mode ::-webkit-scrollbar-track { background: transparent; }
+  html.present-mode ::-webkit-scrollbar-thumb,
+  body.present-mode ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border: none; border-radius: 3px; }
+  html.present-mode ::-webkit-scrollbar-thumb:hover,
+  body.present-mode ::-webkit-scrollbar-thumb:hover { background: rgba(0,240,255,0.35); }
+  html.present-mode { overflow: hidden; }
+
+  /* ── Left-side TOC sidebar (presentation mode only, md+) ── */
+  .present-toc {
+    display: none !important;
+  }
+  @media (min-width: 768px) {
+    body.present-mode .present-toc {
+      display: flex !important;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 300px;
+      padding: 2.5rem 1rem 2rem;
+      gap: 0;
+      overflow-y: auto;
+      background: #0a0e27;
+      border-right: 1px solid rgba(255,46,136,0.2);
+      z-index: 40;
+      transition: transform 0.25s ease;
+    }
+    body.present-mode .playbook-detail {
+      padding-left: 320px;
+      transition: padding-left 0.25s ease, background 0.4s ease;
+    }
+    body.present-mode.akq-toc-hidden .present-toc {
+      transform: translateX(-100%);
+    }
+    body.present-mode.akq-toc-hidden .playbook-detail {
+      padding-left: 2.5rem;
+    }
+  }
+  /* TOC toggle chip in the help overlay */
+  .present-toc-toggle {
+    display: inline-flex;
+    align-items: center;
+    background: transparent;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    pointer-events: auto;
+    padding: 0;
+    transition: color 0.15s, transform 0.15s;
+  }
+  .present-toc-toggle:hover { color: #ff2e88; transform: translate(-1px, -1px); }
+  .present-toc-toggle:hover .key { background: rgba(255, 46, 136, 0.15); border-color: #ff2e88; }
+  .present-toc-toggle[aria-pressed="true"] .key {
+    background: color-mix(in srgb, var(--entry-accent, #00f0ff) 40%, transparent);
+  }
+  @media (max-width: 767px) {
+    .present-toc-toggle { display: none; }
+  }
+  .present-toc .toc-item {
+    display: flex !important;
+    align-items: baseline;
+    gap: 0.55rem;
+    width: 100%;
+    padding: 0.5rem 0.6rem 0.5rem 1.5rem;
+    text-align: left;
+    position: relative;
+    background: transparent;
+    border: none;
+    border-bottom: 1px dashed rgba(232, 244, 255, 0.12);
+    color: #e8f4ff;
+    font-family: 'DotGothic16', monospace;
+    font-size: 0.9rem;
+    line-height: 1.35;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  .present-toc .toc-item::before {
+    content: '▶';
+    position: absolute;
+    left: 0.3rem;
+    top: 0.5rem;
+    font-size: 0.7rem;
+    color: var(--cat-color, #00f0ff);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    pointer-events: none;
+  }
+  .present-toc .toc-item:hover::before,
+  .present-toc .toc-item.active::before {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .present-toc .toc-item.toc-hidden {
+    display: none !important;
+  }
+  .present-toc .toc-item:hover {
+    color: var(--cat-color, #00f0ff);
+  }
+  .present-toc .toc-item.active {
+    color: var(--cat-color, #ff2e88) !important;
+    font-weight: 700;
+    text-shadow: 0 0 8px color-mix(in srgb, var(--cat-color, #ff2e88) 60%, transparent);
+  }
+  .present-toc .toc-section {
+    font-family: 'DotGothic16', 'Noto Sans JP', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.85rem 0.6rem 0.35rem;
+    margin-top: 0.4rem;
+    border-bottom: 1px solid;
+    opacity: 0.85;
+  }
+  .present-toc .toc-section:first-child {
+    margin-top: 0;
+  }
+  .present-toc .toc-num {
+    font-family: 'DotGothic16', 'Noto Sans JP', monospace;
+    font-size: 0.78rem;
+    color: var(--cat-color, #ffb000);
+    flex-shrink: 0;
+    min-width: 1.6rem;
+  }
+  .present-toc .toc-text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .present-toc .toc-item:has(.toc-new-badge) {
+    overflow: visible;
+  }
+  .present-toc .toc-text:has(.toc-new-badge) {
+    overflow: visible;
+    -webkit-line-clamp: unset;
+    display: block;
+    white-space: nowrap;
+  }
+  .present-toc .toc-title-text {
+    position: relative;
+  }
+  .present-toc .toc-new-badge {
+    position: absolute;
+    left: 100%;
+    bottom: 1em;
+    margin-left: -0.55rem;
+    font-family: 'Caveat', 'Comic Sans MS', cursive;
+    font-weight: 700;
+    font-size: 0.85rem;
+    line-height: 1;
+    color: #ffe14d;
+    transform: rotate(20deg);
+    text-shadow: 0 0 8px rgba(255, 209, 0, 0.55);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  /* ── Slide visibility ── */
+  body.present-mode .akq-slide-el { /* no-op marker */ }
+  body.present-mode .akq-slide-hidden:not(.present-toc):not(.toc-item):not(.toc-num):not(.toc-text) { display: none !important; }
+
+  body.present-mode .akq-slide-active {
+    animation: slide-in 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes slide-in {
+    0%   { opacity: 0; transform: translateY(24px) scale(0.98); filter: blur(4px); }
+    60%  { opacity: 1; filter: blur(0); }
+    100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+  }
+  body.present-mode .playbook-detail {
+    transition: background 0.4s ease, padding-left 0.25s ease;
+  }
+
+  /* Boost typography in slide mode */
+  body.present-mode .playbook-detail header { margin-bottom: 1.5rem; }
+  body.present-mode .playbook-detail header h1 { font-size: 3rem !important; }
+  body.present-mode .playbook-detail header > p:nth-of-type(2) { font-size: 1.5rem !important; }
+  body.present-mode .prose-akq { font-size: 1.5rem; line-height: 1.7; max-width: 72rem; width: 100%; margin: 0 auto; }
+  body.present-mode .prose-akq h2 { font-size: 2.4rem; margin-top: 0.5em; margin-bottom: 0.7em; }
+  body.present-mode .prose-akq h3 { font-size: 1.7rem; }
+  body.present-mode .prose-akq pre,
+  body.present-mode .mermaid-wrap {
+    font-size: 1.05rem;
+    padding: 2em;
+    margin: 1.5em 0;
+    width: 100% !important;
+    max-width: none !important;
+    max-height: 75vh;
+    overflow-y: auto;
+    overflow-x: auto;
+  }
+  body.present-mode .mermaid-wrap svg {
+    max-width: none !important;
+    width: auto !important;
+    height: auto !important;
+  }
+  body.present-mode .prose-akq blockquote { font-size: 1.3rem; }
+
+  /* ── Progress bars (top) ── */
+  .slide-progress {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    padding: 4px 16px;
+    gap: 4px;
+    z-index: 60;
+    background: #05060f;
+    border-bottom: 1px dashed color-mix(in srgb, var(--entry-accent, #00f0ff) 25%, transparent);
+  }
+  body.present-mode .slide-progress { display: flex; }
+  /* ── "New" markers pinned above flagged nav-bar segments ── */
+  .slide-new-marker {
+    display: none;
+    position: fixed;
+    z-index: 61;
+    flex-direction: row;
+    align-items: center;
+    gap: 3px;
+    transform: translate(-50%, -8px) rotate(-3deg);
+    pointer-events: none;
+  }
+  body.present-mode .slide-new-marker { display: flex; }
+  .slide-new-arrow {
+    width: 18px;
+    height: 16px;
+    filter: drop-shadow(0 0 6px rgba(255, 209, 0, 0.5));
+  }
+  .slide-new-text {
+    font-family: 'Caveat', 'Comic Sans MS', cursive;
+    font-weight: 700;
+    font-size: 1.15rem;
+    line-height: 1;
+    color: #ffe14d;
+    text-shadow: 0 0 8px rgba(255, 209, 0, 0.55);
+    white-space: nowrap;
+  }
+  .slide-progress-bar {
+    flex: 1;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    padding: 6px 0;
+    position: relative;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .slide-progress-bar::before {
+    content: '';
+    display: block;
+    height: 3px;
+    background: color-mix(in srgb, var(--entry-accent, #00f0ff) 15%, transparent);
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  .slide-progress-bar.active::before {
+    background: var(--entry-accent, #00f0ff);
+    box-shadow: 0 0 6px var(--entry-accent, #00f0ff);
+  }
+  .slide-progress-bar:hover::before {
+    background: color-mix(in srgb, var(--entry-accent, #00f0ff) 55%, transparent);
+  }
+  .slide-progress-bar:focus-visible { outline: none; }
+  .slide-progress-bar:focus-visible::before {
+    background: var(--entry-accent, #00f0ff);
+    box-shadow: 0 0 8px var(--entry-accent, #00f0ff);
+  }
+
+  /* ── Slide counter (bottom right) ── */
+  .slide-counter {
+    display: none;
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    color: var(--entry-accent, #00f0ff);
+    z-index: 60;
+    padding: 6px 10px;
+    background: rgba(10, 14, 39, 0.8);
+    border: 1px solid color-mix(in srgb, var(--entry-accent, #00f0ff) 40%, transparent);
+  }
+  body.present-mode .slide-counter { display: block; }
+
+  /* ── Slide title tag (top-left, shown after cover) ── */
+  .slide-title-tag {
+    display: none;
+    position: fixed;
+    top: 32px;
+    left: 28px;
+    z-index: 60;
+    padding: 10px 18px;
+    background: rgba(10, 14, 39, 0.85);
+    border: 2px solid rgba(255, 46, 136, 0.55);
+    box-shadow: 4px 4px 0 #05060f, 0 0 14px rgba(255, 46, 136, 0.25);
+    color: #e8f4ff;
+    letter-spacing: 0.05em;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    transform: translateX(-12px);
+    transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+    max-width: 80vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 17px;
+    line-height: 1.1;
+  }
+  body.present-mode .slide-title-tag { display: flex; }
+  body.present-mode .slide-title-tag.visible { opacity: 0.95; transform: translateX(0); }
+  .slide-title-tag .tag-main { color: #ff2e88; display: inline-flex; align-items: center; gap: 8px; }
+  .slide-title-tag .tag-main span { font-size: 1.1em; }
+  .slide-title-tag .tag-sep { color: #00f0ff; opacity: 0.7; font-size: 0.9em; }
+  .slide-title-tag .tag-sub { color: #00f0ff; font-family: 'DotGothic16', sans-serif; font-size: 0.95em; }
+
+  /* ── Match the overlay-hint style to the title tag ── */
+  body.present-mode .present-overlay-hint {
+    top: 32px;
+    right: 22px;
+    padding: 6px 12px;
+    background: rgba(10, 14, 39, 0.85);
+    border: 2px solid color-mix(in srgb, var(--entry-accent, #00f0ff) 55%, transparent);
+    box-shadow: 4px 4px 0 #05060f, 0 0 14px color-mix(in srgb, var(--entry-accent, #00f0ff) 25%, transparent);
+    opacity: 0.95;
+    font-size: 18px;
+    gap: 10px;
+  }
+
+  /* Counter: same retro card style */
+  body.present-mode .slide-counter {
+    bottom: 18px;
+    right: 22px;
+    padding: 6px 14px;
+    background: rgba(10, 14, 39, 0.85);
+    border: 2px solid color-mix(in srgb, var(--entry-accent, #00f0ff) 55%, transparent);
+    box-shadow: 4px 4px 0 #05060f, 0 0 14px color-mix(in srgb, var(--entry-accent, #00f0ff) 25%, transparent);
+    color: var(--entry-accent, #00f0ff);
+    font-size: 24px;
+  }
+
+  /* ─────────────────────────────────────────────────────────────
+     Combo A — CRT terminal (site-wide playbook default)
+     Headings: Orbitron · Body + TOC: Share Tech Mono · Chrome: VT323
+     JP fallback for headings: DotGothic16 (Orbitron has no JP glyphs)
+     ───────────────────────────────────────────────────────────── */
+  .playbook-detail .prose-akq {
+    font-family: 'DotGothic16', monospace;
+  }
+  .playbook-detail .prose-akq h2,
+  .playbook-detail .prose-akq h3 {
+    font-family: 'DotGothic16', monospace;
+  }
+  body.present-mode .playbook-detail .present-overlay-hint,
+  body.present-mode .playbook-detail .present-hint,
+  body.present-mode .playbook-detail .slide-counter {
+    font-family: 'VT323', 'Noto Sans JP', monospace !important;
+    letter-spacing: 0.02em;
+  }
+  body.present-mode .playbook-detail .present-overlay-hint {
+    font-size: 18px;
+  }
+  body.present-mode .playbook-detail .slide-counter {
+    font-size: 24px;
+  }

@@ -95,11 +95,11 @@ const CATEGORIES_WITH_PLANETS = new Set<string>(['plan', 'operate', 'review', 'd
               const cardTitle = e.data.title;
               const cardSubtitle = e.data.titleEn;
               return (
-                <li class="h-full">
+                <li class="h-full flex flex-col">
                   <a
                     href={`/playbook/${item.slug}/`}
                     data-playbook-tile
-                    class={`flex h-full bg-shadow-ink/80 border-2 ${ec.border} ${ec.glow} p-5 transition-all duration-200 hover:-translate-y-1 group`}
+                    class={`flex flex-1 bg-shadow-ink/80 border-2 ${ec.border} ${ec.glow} p-5 transition-all duration-200 hover:-translate-y-1 group`}
                   >
                     <div class="flex items-start gap-3 w-full">
                       {e.data.icon && /\.(svg|png|jpg|jpeg|webp|gif)$/i.test(e.data.icon)
@@ -120,6 +120,11 @@ const CATEGORIES_WITH_PLANETS = new Set<string>(['plan', 'operate', 'review', 'd
                       </div>
                     </div>
                   </a>
+                  <a
+                    href={`/playbook/${item.slug}/?present=1`}
+                    class="presentation-link inline-block mt-2 text-sm text-neon-cyan hover:underline"
+                    aria-label={`${e.data.title}のプレゼンモード`}
+                  >▶ プレゼンモード</a>
                 </li>
               );
             })}
@@ -165,6 +170,9 @@ const CATEGORIES_WITH_PLANETS = new Set<string>(['plan', 'operate', 'review', 'd
 
 
 <style>
+  @media (max-width: 767px) {
+    .presentation-link { display: none; }
+  }
   .playbook-cosmos { overflow: visible; }
 
   .category-planet {
