@@ -124,15 +124,17 @@ If issue preparation fails, keep successful issues, fix the reported error and
 rerun `./checkpoint1`. An already-imported snapshot still prepares missing issues
 without another PR. Later push/PR failures use the printed Git/PR recovery steps.
 Do not run imports concurrently, even from different clones.
-Presentation tasks map to checkpoint2 and tests/CI to checkpoint3. The 3D Galaxy,
-its dependent audio task, and daily reporting are later extensions, not snapshot
-features; creating their issues does not implement, assign, or complete them.
+Presentation tasks map to checkpoint2; tests/CI and visual 3D are in checkpoint3.
+Build 3D manually from checkpoint1/2, or inspect and reuse checkpoint3 instead.
+Audio and daily reporting remain separate extensions. Start audio after merging
+the manual 3D PR or checkpoint3 PR. Existing issue bodies and states stay unchanged;
+creating their issues does not implement, assign, or complete them.
 Do not base participant PRs on copied template branches: their histories are
 unrelated. Keep the printed stash SHA and recovery commands; never recommend
 a destructive reset or automatically reapply the stash onto a different snapshot.
 The cumulative checkpoints are `checkpoint/01-develop` (basic landing/detail site),
 `checkpoint/02-cloud-agent` (presentation features), and `checkpoint/03-tests`
-(Playwright and PR workflow). The landing page is not presentation mode.
+(3D Galaxy, Playwright and PR workflow). The landing page is not presentation mode.
 External guide step numbers may still reflect the previous ordering; use titles
 and complete Cloud Agent before TEST & SECURE in this workshop.
 
