@@ -76,7 +76,7 @@ flowchart TB
 
 1. 🌐 リポジトリを開く: <a class="retro-link" href="https://github.com/theomonfort/Github-copilot-workshop" target="_blank" rel="noopener noreferrer">theomonfort/Github-copilot-workshop ↗</a>
 2. 🟢 緑の **Code** ボタン → **Codespaces** タブ → **Create codespace on main**
-3. 📖 ハンズオンを開く: <a class="retro-link" href="/handson/">ハンズオンを開く →</a>
+3. 📖 ハンズオンを開く: <a class="retro-link" href="https://theomonfort.github.io/theomonfort/handson/">ハンズオンを開く →</a>
 4. ⌨️ 1 ステップずつ進めながら Copilot に話しかける
 
 > 💡 ローカルに環境が無くても OK。Codespaces で必要な拡張機能・依存関係はすべて準備済みです。

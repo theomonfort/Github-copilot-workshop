@@ -1,0 +1,35 @@
+---
+import '../../styles/globals.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = 'GitHub Copilot ハンズオンの Playbook サイト' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0a0e27" />
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DotGothic16&family=VT323&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  </head>
+  <body class="bg-stars crt-lines min-h-screen">
+    <header class="site-header border-b border-neon-cyan/40 px-4 py-4">
+      <nav aria-label="メインナビゲーション" class="max-w-5xl mx-auto">
+        <a href="/playbook/" class="font-pixel text-xs text-neon-cyan">COPILOT PLAYBOOK</a>
+      </nav>
+    </header>
+    <main id="main-content"><slot /></main>
+    <footer class="border-t border-neon-cyan/40 p-6 text-center text-sm">
+      GitHub Copilot Workshop
+    </footer>
+  </body>
+</html>

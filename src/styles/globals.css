@@ -1,0 +1,45 @@
+@import './tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+  background: radial-gradient(ellipse at top, #1a0b2e 0%, #0a0e27 50%, #05060f 100%);
+  color: var(--c-phosphor);
+  font-family: 'DotGothic16', monospace;
+  min-height: 100%;
+  overflow-x: clip;
+  letter-spacing: 0.02em;
+}
+
+::selection { background: var(--c-neon-magenta); color: var(--c-shadow-ink); }
+a:focus-visible, button:focus-visible { outline: 2px solid #ffb000; outline-offset: 4px; }
+.bg-stars {
+  background-image:
+    radial-gradient(1px 1px at 25% 15%, #fff 1px, transparent 0),
+    radial-gradient(1px 1px at 67% 42%, #fff 1px, transparent 0),
+    radial-gradient(1px 1px at 81% 78%, #fff 1px, transparent 0);
+  background-size: 400px 400px;
+}
+.crt-lines::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(to bottom, transparent 0, transparent 2px, rgba(0,0,0,.18) 3px, transparent 4px);
+  z-index: 50;
+}
+a.retro-link { color: var(--c-neon-cyan); text-decoration: underline; text-underline-offset: 3px; }
+a.retro-link:hover { color: var(--c-neon-magenta); }
+.prose-akq { overflow-wrap: anywhere; }
+.prose-akq img, .prose-akq svg { max-width: 100%; }
+.prose-akq table { display: block; max-width: 100%; overflow-x: auto; }
+.prose-akq pre, .prose-akq code { font-family: 'IBM Plex Mono', monospace; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

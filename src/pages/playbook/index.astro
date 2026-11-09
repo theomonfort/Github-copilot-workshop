@@ -1,0 +1,320 @@
+---
+import Layout from '../../components/layout/Layout.astro';
+import { accentClasses } from '../../lib/theme';
+import { categories, localizedCategory } from '../../lib/playbook-categories';
+import { getPlaybookEntries } from '../../lib/playbook';
+
+const locale = 'ja';
+const t = { playbook: {
+  title: 'GitHub Copilot Playbook', heading: 'PLAYBOOK',
+  subtitle: 'GitHub Copilot プレイブック',
+  intro: 'SDLC の各フェーズで使う GitHub Copilot のツールと概念を一覧化。',
+  itemCount: '項目', readMore: '詳細を読む',
+}};
+const entries = await getPlaybookEntries();
+
+const grouped = categories.map((cat) => ({
+  ...localizedCategory(cat, locale),
+  items: entries.filter((e) => e.entry.data.category === cat.id),
+}));
+
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
+const CATEGORIES_WITH_PLANETS = new Set<string>(['plan', 'operate', 'review', 'develop', 'secure', 'introduction', 'administration']);
+---
+
+<Layout title={t.playbook.title}>
+  <section class="max-w-5xl mx-auto px-4 py-12 relative playbook-cosmos">
+    <header class="mb-10 relative z-10">
+      <h1 class="font-pixel text-2xl md:text-4xl text-neon-magenta mb-3">{t.playbook.heading}</h1>
+      <p class="font-pixel-jp text-lg text-neon-cyan">{t.playbook.subtitle}</p>
+      <p class="font-pixel-jp text-sm text-phosphor/80 mt-4 max-w-2xl">
+        {t.playbook.intro}{' '}
+        なお、これは個人的な学習リソースで情報が古くなっている可能性があるため、正確な情報は必ず <a href="https://docs.github.com/ja/copilot" target="_blank" rel="noopener noreferrer" class="text-neon-cyan hover:text-neon-magenta underline">GitHub 公式ドキュメント ↗</a> をご確認ください。
+      </p>
+
+      <nav aria-label="SDLC ナビゲーション" class="mt-8 flex flex-wrap md:flex-nowrap items-center gap-2 md:gap-3">
+        {grouped.filter((g) => g.items.length > 0 && g.id !== 'introduction' && g.id !== 'administration').map((g, i, arr) => {
+          const c = accentClasses[g.color];
+          return (
+            <>
+              <a
+                href={`#cat-${g.id}`}
+                class={`font-pixel text-[10px] md:text-xs px-3 py-2 border-2 whitespace-nowrap ${c.border} ${c.text} ${c.glow} transition`}
+              >
+                {g.icon} {g.labelEn}
+              </a>
+              {i < arr.length - 1 && (
+                <span class="font-pixel text-phosphor/60 text-2xl md:text-3xl">→</span>
+              )}
+            </>
+          );
+        })}
+      </nav>
+    </header>
+
+    {grouped.map((g) => {
+      if (g.items.length === 0) return null;
+      const c = accentClasses[g.color];
+      return (
+        <section id={`cat-${g.id}`} class="mb-12 scroll-mt-24 relative category-section">
+          <header class={`mb-5 pb-3 border-b-2 ${c.border} relative z-10`}>
+            <div class="flex items-baseline gap-3 flex-wrap">
+              <span class="text-2xl">{g.icon}</span>
+              <h2 class={`font-pixel text-lg md:text-xl ${c.text}`}>{g.labelEn}</h2>
+              {g.labelJa !== g.labelEn && <span class="font-pixel-jp text-base text-phosphor/70">{g.labelJa}</span>}
+              <span class={`font-pixel text-[10px] ${c.text} opacity-60 ml-auto`}>
+                {g.items.length} {t.playbook.itemCount}
+              </span>
+            </div>
+            {(g.avatar || g.localizedDescription) && (
+              <div class="mt-3 flex items-start gap-3">
+                {g.avatar && (
+                  <img
+                    src={g.avatar}
+                    alt={g.actorLabel}
+                    class={`h-12 w-12 object-cover border-2 ${c.border} shrink-0`}
+                  />
+                )}
+                <div class="flex-1 min-w-0">
+                  {g.actorLabel && (
+                    <p class={`font-pixel text-[10px] ${c.text} mb-1`}>👤 {g.actorLabel}</p>
+                  )}
+                  {g.localizedDescription && (
+                    <p class="font-pixel-jp text-sm text-phosphor/80 leading-relaxed" set:html={g.localizedDescription}>
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+          </header>
+
+          <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 auto-rows-fr relative z-10">
+            {g.items.map((item) => {
+              const e = item.entry;
+              const ec = accentClasses[e.data.color];
+              const cardTitle = e.data.title;
+              const cardSubtitle = e.data.titleEn;
+              return (
+                <li class="h-full">
+                  <a
+                    href={`/playbook/${item.slug}/`}
+                    data-playbook-tile
+                    class={`flex h-full bg-shadow-ink/80 border-2 ${ec.border} ${ec.glow} p-5 transition-all duration-200 hover:-translate-y-1 group`}
+                  >
+                    <div class="flex items-start gap-3 w-full">
+                      {e.data.icon && /\.(svg|png|jpg|jpeg|webp|gif)$/i.test(e.data.icon)
+                        ? <img src={e.data.icon} alt="" class="h-8 w-8 object-contain shrink-0" />
+                        : <span class="text-3xl">{e.data.icon}</span>}
+                      <div class="flex-1 min-w-0">
+                        <div class="flex items-baseline gap-2 mb-1">
+                          <span class={`font-pixel text-[10px] ${ec.text}`}>NO.{String(e.data.order).padStart(2, '0')}</span>
+                        </div>
+                        <h3 class={`font-pixel-jp text-sm md:text-base ${ec.text} mb-1 leading-tight`}>{cardTitle}</h3>
+                        {cardSubtitle && <p class="font-pixel-jp text-xs text-phosphor/50 mb-2">{cardSubtitle}</p>}
+                        <p class="font-pixel-jp text-sm text-phosphor/85 leading-relaxed line-clamp-3">
+                          {e.data.summary}
+                        </p>
+                        <div class={`mt-3 font-pixel text-[10px] ${ec.text} opacity-0 group-hover:opacity-100 transition-opacity`}>
+                          ▶ {t.playbook.readMore}
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+          {CATEGORIES_WITH_PLANETS.has(g.id) && (
+            <div
+              class="category-planet"
+              data-planet={g.id}
+              data-parallax
+              data-parallax-speed="20"
+              aria-hidden="true"
+            >
+              <img
+                src={`${BASE}/planet-${g.id}.webp`}
+                alt=""
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          )}
+          {g.id === 'plan' && (
+            <div
+              class="category-decor"
+              data-decor="asteroids-plan"
+              data-parallax
+              data-parallax-speed="35"
+              aria-hidden="true"
+            >
+              <img
+                src={`${BASE}/asteroids-plan.webp`}
+                alt=""
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          )}
+        </section>
+      );
+    })}
+  </section>
+</Layout>
+
+
+
+<style>
+  .playbook-cosmos { overflow: visible; }
+
+  .category-planet {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: calc(50% - 0.5rem);
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    pointer-events: none;
+    z-index: 0;
+    will-change: transform;
+    opacity: 0.95;
+  }
+  .category-planet img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 340px;
+    display: block;
+    object-fit: contain;
+    animation: planet-float 7.5s ease-in-out infinite;
+  }
+  @keyframes planet-float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-10px) rotate(0.6deg); }
+  }
+
+  /* (planet-cell removed — planet is now position:absolute on .category-planet itself) */
+
+  .category-planet[data-planet='introduction'] {
+    bottom: -3.5rem;
+  }
+  .category-planet[data-planet='introduction'] img {
+    max-height: 380px;
+  }
+
+  .category-planet[data-planet='plan'] {
+    right: -15rem;
+    left: auto;
+    bottom: -4rem;
+    width: 38rem;
+    max-width: 75%;
+    align-items: flex-end;
+    z-index: 0;
+  }
+  .category-planet[data-planet='plan'] img {
+    max-height: 520px;
+  }
+
+  .category-planet[data-planet='develop'] {
+    left: -16rem;
+    right: auto;
+    top: 12rem;
+    bottom: auto;
+    width: 38rem;
+    max-width: 75%;
+    align-items: flex-start;
+  }
+  .category-planet[data-planet='develop'] img {
+    max-height: 620px;
+  }
+
+  .category-planet[data-planet='review'] {
+    bottom: 5rem;
+    right: -3rem;
+    z-index: 0;
+  }
+  .category-planet[data-planet='review'] img {
+    max-height: 380px;
+  }
+
+  .category-planet[data-planet='secure'] {
+    left: -14rem;
+    right: auto;
+    bottom: 6rem;
+    top: auto;
+    width: 38rem;
+    max-width: 75%;
+    align-items: flex-end;
+  }
+  .category-planet[data-planet='secure'] img {
+    max-height: 560px;
+  }
+
+  .category-planet[data-planet='operate'] {
+    top: -13rem;
+    bottom: auto;
+    right: -14rem;
+    left: auto;
+    width: 44rem;
+    max-width: 85%;
+    align-items: flex-start;
+    z-index: 0;
+  }
+  .category-planet[data-planet='operate'] img {
+    max-height: 760px;
+  }
+
+  .category-planet[data-planet='administration'] {
+    right: -3rem;
+    bottom: -15rem;
+    width: calc(50% + 1rem);
+    z-index: 20;
+  }
+  .category-planet[data-planet='administration'] img {
+    max-height: 340px;
+  }
+
+  /* Decorative asteroid clusters (background, behind cards) */
+  .category-decor {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+    will-change: transform;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .category-decor img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    opacity: 0.55;
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.55));
+    animation: planet-float 9s ease-in-out infinite;
+  }
+  .category-decor[data-decor='asteroids-plan'] {
+    left: -7rem;
+    top: 12rem;
+    width: 16rem;
+  }
+
+  /* Per-category glow (color matches the section accent) */
+  .category-planet[data-planet='plan']         img { filter: drop-shadow(0 12px 22px rgba(0,0,0,0.55)) drop-shadow(0 0 28px rgba(155, 188, 15, 0.32)); }
+  .category-planet[data-planet='introduction'] img { filter: drop-shadow(0 12px 22px rgba(0,0,0,0.55)) drop-shadow(0 0 28px rgba(0, 240, 255, 0.32)); }
+  .category-planet[data-planet='develop']      img { filter: drop-shadow(0 12px 22px rgba(0,0,0,0.55)) drop-shadow(0 0 28px rgba(255, 46, 136, 0.32)); }
+  .category-planet[data-planet='review']       img { filter: drop-shadow(0 12px 22px rgba(0,0,0,0.55)) drop-shadow(0 0 28px rgba(255, 176, 0, 0.32)); }
+  .category-planet[data-planet='secure']       img { filter: drop-shadow(0 12px 22px rgba(0,0,0,0.55)) drop-shadow(0 0 28px rgba(0, 240, 255, 0.32)); }
+  .category-planet[data-planet='operate']      img { filter: drop-shadow(0 12px 22px rgba(0,0,0,0.55)) drop-shadow(0 0 28px rgba(155, 188, 15, 0.32)); }
+  .category-planet[data-planet='administration'] img { filter: drop-shadow(0 12px 22px rgba(0,0,0,0.55)) drop-shadow(0 0 28px rgba(255, 46, 136, 0.32)); }
+
+  @media (max-width: 767px) {
+    .category-planet { display: none; }
+    .category-decor { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .category-planet img { animation: none; }
+    .category-decor img { animation: none; }
+  }
+</style>
