@@ -109,9 +109,14 @@ Recommended choices in the interactive prompt:
 After installing a skill, remind participants to open a **new Copilot Chat session**. Existing chat sessions may not load newly installed skills.
 
 Both skills are already included in this repository's `.agents/skills/`.
-For safe recovery, follow README.md: preserve partial work with a commit or
-`git stash push --include-untracked`, fetch the named checkpoint from the workshop
-source, and create a fresh work branch. Never recommend a destructive reset.
+For recovery, follow README.md and use `./checkpoint1`, `./checkpoint2`, or
+`./checkpoint3` only when the participant requests the import and PR creation.
+These save tracked/untracked edits in a named stash, create a fresh branch from
+the participant's remote main, import the current canonical checkpoint's files,
+and push/open a PR in the participant repository without merging it.
+Do not base participant PRs on copied template branches: their histories are
+unrelated. Keep the printed stash SHA and recovery commands; never recommend
+a destructive reset or automatically reapply the stash onto a different snapshot.
 The cumulative checkpoints are `checkpoint/01-develop` (basic landing/detail site),
 `checkpoint/02-cloud-agent` (presentation features), and `checkpoint/03-tests`
 (Playwright and PR workflow). The landing page is not presentation mode.
