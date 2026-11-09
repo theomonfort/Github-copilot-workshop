@@ -2,7 +2,7 @@
 
 ハンズオン教材の復帰用チェックポイント。`main` は content / assets から始めるスターターのままです。変更前の状態は release **1.0** (`v1.0.0`) に保存しています。
 
-## このブランチ: checkpoint/02-cloud-agent
+## このブランチ: checkpoint/03-tests
 
 PLAN のハーネスと、日本語 Playbook の基本サイトを含みます。
 
@@ -21,7 +21,24 @@ PLAN のハーネスと、日本語 Playbook の基本サイトを含みます�
 - Mermaid 図の描画 (後続スライドを含む)、スクロール可能なコード / テーブル
 - 幅 768px 未満では通常の Markdown 詳細に戻るモバイルフォールバック
 
-E2E / PR テストは **03-tests** で追加します。TOC のデザイン案 10 種、CLI 用の追加機能、元サイトの英語切替 / BGM は含めません。
+**02-cloud-agent** に Playwright E2E と `.github/workflows/test.yml` を追加しています。TOC のデザイン案 10 種、CLI 用の追加機能、元サイトの英語切替 / BGM は含めません。
+
+## E2E / PR テスト
+
+```bash
+npm ci
+npx playwright install chromium
+npm run check
+npm run test:e2e
+```
+
+Linux でブラウザのシステム依存が足りない場合は `npx playwright install --with-deps chromium` を使います。
+
+テストは production build を作り、専用ポート **44321** で preview を起動・終了します。既存のサーバーは再利用しません。ポートが使用中なら先に競合を解消してください。
+
+`tests/e2e/presentation.spec.ts` は、通常の一覧 / 詳細を入口として、スライドの前後移動、TOC 切替とスクロール位置、深いリンク、進捗バー、リンク集、後続 Mermaid スライド、Esc、モバイルフォールバック、全詳細のローカルリンク / 画像を検証します。外部フォントへの通信はテスト中だけ差し替えます。
+
+PR の作成 / 更新時に GitHub Actions が Node.js 22、`npm ci`、Chromium、型チェック、E2E を実行します。失敗時は HTML レポート / trace / スクリーンショットを artifact に保存します。Actions の実行許可、外部 PR の承認、必須チェックの branch protection は各自のリポジトリで設定してください。Security のアカウント設定はこの checkpoint に含まれません。
 
 ## 起動
 
