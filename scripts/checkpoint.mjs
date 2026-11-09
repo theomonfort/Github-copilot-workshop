@@ -7,9 +7,24 @@ import { fileURLToPath } from 'node:url';
 const root = realpathSync(resolve(dirname(fileURLToPath(import.meta.url)), '..'));
 const source = 'https://github.com/theomonfort/Github-copilot-workshop.git';
 const stages = [
-  { name: '01-develop', title: 'Website scaffold' },
-  { name: '02-cloud-agent', title: 'Website with presentation mode' },
-  { name: '03-tests', title: 'Complete website with tests and CI' },
+  {
+    name: '01-develop',
+    title: 'Website scaffold',
+    summary: 'PLAN ハーネスと、Playbook の一覧 / 詳細を備えた基本サイトの完成例です。',
+    inspect: '一覧と詳細を確認',
+  },
+  {
+    name: '02-cloud-agent',
+    title: 'Website with presentation mode',
+    summary: 'PLAN ハーネスと、一覧 / 詳細 / プレゼンを備えたサイトの完成例です。',
+    inspect: 'カードからプレゼンを開き、移動と目次を確認',
+  },
+  {
+    name: '03-tests',
+    title: 'Complete website with tests and CI',
+    summary: 'PLAN ハーネスとプレゼン対応サイト、Playwright テスト、PR CI の完成例です。',
+    inspect: '一覧、詳細、プレゼンを確認',
+  },
 ];
 const state = { completed: [], step: 'checking prerequisites' };
 const env = { ...process.env, GIT_TERMINAL_PROMPT: '0', GH_PROMPT_DISABLED: '1' };
@@ -26,6 +41,34 @@ function run(command, args, accepted = [0]) {
 const git = (args, accepted) => run('git', args, accepted);
 const done = (message) => { state.completed.push(message); console.log(message); };
 const requireThat = (condition, message) => { if (!condition) throw new Error(message); };
+
+function pullRequestBody(stage, checkpoint, snapshot, base) {
+  const validation = stage.name === '03-tests'
+    ? '`npx playwright install chromium`（Linux: `npx playwright install --with-deps chromium`）→ `npm run check` → `npm run test:e2e`。PR の CI 結果も確認してください。'
+    : '`npm run check` → `npm run build`。';
+  return `${stage.summary}
+
+\`npm ci\` → \`npm run dev\`。表示 URL（Codespaces は転送 URL）の \`/playbook/\` で${stage.inspect}。
+
+**差分:** 全追跡ファイルを置換します。独自変更と削除を確認してください。
+
+**教材:** 意図的な脆弱性と品質問題はサイトから隔離しています。検出例は \`workshop-exercises/README.md\`。
+
+必須チェックは回避せず、依存監査の警告とは分けて確認してください。
+
+<details>
+<summary>取り込み元と確認コマンド</summary>
+
+- チェックポイント: \`${checkpoint}\`
+- 元リポジトリ: ${source}
+- スナップショット SHA: \`${snapshot}\`
+- 参加者の main SHA: \`${base}\`
+
+前段の取り込みは不要です。ファイルのみを取り込み、元リポジトリの履歴はマージしません。
+
+別ターミナルでの確認（取り込みスクリプトでは未実行）: ${validation}
+</details>`;
+}
 
 function repository(remote) {
   let host, path;
@@ -151,8 +194,9 @@ function main() {
   done('Imported checkpoint files only; canonical commit history was not merged.');
   state.step = 'committing the snapshot';
   state.title = stage.title;
-  state.body = `Import files from ${source} at ${snapshot} (${checkpoint}). Based on participant main ${base}; canonical history is not merged. Review this snapshot before merging.`;
-  git(['commit', '-m', `Import workshop ${checkpoint}`, '-m', state.body]);
+  state.body = pullRequestBody(stage, checkpoint, snapshot, base);
+  const commitBody = `Import files from ${source} at ${snapshot} (${checkpoint}). Based on participant main ${base}; canonical history is not merged. Review this snapshot before merging.`;
+  git(['commit', '-m', `Import workshop ${checkpoint}`, '-m', commitBody]);
   state.commit = git(['rev-parse', 'HEAD']).text;
   requireThat(git(['rev-parse', 'HEAD^{tree}']).text === tree, 'A commit hook changed the snapshot; inspect the commit before publishing.');
   done(`Committed ${state.commit}.`);
