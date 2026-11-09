@@ -2,6 +2,7 @@ import { spawnSync } from 'node:child_process';
 import { existsSync, lstatSync, realpathSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { prepareIssues } from './checkpoint-issues.mjs';
 
 // Node loads this module before switch/restore can replace its on-disk files.
 const root = realpathSync(resolve(dirname(fileURLToPath(import.meta.url)), '..'));
@@ -140,6 +141,8 @@ function main() {
   requireThat(resolved.key === target.key, 'origin resolves to a different repository; update origin explicitly first.');
   requireThat(metadata.permissions?.push === true && !metadata.archived && !metadata.disabled,
     'Your gh account needs push access to an active participant repository.');
+  if (number === '1') requireThat(metadata.has_issues === true,
+    'checkpoint1 needs Issues enabled in the participant repository and gh access to read/create issues. Repository settings were not changed.');
   state.original = git(['symbolic-ref', '--quiet', '--short', 'HEAD'], [0, 1]).text;
   state.originalHead = git(['rev-parse', 'HEAD']).text;
   const stage = stages[Number(number) - 1];
@@ -154,17 +157,28 @@ function main() {
   git([...fetchOptions, source, `refs/heads/${checkpoint}`]);
   const snapshot = git(['rev-parse', 'FETCH_HEAD^{commit}']).text;
   const tree = git(['rev-parse', `${snapshot}^{tree}`]).text;
-  for (const path of ['checkpoint1', 'checkpoint2', 'checkpoint3', 'scripts/checkpoint.mjs']) {
+  for (const path of ['checkpoint1', 'checkpoint2', 'checkpoint3', 'scripts/checkpoint.mjs', 'scripts/checkpoint-issues.mjs', 'scripts/checkpoint-issues.json']) {
     const entry = git(['ls-tree', snapshot, '--', path]).text;
     requireThat(entry.startsWith(path.startsWith('checkpoint') ? '100755 blob ' : '100644 blob '),
       `The canonical snapshot is missing a usable ${path}; nothing was switched.`);
   }
   done(`Fetched canonical ${checkpoint}: ${snapshot}`);
-  if (git(['rev-parse', `${base}^{tree}`]).text === tree) {
+  const alreadyImported = git(['rev-parse', `${base}^{tree}`]).text === tree;
+  if (!alreadyImported) preserveIgnoredFiles(base, snapshot);
+  if (number === '1') {
+    state.step = 'preparing workshop issues';
+    const catalogue = JSON.parse(git(['show', `${snapshot}:scripts/checkpoint-issues.json`]).text);
+    prepareIssues(catalogue, {
+      directory: resolve(root, git(['rev-parse', '--git-common-dir']).text, 'workshop-issues'),
+      target, metadata, run, done,
+    });
+  }
+  if (alreadyImported) {
     console.log('origin/main already matches this snapshot. No stash, branch, commit, push or PR was created.');
     return;
   }
-  preserveIgnoredFiles(base, snapshot);
+  // Issue API の待機中に増えた ignored ファイルも、checkout 変更前に保護する。
+  if (number === '1') preserveIgnoredFiles(base, snapshot);
   const prefix = `workshop-checkpoint${number}`;
   const local = git(['for-each-ref', '--format=%(refname:short)', 'refs/heads']).text.split('\n');
   const remote = git(['ls-remote', '--heads', 'origin']).text
@@ -218,6 +232,9 @@ try {
   console.error(`Stopped while ${state.step}: ${error.message}`);
   console.error(`Completed: ${state.completed.join(' | ') || 'none; no checkout changes made'}`);
   console.error('No automatic rollback was attempted. Inspect git status first.');
+  if (state.step === 'preparing workshop issues') {
+    console.error('Issue preparation stopped before stash/checkout/commit/push/PR changes. Keep created issues and their identity markers. After resolving the reported error, rerun ./checkpoint1 to reuse existing issues and prepare only missing ones.');
+  }
   if (state.branch) console.error(`Your work branch is ${state.branch}; existing branches and main were not updated.`);
   if (state.commit && !state.pushed) {
     console.error(`First check: git ls-remote origin refs/heads/${state.branch}\nIf it already points to ${state.commit}, skip the push and open the PR. Never overwrite another commit.`);

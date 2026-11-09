@@ -114,6 +114,19 @@ For recovery, follow README.md and use `./checkpoint1`, `./checkpoint2`, or
 These save tracked/untracked edits in a named stash, create a fresh branch from
 the participant's remote main, import the current canonical checkpoint's files,
 and push/open a PR in the participant repository without merging it.
+Only `checkpoint1` also prepares the eight Japanese Part 6 build-step issues
+from `scripts/checkpoint-issues.json`, before any stash or checkout changes.
+It needs Issues enabled and read/create access, reuses open/closed issues without
+editing or reopening them, and prints their actual numbers and URLs.
+Reuse these issues rather than creating another catalogue; never assume numbers
+start at 1. Keep the body marker or title key, especially when using another clone.
+If issue preparation fails, keep successful issues, fix the reported error and
+rerun `./checkpoint1`. An already-imported snapshot still prepares missing issues
+without another PR. Later push/PR failures use the printed Git/PR recovery steps.
+Do not run imports concurrently, even from different clones.
+Presentation tasks map to checkpoint2 and tests/CI to checkpoint3. The 3D Galaxy,
+its dependent audio task, and daily reporting are later extensions, not snapshot
+features; creating their issues does not implement, assign, or complete them.
 Do not base participant PRs on copied template branches: their histories are
 unrelated. Keep the printed stash SHA and recovery commands; never recommend
 a destructive reset or automatically reapply the stash onto a different snapshot.
