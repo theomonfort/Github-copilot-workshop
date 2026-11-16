@@ -1,7 +1,7 @@
 ---
 title: GitHub Advanced Security
 titleEn: GHAS
-summary: GitHub's paid security product suite. Split into GitHub Secret Protection ($19) and GitHub Code Security ($30) in April 2025, billed per active committer. Public repos remain free.
+summary: GitHub's paid security suite, sold as two products. Secret Protection ($19) keeps credentials out of the repo, Code Security ($30) finds vulnerabilities in the code. Billed per active committer. Public repos are free.
 icon: /icons/ghas.png
 color: cyan
 accent:
@@ -10,7 +10,7 @@ accent:
   glow: hover:shadow-neon-cyan
   shadow: shadow-neon-cyan
   hex: "#00f0ff"
-order: 19.8
+order: 19.3
 category: secure
 related: ['secret-scanning', 'code-scanning', 'dependabot']
 links:
@@ -21,53 +21,377 @@ links:
     label: About GitHub Advanced Security
     url: https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security
   - group: 📖 Official Documentation
-    label: GitHub plans pricing
-    url: https://docs.github.com/en/get-started/learning-about-github/githubs-plans
-  - group: 📰 Announcement
-    label: Introducing Secret Protection & Code Security (2025/03)
-    url: https://github.blog/changelog/2025-03-04-introducing-github-secret-protection-and-github-code-security/
-  - group: 💰 Billing
+    label: GitHub security features (free vs licensed)
+    url: https://docs.github.com/en/code-security/getting-started/github-security-features
+  - group: 🗃️ Vulnerability databases
+    label: GitHub Advisory Database
+    url: https://github.com/advisories
+  - group: 🗃️ Vulnerability databases
+    label: NVD (National Vulnerability Database)
+    url: https://nvd.nist.gov/
+  - group: 💰 Billing & free inventory
     label: About billing for GitHub Advanced Security
     url: https://docs.github.com/en/billing/concepts/product-billing/github-advanced-security
-  - group: 🆓 Free inventory (Risk Assessment)
-    label: Secret Risk Assessment (Docs)
+  - group: 💰 Billing & free inventory
+    label: Secret Risk Assessment
     url: https://docs.github.com/en/code-security/how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/assess-your-secret-risk
-  - group: 🆓 Free inventory (Risk Assessment)
-    label: Code Security Risk Assessment (Docs)
+  - group: 💰 Billing & free inventory
+    label: Code Security Risk Assessment
     url: https://docs.github.com/en/code-security/concepts/code-scanning/code-security-risk-assessment
-  - group: 🆓 Free inventory (Risk Assessment)
-    label: Code Security Risk Assessment GA (2026/04)
-    url: https://github.blog/changelog/2026-04-08-code-security-risk-assessment-available-for-organizations/
-  - group: 📰 Recent Changelog
-    label: "Start a GitHub Advanced Security trial from a risk assessment (2026-05-19)"
-    url: https://github.blog/changelog/2026-05-19-start-a-github-advanced-security-trial-from-a-risk-assessment
-  - group: 📰 Recent Changelog
-    label: "GitHub Advanced Security setup made simple (2026-03-17)"
-    url: https://github.blog/changelog/2026-03-17-github-advanced-security-setup-made-simple
+  - group: 🏢 Enterprise rollout
+    label: Creating a custom security configuration
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-at-scale/configure-enterprise-security/establish-complete-coverage/create-custom-configuration
+  - group: 🏢 Enterprise rollout
+    label: Applying a custom security configuration
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-at-scale/configure-enterprise-security/establish-complete-coverage/apply-custom-configuration
+  - group: 🏢 Enterprise rollout
+    label: Security configuration statuses
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/reference/security-at-scale/configuration-statuses
+  - group: 🏢 Enterprise rollout
+    label: Code security configurations REST API
+    url: https://docs.github.com/en/enterprise-cloud@latest/rest/code-security/configurations
+  - group: 🏢 Enterprise rollout
+    label: Code scanning merge protection
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/code-scanning/merge-protection
+  - group: 📊 Visibility (Security overview)
+    label: Security overview
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/security-at-scale/security-overview
+  - group: 📊 Visibility (Security overview)
+    label: Exporting data from security overview (CSV)
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/view-and-interpret-data/analyze-organization-data/export-data
+  - group: 🔐 Permissions
+    label: Repository roles and security permissions
+    url: https://docs.github.com/en/enterprise-cloud@latest/organizations/managing-user-access-to-your-organizations-repositories/managing-repository-roles/repository-roles-for-an-organization#access-requirements-for-security-features
+  - group: 🔐 Permissions
+    label: Security overview permissions
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/reference/permissions/security-overview
+  - group: 🔐 Permissions
+    label: Security manager permissions
+    url: https://docs.github.com/en/enterprise-cloud@latest/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization
+  - group: 🔐 Permissions
+    label: Assigning campaign alerts to Copilot
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/manage-security-alerts/remediate-alerts-at-scale/fixing-alerts-in-security-campaign#assigning-alerts-to-copilot
 ---
 
 ## In a nutshell
 
-<div class="hero-quote">
+<div data-playbook-article="github-advanced-security" class="hero-quote">
   <p>
-    <strong>GitHub Advanced Security (GHAS)</strong> is GitHub's paid add-on that bundles security features. It was the license needed to enable code scanning and secret scanning on private repos.
+    <strong>GitHub Advanced Security (GHAS)</strong> is GitHub's paid security suite. It scans your repositories for two things developers leak by accident: <strong>credentials</strong> and <strong>vulnerable code</strong>.
   </p>
   <p>
-    In <strong>April 2025</strong>, it was split into <strong>GitHub Secret Protection</strong> and <strong>GitHub Code Security</strong> — you can now buy only the features you need.
+    It comes as two products you buy separately — <strong>Secret Protection</strong> and <strong>Code Security</strong>.
   </p>
 </div>
 
-> 🌐 Public repos continue to get everything for free. A GHAS / Secret Protection / Code Security license is only required when you want to enable features on **private / internal repos**.
-> 🤖 **Dependabot itself** (alerts / security updates / version updates / dependency graph) is <strong>completely free on every plan</strong> — no GHAS required. See <a class="retro-link" href="/en/playbook/dependabot">Dependabot ↗</a>.
+## Why now
 
-## What's included?
+<details class="workshop-demo is-info"><summary>More information</summary>
 
-| Product | Key features | Details |
-| --- | --- | --- |
-| 🔑 **Secret Protection** | Secret scanning · Push protection (org/repo level) · Custom patterns · AI detection · Validity checks | <a class="retro-link" href="/en/playbook/secret-scanning">Secret Scanning ↗</a> |
-| 🔍 **Code Security** | Code scanning (CodeQL) · Copilot Autofix · Security campaigns · Dependency review (PR enforcement) · Security overview | <a class="retro-link" href="/en/playbook/code-scanning">Code Scanning ↗</a> |
+<div class="demo-window" role="group" aria-label="What is FIRST">
+<div class="demo-head"><span class="demo-tag">INFO</span><span class="demo-name">What is FIRST (Forum of Incident Response and Security Teams)?</span></div>
+<div class="info-body">
+<p class="info-lead">A global network that brings together cybersecurity teams from around the world.</p>
+<p>Founded in 1990. Security teams from more than 850 companies, government bodies, universities and other institutions across 110+ countries are members.</p>
+<p class="info-h">What it does</p>
+<ol class="info-list">
+<li><b>Shares cyber attack information</b>: members share what they see about attacks and software flaws (vulnerabilities) worldwide, to stop the damage from spreading.</li>
+<li><b>Builds the shared "danger rulers" everyone uses</b>
+<ul>
+<li><a class="retro-link" href="https://www.first.org/cvss/" target="_blank" rel="noopener noreferrer">CVSS ↗</a> (Common Vulnerability Scoring System): the global standard that scores how dangerous a bug is.</li>
+<li><a class="retro-link" href="https://www.first.org/epss/" target="_blank" rel="noopener noreferrer">EPSS ↗</a> (Exploit Prediction Scoring System): uses AI and data to predict how likely a bug is to actually be exploited by attackers.</li>
+</ul>
+</li>
+</ol>
+<p class="info-h">The June 2026 release, in short</p>
+<ul class="info-list">
+<li>Thanks to AI, bugs are being found at a record pace. But truly dangerous attacks have not gone up with them.</li>
+<li>Don't try to fix every bug one by one. Use signals like EPSS to fix the truly dangerous ones first.</li>
+</ul>
+<p class="info-sum"><b>In one line:</b> an organization where the world works together on information sharing and common rules to keep the internet safe to use.</p>
+</div>
+</div>
+</details>
 
-## Pricing (from April 2025)
+<div class="surge-steps">
+<div class="surge-step is-alert">
+<p class="surge-k">Record CVE volume</p>
+<p class="surge-v"><a class="retro-link" href="https://www.first.org/newsroom/releases/20260615" target="_blank" rel="noopener noreferrer">FIRST ↗</a> forecasts a record <strong>~66,000</strong> new <a class="retro-link" href="https://github.com/advisories" target="_blank" rel="noopener noreferrer">CVEs ↗</a> published in 2026 alone. AI-assisted discovery is a key driver.</p>
+</div>
+<div class="surge-step is-alert">
+<p class="surge-k">GHSA +449% YoY</p>
+<p class="surge-v">GitHub added curators and AI tooling. Its free <a class="retro-link" href="https://github.com/advisories" target="_blank" rel="noopener noreferrer">Advisory Database ↗</a> feeds Dependabot (left).</p>
+</div>
+<div class="surge-step">
+<p class="surge-k">AI vs AI race</p>
+<p class="surge-v">AI-built exploits against AI-built patches. Time to exploitation is already down to <strong>24 hours</strong> (right).</p>
+</div>
+</div>
+
+<div class="duo-fig">
+<div class="duo-panel is-alert">
+<p class="duo-cap">Dependabot alerts up 4x+</p>
+<p class="duo-sub">New alerts across GitHub, per quarter.</p>
+<div class="qbars">
+<div class="qbar"><div class="qbar-fill" style="height:14.6%"><span class="qbar-val">52M</span></div><p class="qbar-lab">Q1 25</p></div>
+<div class="qbar"><div class="qbar-fill" style="height:19.7%"><span class="qbar-val">70M</span></div><p class="qbar-lab">Q2 25</p></div>
+<div class="qbar"><div class="qbar-fill" style="height:21.6%"><span class="qbar-val">77M</span></div><p class="qbar-lab">Q3 25</p></div>
+<div class="qbar"><div class="qbar-fill" style="height:23.1%"><span class="qbar-val">82M</span></div><p class="qbar-lab">Q4 25</p></div>
+<div class="qbar is-peak"><div class="qbar-fill" style="height:100.0%"><span class="qbar-val">357M</span></div><p class="qbar-lab">Q1 26</p></div>
+<div class="qbar is-peak"><div class="qbar-fill" style="height:87.7%"><span class="qbar-val">313M</span></div><p class="qbar-lab">Q2 26</p></div>
+</div>
+<p class="duo-foot">Steady at <strong>70–80M</strong> through 2025, then a jump. CVE alerts are up <strong>6x</strong> since February 2026.</p>
+</div>
+<div class="duo-panel">
+<p class="duo-cap">Time to exploitation</p>
+<p class="duo-sub">Mean time from CVE disclosure to first exploitation.</p>
+<div class="tte">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 292" role="img" aria-label="Mean time from CVE disclosure to first confirmed exploitation, 2018 to 2026">
+<style>html .tte svg text[font-family]{font-family:inherit}</style>
+<line x1="52.0" y1="70.6" x2="574.0" y2="70.6" stroke="rgb(var(--rgb-neon-cyan) / 0.16)" stroke-width="1.2"/>
+<text x="42.0" y="76.6" text-anchor="end" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.68)">1y</text>
+<line x1="52.0" y1="146.6" x2="574.0" y2="146.6" stroke="rgb(var(--rgb-neon-cyan) / 0.16)" stroke-width="1.2"/>
+<text x="42.0" y="152.6" text-anchor="end" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.68)">1mo</text>
+<line x1="52.0" y1="190.8" x2="574.0" y2="190.8" stroke="rgb(var(--rgb-neon-cyan) / 0.16)" stroke-width="1.2"/>
+<text x="42.0" y="196.8" text-anchor="end" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.68)">7d</text>
+<line x1="52.0" y1="250.0" x2="574.0" y2="250.0" stroke="rgb(var(--rgb-neon-cyan) / 0.16)" stroke-width="1.2"/>
+<text x="42.0" y="256.0" text-anchor="end" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.68)">1d</text>
+<polyline points="52.0,45.3 117.2,54.5 182.5,62.6 247.8,76.2 313.0,80.7 378.2,102.5 443.5,129.3 508.8,156.7 574.0,250.0" fill="none" stroke="var(--c-neon-cyan)" stroke-width="6" stroke-linejoin="round" stroke-linecap="round" opacity="0.22"/>
+<polyline points="52.0,45.3 117.2,54.5 182.5,62.6 247.8,76.2 313.0,80.7 378.2,102.5 443.5,129.3 508.8,156.7 574.0,250.0" fill="none" stroke="var(--c-neon-cyan)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="52.0" cy="45.3" r="4.6" fill="var(--c-phosphor)"/>
+<text x="52.0" y="31.3" text-anchor="middle" font-size="18" fill="rgb(var(--rgb-phosphor) / 0.88)">2.3y</text>
+<circle cx="117.2" cy="54.5" r="4.6" fill="var(--c-phosphor)"/>
+<text x="117.2" y="40.5" text-anchor="middle" font-size="18" fill="rgb(var(--rgb-phosphor) / 0.88)">1.7y</text>
+<circle cx="182.5" cy="62.6" r="4.6" fill="var(--c-phosphor)"/>
+<text x="182.5" y="48.6" text-anchor="middle" font-size="18" fill="rgb(var(--rgb-phosphor) / 0.88)">1.3y</text>
+<circle cx="247.8" cy="76.2" r="4.6" fill="var(--c-phosphor)"/>
+<text x="247.8" y="62.2" text-anchor="middle" font-size="18" fill="rgb(var(--rgb-phosphor) / 0.88)">10mo</text>
+<circle cx="313.0" cy="80.7" r="4.6" fill="var(--c-phosphor)"/>
+<text x="313.0" y="66.7" text-anchor="middle" font-size="18" fill="rgb(var(--rgb-phosphor) / 0.88)">8.6mo</text>
+<circle cx="378.2" cy="102.5" r="4.6" fill="var(--c-phosphor)"/>
+<text x="378.2" y="88.5" text-anchor="middle" font-size="18" fill="rgb(var(--rgb-phosphor) / 0.88)">4.2mo</text>
+<circle cx="443.5" cy="129.3" r="4.6" fill="var(--c-phosphor)"/>
+<text x="443.5" y="115.3" text-anchor="middle" font-size="18" fill="rgb(var(--rgb-phosphor) / 0.88)">53d</text>
+<circle cx="508.8" cy="156.7" r="4.6" fill="var(--c-phosphor)"/>
+<text x="508.8" y="142.7" text-anchor="middle" font-size="18" fill="rgb(var(--rgb-phosphor) / 0.88)">21.5d</text>
+<circle cx="574.0" cy="250.0" r="6.5" fill="var(--c-coral-alert)"/>
+<text x="559.0" y="257.0" text-anchor="end" font-family="'Orbitron', 'IBM Plex Mono', sans-serif" font-size="20" font-weight="700" fill="var(--c-coral-alert)">24h</text>
+<text x="52.0" y="281" text-anchor="middle" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.72)">2018</text>
+<text x="117.2" y="281" text-anchor="middle" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.72)">2019</text>
+<text x="182.5" y="281" text-anchor="middle" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.72)">2020</text>
+<text x="247.8" y="281" text-anchor="middle" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.72)">2021</text>
+<text x="313.0" y="281" text-anchor="middle" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.72)">2022</text>
+<text x="378.2" y="281" text-anchor="middle" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.72)">2023</text>
+<text x="443.5" y="281" text-anchor="middle" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.72)">2024</text>
+<text x="508.8" y="281" text-anchor="middle" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.72)">2025</text>
+<text x="574.0" y="281" text-anchor="middle" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.72)">2026</text>
+</svg>
+</div>
+<p class="duo-foot">Based on 3,500+ confirmed-exploited CVEs (CISA KEV + VulnCheck KEV) · zerodayclock.com</p>
+</div>
+</div>
+
+## FIRST's four recommendations <a class="h2-doc" href="https://www.first.org/newsroom/releases/20260615" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+**Traditional security can't keep up.** The volume of new, AI-generated code outpaces what any traditional review process can inspect, and it arrives across many new surfaces at once. Gating at the pull request is already too late once an agent has propagated a change across repos.
+
+<div class="imp2">
+<div class="imp2-col">
+<p class="imp2-k">🔧 Plan for double the patching work</p>
+<p class="imp2-v">Software maintainers should expect twice the work, while live-system patching stays roughly steady through 2026.</p>
+</div>
+<div class="imp2-col">
+<p class="imp2-k">💰 Budget for security</p>
+<p class="imp2-v">With more CVEs and a growing software estate, allocating a dedicated security budget is imperative.</p>
+</div>
+<div class="imp2-col">
+<p class="imp2-k">🎯 Triage by severity and exploitability</p>
+<p class="imp2-v">FIRST also recommends assessing severity with <a class="retro-link" href="https://www.first.org/cvss/v3.1/specification-document#Qualitative-Severity-Rating-Scale" target="_blank" rel="noopener noreferrer">CVSS ↗</a>, adjusted to your environment. Complement this with exploitability signals: Dependabot alerts show the <a class="retro-link" href="https://github.blog/changelog/2025-02-19-dependabot-helps-users-focus-on-the-most-important-alerts-by-including-epss-scores-that-indicate-likelihood-of-exploitation-now-generally-available/" target="_blank" rel="noopener noreferrer">EPSS score ↗</a>, the likelihood of real-world exploitation.</p>
+</div>
+<div class="imp2-col">
+<p class="imp2-k">🤖 Use defensive AI now</p>
+<p class="imp2-v">Exploitation is faster than ever. Attackers reach the same frontier models, and cost is no object. They find and weaponize risk faster than defenders can triage it, and supply chain attacks move faster than any human review cycle.</p>
+</div>
+</div>
+
+## Data leaks in Japan (as of 2026-10-22) <a class="h2-doc" href="https://docs.github.com/en/code-security/getting-started/github-security-features" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+Public disclosure dates, including the cited updates.
+
+<div class="ctl-widget">
+<div class="ctl-list">
+<details class="ctl-item" name="ghas-japan-incidents">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🔑</span><span class="ctl-name">Toyota T-Connect (2022-10-07)</span><span class="ctl-when">Potential exposure: 296,019 records</span><a class="ctl-doc" href="https://global.toyota/jp/newsroom/corporate/38095972.html" target="_blank" rel="noopener noreferrer">Source</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Disclosure</span><span class="ctl-v">A <b>database access key in public GitHub source</b> was exposed from December 2017 to September 2022. Unauthorized data access was not confirmed.</span></p>
+<p class="ctl-row"><span class="ctl-k">GitHub protection</span><span class="ctl-v"><a class="retro-link" href="https://docs.github.com/en/code-security/concepts/secret-security/secret-scanning" target="_blank" rel="noopener noreferrer">Secret Protection ↗</a>: detect keys in code and history. <a class="retro-link" href="https://docs.github.com/en/code-security/reference/secret-security/secret-scanning-scope" target="_blank" rel="noopener noreferrer">Push protection ↗</a>: block supported secrets. Coverage depends on the secret format and configuration.</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghas-japan-incidents">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🔐</span><span class="ctl-name">Money Forward (2026-05-01)</span><span class="ctl-when">Keys + passwords in code</span><a class="ctl-doc" href="https://corp.moneyforward.com/news/info/20260501-mf-press-1/" target="_blank" rel="noopener noreferrer">Source</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Disclosure</span><span class="ctl-v">Compromised GitHub credentials enabled repository copying. The company <b>revoked and reissued keys and passwords embedded in source code</b>.</span></p>
+<p class="ctl-row"><span class="ctl-k">GitHub protection</span><span class="ctl-v"><a class="retro-link" href="https://docs.github.com/en/code-security/concepts/secret-security/secret-scanning" target="_blank" rel="noopener noreferrer">Secret Protection ↗</a>: identify embedded credentials for revocation and rotation; block new supported secrets with push protection. This limits <b>follow-on access</b>, not the initial account compromise.</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghas-japan-incidents">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🖼️</span><span class="ctl-name">Gyazo (2026-10-21)</span><span class="ctl-when">Scope: ~23.62M accounts</span><a class="ctl-doc" href="https://corp.helpfeel.com/news/news-20261021" target="_blank" rel="noopener noreferrer">Source</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Disclosure</span><span class="ctl-v"><b>Command injection</b> in video conversion. Exact exported count unknown.</span></p>
+<p class="ctl-row"><span class="ctl-k">GitHub protection</span><span class="ctl-v"><a class="retro-link" href="https://codeql.github.com/codeql-query-help/javascript/js-command-line-injection/" target="_blank" rel="noopener noreferrer">Code Security / CodeQL ↗</a>: detect this input-handling weakness class in supported code.</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghas-japan-incidents">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">📧</span><span class="ctl-name">KDDI (ISP mail, 2026-07-21)</span><span class="ctl-when">Leak: 12,231,954 people</span><a class="ctl-doc" href="https://newsroom.kddi.com/news/assets/2026/kddi_nr_s-73_4619/kddi_nr_s-73_4619_pdf_01.pdf" target="_blank" rel="noopener noreferrer">Source</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Disclosure</span><span class="ctl-v">Email addresses leaked. Third-party flaw <b>unknown to the vendor at detection</b>.</span></p>
+<p class="ctl-row"><span class="ctl-k">GitHub protection</span><span class="ctl-v"><a class="retro-link" href="https://docs.github.com/en/code-security/concepts/supply-chain-security/dependabot-alerts" target="_blank" rel="noopener noreferrer">Dependabot ↗</a>: <b>known advisories</b> for supported dependencies, not a zero-day shield.</span></p>
+</div>
+</details>
+</div>
+</div>
+
+## A wave of data leaks at Japanese companies
+
+**Cyber threats surged in 2026.** In H1, suspicious accesses detected by police sensors rose **51% year over year**; reported ransomware cases hit a **half-year record of 123** (<a class="retro-link" href="https://www.npa.go.jp/publications/statistics/cybersecurity/data/R8kami/R08_kami_cyber_jousei.pdf" target="_blank" rel="noopener noreferrer">Japan NPA ↗</a>).
+
+Public disclosure dates, including updates, oldest first. As of 2026-10-22.
+
+<div class="imp2">
+<div class="imp2-col">
+<p class="imp2-v">
+<a class="retro-link" href="https://www.nttdata-act.com/info/detail/231017.html" target="_blank" rel="noopener noreferrer">NTT West (2023-10-17)</a><br />
+<a class="retro-link" href="https://www.universal-music.co.jp/press-releases/2026-05-18/" target="_blank" rel="noopener noreferrer">Universal Music Japan (2026-05-18)</a><br />
+<a class="retro-link" href="https://directcloud.jp/contents/information_leak_cases/#list-01" target="_blank" rel="noopener noreferrer">Kyushu Electric Power T&amp;D (2026-07-08)</a><br />
+<a class="retro-link" href="https://japansecuritysummit.org/2026/07/14714/" target="_blank" rel="noopener noreferrer">Sagawa Express (notification error, 2026-07-18)</a><br />
+<a class="retro-link" href="https://itpostjp.com/security/aflac-unauthorized-access-investigation-results/" target="_blank" rel="noopener noreferrer">Aflac (2026-07-31)</a><br />
+<a class="retro-link" href="https://internet.watch.impress.co.jp/docs/news/2141530.html" target="_blank" rel="noopener noreferrer">Murauchi.com (2026-09-15)</a><br />
+<a class="retro-link" href="https://internet.watch.impress.co.jp/docs/news/2142333.html" target="_blank" rel="noopener noreferrer">Nichirei (2026-09-18)</a><br />
+<a class="retro-link" href="https://share.timescar.jp/news/2026/0929/1816.html" target="_blank" rel="noopener noreferrer">Times Car (2026-09-29)</a><br />
+<a class="retro-link" href="https://www.secoma.co.jp/info/pdf/202609290017.pdf" target="_blank" rel="noopener noreferrer">Seicomart (2026-09-29)</a>
+</p>
+</div>
+<div class="imp2-col">
+<p class="imp2-v">
+<a class="retro-link" href="https://starts-pub.jp/info20261001" target="_blank" rel="noopener noreferrer">OZmall (2026-10-01)</a><br />
+<a class="retro-link" href="https://www.monogatari.co.jp/news/261005_news/" target="_blank" rel="noopener noreferrer">Yakiniku King (2026-10-05)</a><br />
+<a class="retro-link" href="https://www.asahi-kasei.co.jp/pharma/oshirase_20261006.html" target="_blank" rel="noopener noreferrer">Asahi Kasei Therapeutics (2026-10-06)</a><br />
+<a class="retro-link" href="https://mrmax.co.jp/info/incident_20261006/" target="_blank" rel="noopener noreferrer">MrMax (2026-10-06)</a><br />
+<a class="retro-link" href="https://www.his.co.jp/assets/20261007.pdf" target="_blank" rel="noopener noreferrer">HIS (2026-10-07)</a><br />
+<a class="retro-link" href="https://www2.sagawa-exp.co.jp/information/detail/426/" target="_blank" rel="noopener noreferrer">Sagawa Express (parcel tracking, 2026-10-09)</a><br />
+<a class="retro-link" href="https://www.metpo.jp/news/Gn52e-Vm" target="_blank" rel="noopener noreferrer">Tokyo Metro (2026-10-15)</a><br />
+<a class="retro-link" href="https://www.yamato-hd.co.jp/important/info_260929_1.html" target="_blank" rel="noopener noreferrer">Yamato (deferred payment, 2026-10-16)</a>
+</p>
+</div>
+</div>
+
+## How GHAS answers it
+
+Scanning tools normally live outside the platform: a separate console, a separate backlog, and findings that reach the developer days after the code was written. GHAS puts all four steps where the code already is.
+
+<div class="rem-widget">
+<p class="rem-hint">▸ CLICK A STEP FOR DETAILS</p>
+<div class="rem-flow">
+<div class="rem-row">
+<details class="rem-slot" name="ghas-answer">
+<summary class="rem-btn"><span class="rem-icon" aria-hidden="true">🔎</span><span class="rem-name">FIND</span></summary>
+<div class="rem-plate">
+<p class="rem-title">🔎 FIND — what is already there</p>
+<p class="rem-why">Scans the <b>full git history</b> and every branch for leaked credentials, and builds a queryable database of the code to trace vulnerable data flows.</p>
+<p class="rem-why">Runs across every repository in the org without asking a single team to install or configure anything.</p>
+</div>
+</details>
+<details class="rem-slot" name="ghas-answer">
+<summary class="rem-btn"><span class="rem-icon" aria-hidden="true">🚧</span><span class="rem-name">PREVENT</span></summary>
+<div class="rem-plate">
+<p class="rem-title">🚧 PREVENT — before it lands</p>
+<p class="rem-why"><b>Push protection</b> rejects the push carrying a secret, so it never reaches the remote and never needs rotating.</p>
+<p class="rem-why">A <b>ruleset</b> can hold a pull request until code scanning comes back clean, so the gate is a repository rule rather than a reviewer remembering.</p>
+</div>
+</details>
+<details class="rem-slot" name="ghas-answer">
+<summary class="rem-btn"><span class="rem-icon" aria-hidden="true">🔧</span><span class="rem-name">FIX</span></summary>
+<div class="rem-plate">
+<p class="rem-title">🔧 FIX — in the pull request</p>
+<p class="rem-why">Alerts arrive as <b>annotations on the diff</b>, not as tickets in another tool the developer has to go open.</p>
+<p class="rem-why"><b>Copilot Autofix</b> proposes an actual patch with an explanation, so the developer reviews a change instead of first researching the vulnerability class.</p>
+</div>
+</details>
+<details class="rem-slot" name="ghas-answer">
+<summary class="rem-btn"><span class="rem-icon" aria-hidden="true">📊</span><span class="rem-name">PROVE</span></summary>
+<div class="rem-plate">
+<p class="rem-title">📊 PROVE — across the enterprise</p>
+<p class="rem-why">One <b>security configuration</b> applies to every org and repo, including ones created tomorrow.</p>
+<p class="rem-why"><b>Security overview</b> reports which repos are covered, which are not, and how the backlog is trending, so coverage is a number rather than an assumption.</p>
+</div>
+</details>
+</div>
+<div class="rem-screen"><p class="rem-empty">SELECT A STEP ▸</p></div>
+</div>
+</div>
+
+## What's inside <a class="h2-doc" href="https://docs.github.com/en/code-security/getting-started/github-security-features" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+<div class="trio-widget">
+<input class="trio-radio" type="radio" name="ghas-inside" id="gi-secret" checked />
+<input class="trio-radio" type="radio" name="ghas-inside" id="gi-code" />
+<input class="trio-radio" type="radio" name="ghas-inside" id="gi-dep" />
+<div class="trio-bar">
+<label class="trio-tab" for="gi-secret"><span class="trio-name"><span class="trio-icon" aria-hidden="true">🔑</span>Secret scanning</span><span class="trio-prod">SECRET PROTECTION · $19</span></label>
+<label class="trio-tab" for="gi-code"><span class="trio-name"><span class="trio-icon" aria-hidden="true">🔍</span>Code scanning</span><span class="trio-prod">CODE SECURITY · $30</span></label>
+<label class="trio-tab" for="gi-dep"><span class="trio-name"><span class="trio-icon" aria-hidden="true">📦</span>Dependabot</span><span class="trio-prod">CODE SECURITY · $30</span></label>
+</div>
+<div class="trio-panels">
+
+<div class="trio-panel">
+<details class="trio-row trio-intro" name="ghas-feature"><summary class="trio-summary"><span class="trio-k"><span class="trio-q" aria-hidden="true">?</span>What is <b>secret scanning</b><span class="trio-sub">finds keys left in the code</span></span><span class="trio-chip is-intro">PRIMER</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">Not a vulnerability but <b>a credential committed into code or git history</b>: API keys, tokens, passwords. It is the cheapest way in for an attacker, so it often outranks SAST on priority. <b>Deleting the line does not remove it from history</b>, so a leaked secret must be revoked and rotated.</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Secret scanning</span><span class="trio-chip is-free">FREE ON PUBLIC</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">Scans the <b>entire git history</b> and every push against <b>200+ provider patterns</b>. <b>Validity checks</b> confirm whether a leaked token is still live.</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Push protection</span><span class="trio-chip is-free">FREE ON PUBLIC</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">Rejects the push carrying the secret, so it never reaches the remote and never needs rotating.</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">AI-detected secrets</span><span class="trio-chip is-paid">LICENSED ONLY</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">Catches <b>unstructured</b> credentials no regex describes: passwords in config, secrets in prose.</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Custom patterns</span><span class="trio-chip is-paid">LICENSED ONLY</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">Your own token formats: internal services, legacy credentials, conventions no partner registers.</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Delegated bypass</span><span class="trio-chip is-paid">LICENSED ONLY</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">Turns bypassing push protection into an approval request routed to a named reviewer group.</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Public monitoring</span><span class="trio-chip is-paid">LICENSED ONLY</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v"><b>Enterprise, public preview.</b> Detects secrets leaked in public repositories across GitHub, including repos you don't own. Attribution uses <b>enterprise membership or verified domains</b>. Requires Secret Protection or GHAS. <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/public-monitoring" target="_blank" rel="noopener noreferrer">Docs ↗</a></p></details>
+</div>
+
+<div class="trio-panel">
+<details class="trio-row trio-intro" name="ghas-feature"><summary class="trio-summary"><span class="trio-k"><span class="trio-q" aria-hidden="true">?</span>What is <b>SAST</b><span class="trio-sub">reads the code you wrote, without running it</span></span><span class="trio-chip is-intro">PRIMER</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v"><b>Static Application Security Testing</b> reads source <b>without executing it</b>, so it runs at <b>commit and pull request time</b>, where fixes are cheapest (shift-left). It sees every code path but is <b>blind to runtime-only problems</b> like misconfiguration or broken auth flows. That is <b>DAST</b>'s territory: attacking a running app from outside (no first-party GitHub feature, results can be ingested via SARIF).</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Code scanning (CodeQL)</span><span class="trio-chip is-free">FREE ON PUBLIC</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">Compiles the code into a <b>queryable database</b> and traces data flow into dangerous sinks: injection, path traversal, deserialization.</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Copilot Autofix</span><span class="trio-chip is-free">FREE ON PUBLIC</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">Turns an alert into a <b>suggested diff with an explanation</b> on the pull request. This is what moves remediation rates.</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">AI-powered detections</span><span class="trio-chip is-paid">LICENSED ONLY</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">An AI engine covering languages and frameworks CodeQL has no queries for, during pull request review.</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Third-party SARIF</span><span class="trio-chip is-free">FREE ON PUBLIC</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">Any scanner emitting SARIF uploads into the same alert list: one backlog, one dashboard.</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Security campaigns</span><span class="trio-chip is-paid">LICENSED ONLY</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">Slices the backlog into a <b>finishable list</b> with an owner and a due date, opened with the teams that own the code.</p></details>
+</div>
+
+<div class="trio-panel">
+<details class="trio-row trio-intro" name="ghas-feature"><summary class="trio-summary"><span class="trio-k"><span class="trio-q" aria-hidden="true">?</span>What is <b>SCA</b><span class="trio-sub">checks the code someone else wrote</span></span><span class="trio-chip is-intro">PRIMER</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v"><b>Software Composition Analysis</b> reads manifests and lock files to find <b>known vulnerabilities (CVEs) in libraries you did not write</b>. Most of a modern app is dependencies, so by raw count it is usually the biggest source of findings. <b>SAST covers the code you wrote, SCA the code someone else wrote</b>: neither replaces the other.</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Dependency review</span><span class="trio-chip is-free">FREE ON PUBLIC</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">Shows dependencies added, removed, or upgraded by a PR. The Dependency Review Action can block known vulnerabilities and disallowed licenses when configured as a required check.</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">License compliance</span><span class="trio-chip is-paid">LICENSED ONLY</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v"><b>GA since 2026-10-16.</b> Central enterprise license policy, enforced before merge through branch rulesets, with exceptions approved by an <b>Enterprise Open-Source License Manager</b>. Requires <b>Enterprise Cloud + Code Security</b>, including on public repos; data residency is supported. <a class="retro-link" href="https://theomonfort.github.io/theomonfort/en/playbook/dependabot/?present=1&amp;slide=6">License compliance slide ↗</a> / <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/supply-chain-security/open-source-license-compliance" target="_blank" rel="noopener noreferrer">Docs ↗</a></p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Custom auto-triage rules</span><span class="trio-chip is-free">FREE ON PUBLIC</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">Your own rules to auto-dismiss or reopen Dependabot alerts at scale, so the backlog reflects real risk.</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Security overview</span><span class="trio-chip is-paid">LICENSED ONLY</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">Org-wide aggregation of supply chain risk and coverage, across every repository.</p></details>
+<details class="trio-row trio-foot" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Other supply-chain features</span><span class="trio-chip is-free">FREE ON ALL PLANS</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">Dependency graph, Dependabot alerts, security and version updates, malware alerts, preset auto-triage rules, and SBOM export are <b>free on every plan</b>.</p></details>
+</div>
+
+</div>
+</div>
+
+## Who can do what? <a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/organizations/managing-user-access-to-your-organizations-repositories/managing-repository-roles/repository-roles-for-an-organization#access-requirements-for-security-features" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+**Org owners / Security managers:** view and manage all alerts. **Other org members:** only repos with these permissions.
+
+| Action | Where | Code scanning | Secret scanning |
+| --- | --- | --- | --- |
+| View alert list | Repo → Security | **Write+** | **Admin**¹ |
+| View org alerts | Org → Security | **Write+** | **Admin** |
+| Change status | Repo → alert | **Write+** | **Admin**¹ |
+| Assign Copilot | Org → Campaigns → repo | **Write+** ² | Not supported |
+
+¹ **Write / Maintain:** view/manage secrets in **their own commits**, no alert list.
+
+² Requires **Agentic Autofix enabled + Write on the target repo**. Security manager alone grants **Read**, not Write.
+
+Org repos, default roles (2026-11-10). **Write+** = Write / Maintain / Admin.
+
+## Pricing <a class="h2-doc" href="https://docs.github.com/en/billing/concepts/product-billing/github-advanced-security" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
 | Product | Price | Billing unit |
 | --- | :---: | --- |
@@ -75,52 +399,158 @@ links:
 | 🔍 **GitHub Code Security** | **$30** / month | active committer |
 | 📦 Both together | $49 / month | active committer |
 
-- 👥 **Active committer** = a unique committer who pushed to a repository with the feature enabled during the past 90 days. The same person counts as one across any number of repositories
-- 💳 **Metered (pay-as-you-go)** model — no need to reserve license seats upfront; you're billed only for the people who actually push
-- 🏷️ Available on **GitHub Team** plan too (previously Enterprise-only)
-- 🆓 **Public repos are completely free** — open source projects need no license
+- 👥 **Active committer** = someone who pushed to a repo with the feature on in the past 90 days. Counted once across every repo and org; GitHub App bots don't count
+- 🏷️ Sold on **GitHub Team** and **GitHub Enterprise**. On **Enterprise Server** and **GHE.com** every repository needs a licence
+- 🌐 **Public repos get most features free, not all** — custom patterns, delegated bypass, AI-detected secrets, campaigns and Security overview still need a licence (<a class="retro-link" href="https://docs.github.com/en/code-security/getting-started/github-security-features" target="_blank" rel="noopener noreferrer">exact split ↗</a>)
 
-> 💡 If you only need secret scanning, **Secret Protection alone ($19)** is enough. Add **Code Security ($30)** when you also want CodeQL — the split model lets you adopt incrementally.
 
-## How to think about licensing
+## Pre-purchase inventory — Risk Assessments <a class="h2-doc" href="https://docs.github.com/en/code-security/how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/assess-your-secret-risk" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-1. 🌐 **Public repos only? Do nothing** — everything is free
-2. 🆓 **Enable free features for private repos first** — Dependabot (alerts / updates), user-level push protection, and Secret Risk Assessment (one-time inventory)
-3. 🔑 **Want org-level enforcement against secret leaks?** → Buy **Secret Protection**
-4. 🔍 **Want code vulnerability scanning (CodeQL) and Autofix too?** → Add **Code Security**
+Two free assessments run from **Org → Security → Assessments** and show what is already hiding in your repos. No licence, no trial, and you see the numbers before deciding to buy.
 
-> 🎯 Start with a Risk Assessment (below) to visualize how many secrets and vulnerabilities are hiding in your org — then evaluate the cost-effectiveness of Secret Protection / Code Security.
-
-## Pre-purchase inventory — Risk Assessments
-
-<div class="hero-quote hero-quote-plain">
-  <p>
-    GitHub provides two <strong>Risk Assessments</strong> to visualize your organization's security posture — <strong>no license required, completely free</strong>.
-  </p>
-  <p>
-    Both can be triggered with a single click from <strong>Org → Security → Assessments</strong>, and you can review the results before deciding to purchase Secret Protection / Code Security.
-  </p>
+<div class="assess">
+<div class="assess-card">
+<p class="assess-name">🔑 Secret Risk Assessment</p>
+<p class="assess-what">Types and count of secrets sitting in your org's repositories, aggregated by category.</p>
+<dl class="assess-meta">
+<div class="assess-line"><dt>SCOPE</dt><dd>All repos — public, private, internal, archived</dd></div>
+<div class="assess-line"><dt>RUNS</dt><dd>Once</dd></div>
+<div class="assess-line"><dt>OUTPUT</dt><dd>Counts only; secret values are never stored</dd></div>
+</dl>
+</div>
+<div class="assess-card is-code">
+<p class="assess-name">🔍 Code Security Risk Assessment</p>
+<p class="assess-what">Code vulnerabilities found by CodeQL, broken down by severity, language, and how many Copilot Autofix can fix.</p>
+<dl class="assess-meta">
+<div class="assess-line"><dt>SCOPE</dt><dd>Up to the 20 most active repos</dd></div>
+<div class="assess-line"><dt>RUNS</dt><dd>Once every 90 days</dd></div>
+<div class="assess-line"><dt>OUTPUT</dt><dd>Aggregated report; no Actions minutes consumed</dd></div>
+</dl>
+</div>
 </div>
 
-| Assessment | What it shows | Scope | Frequency | Details |
-| --- | --- | --- | :---: | --- |
-| 🔑 **Secret Risk Assessment** | Types and count of secrets hiding in org repos | **All repos** (public / private / internal / archived) | Once | <a class="retro-link" href="/en/playbook/secret-scanning">Secret Scanning ↗</a> |
-| 🔍 **Code Security Risk Assessment** | Code vulnerabilities detected by CodeQL (severity / language / Autofix-eligible count) | **Up to 20 most active repos** | Once every 90 days | <a class="retro-link" href="/en/playbook/code-scanning">Code Scanning ↗</a> |
+- 🛂 Only **organization owners** and **security managers** can run them
+- 🏷️ **GitHub Team** and **GitHub Enterprise Cloud** (Server support expected in 3.22)
+- 🧪 You can start a <a class="retro-link" href="https://docs.github.com/en/code-security/tutorials/trialing-github-advanced-security/planning-a-trial-of-ghas" target="_blank" rel="noopener noreferrer">GHAS trial directly from the results ↗</a>, which is the natural next step once you have the numbers
 
-- 🆓 **Completely free** — no GHAS / Secret Protection / Code Security license required
-- 🛂 **Permissions** — only Organization owners or security managers can run them
-- 📊 **Output** — aggregated reports (individual secret values and code are not stored on GitHub servers)
-- 🏷️ **Eligible plans** — GitHub Team and GitHub Enterprise Cloud (Server support expected in 3.22)
-- ⚙️ **Actions minutes** — Code Security Risk Assessment does not consume your regular Actions quota
+## Rolling out across the enterprise
 
-> 💡 Use these first when you "need numbers for a budget proposal" or "want to see the impact before buying." Running both on the same day gives you a complete view of your organization's security posture in hours.
+One configuration at **Enterprise → Settings → Advanced Security → Code security** rolls out to every org and repo. **New configuration** opens pre-filled with **GitHub recommended**.
 
-📘 Risk Assessment references:
-- <a class="retro-link" href="https://docs.github.com/en/code-security/how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/assess-your-secret-risk" target="_blank" rel="noopener noreferrer">Enabling Secret Risk Assessment ↗</a>
-- <a class="retro-link" href="https://docs.github.com/en/code-security/concepts/code-scanning/code-security-risk-assessment" target="_blank" rel="noopener noreferrer">Code security risk assessment (GitHub Docs) ↗</a>
-- <a class="retro-link" href="https://github.blog/changelog/2026-04-08-code-security-risk-assessment-available-for-organizations/" target="_blank" rel="noopener noreferrer">Code Security Risk Assessment GA (2026/04) ↗</a>
+You can now **enforce enterprise security configurations** across both new and existing repositories, preventing organization and repository admins from overriding those policies. <a class="retro-link" href="https://github.blog/changelog/2026-09-15-enforce-github-advanced-security-configurations/" target="_blank" rel="noopener noreferrer">September 15 announcement ↗</a>
 
-📘 GHAS general:
-- <a class="retro-link" href="https://github.blog/changelog/2025-03-04-introducing-github-secret-protection-and-github-code-security/" target="_blank" rel="noopener noreferrer">Introducing GitHub Secret Protection & Code Security (GitHub Blog) ↗</a>
-- <a class="retro-link" href="https://docs.github.com/en/billing/concepts/product-billing/github-advanced-security" target="_blank" rel="noopener noreferrer">About billing for GitHub Advanced Security ↗</a>
-- <a class="retro-link" href="https://github.com/security/advanced-security" target="_blank" rel="noopener noreferrer">GitHub Advanced Security product page ↗</a>
+<div class="ctl-widget">
+<div class="ctl-list">
+<details class="ctl-item" name="ghas-rollout" style="--entry-accent:var(--c-crt-amber)">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🚫</span><span class="ctl-name">Block orgs that should not have it</span><span class="ctl-when">Do this first</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-code-security-and-analysis-for-your-enterprise" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Do this</span><span class="ctl-v">Enterprise → Policies → <b>Advanced Security</b> → <b>Policies</b> tab → set the dropdown to <b>Allow for selected organizations</b> and keep only the orgs you want</span></p>
+<p class="ctl-row"><span class="ctl-k">Why first</span><span class="ctl-v">Disallowing does <b>not</b> disable repos where it is <b>already enabled</b>. It only blocks <b>additional</b> repositories, so after rollout it is too late</span></p>
+<p class="ctl-row"><span class="ctl-k">Who it binds</span><span class="ctl-v"><b>Repository administrators only</b>. Org owners and security managers can always enable it regardless of the policy</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghas-rollout" style="--entry-accent:var(--c-coral-alert)">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🛡️</span><span class="ctl-name">Push protection turns on</span><span class="ctl-when">blocks <code>push</code> only</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/push-protection" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Blocked</span><span class="ctl-v"><code>git push</code>, commits made in the GitHub UI, file uploads, REST API requests</span></p>
+<p class="ctl-row"><span class="ctl-k">Not blocked</span><span class="ctl-v"><code>git pull</code>, <code>git clone</code>, <code>git fetch</code>. <b>"Secret scanning will stop us pulling" is a misconception</b></span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghas-rollout" style="--entry-accent:var(--c-coral-alert)">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🛂</span><span class="ctl-name">Bypass is open to anyone with write</span><span class="ctl-when">default behavior</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/delegated-bypass" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Default</span><span class="ctl-v"><b>anyone</b> with write access can bypass by picking a reason. Every bypass still leaves <b>an alert, an audit log entry, and an email to owners</b></span></p>
+<p class="ctl-row"><span class="ctl-k">To restrict</span><span class="ctl-v">set <b>Bypass privileges</b> to <b>Specific actors</b> in the configuration (delegated bypass). Everyone else goes through a request and approval flow (requests expire after 7 days)</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghas-rollout" style="--entry-accent:var(--c-neon-cyan)">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🔍</span><span class="ctl-name">Code scanning runs on three triggers</span><span class="ctl-when">consumes Actions minutes</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/code-scanning/setup-types" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">When</span><span class="ctl-v">every push to the default or a protected branch, every PR creation and commit against those branches (fork PRs excluded), and a <b>weekly schedule</b></span></p>
+<p class="ctl-row"><span class="ctl-k">Cost</span><span class="ctl-v">the dominant factor in an enterprise-wide rollout. Repos with no CodeQL-supported language use <b>zero scans and zero minutes</b></span></p>
+<p class="ctl-row"><span class="ctl-k">Note</span><span class="ctl-v">code scanning on its own <b>never blocks a merge</b></span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghas-rollout" style="--entry-accent:var(--c-neon-cyan)">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🚧</span><span class="ctl-name">Blocking merges needs a ruleset</span><span class="ctl-when">Enterprise → Policies → Rulesets</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/code-scanning/merge-protection" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Where</span><span class="ctl-v">Policies → Repository → Rulesets → <b>Require code scanning results</b></span></p>
+<p class="ctl-row"><span class="ctl-k">Blocks when</span><span class="ctl-v">an alert at the configured severity, analysis running, or <b>tool not configured</b></span></p>
+<p class="ctl-row"><span class="ctl-k">Trap</span><span class="ctl-v">point it at repos without CodeQL and <b>every PR is blocked even with zero alerts</b></span></p>
+<p class="ctl-row"><span class="ctl-k">What Evaluate is</span><span class="ctl-v">a <b>dry run that records instead of blocking</b>. <b>Rule Insights</b> shows what Active would have rejected. The others are Active and Disabled</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghas-rollout" style="--entry-accent:var(--c-gb-green)">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🆕</span><span class="ctl-name">Cover new repositories</span><span class="ctl-when">set via Policy</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-at-scale/configure-enterprise-security/establish-complete-coverage/create-custom-configuration" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Do this</span><span class="ctl-v">Policy → <b>Use as default for newly created repositories</b>. Pick <b>Enabled with advanced setup allowed</b> for code scanning so existing CodeQL workflows survive</span></p>
+<p class="ctl-row"><span class="ctl-k">Scope</span><span class="ctl-v"><b>new repositories only</b>. It does nothing to repositories that already exist</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghas-rollout" style="--entry-accent:var(--c-gb-green)">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🗂️</span><span class="ctl-name">Cover existing repositories</span><span class="ctl-when">separate Apply to action</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-at-scale/configure-enterprise-security/establish-complete-coverage/apply-custom-configuration" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Do this</span><span class="ctl-v">from the configurations list, <b>Apply to</b> → <b>All repositories without configurations</b></span></p>
+<p class="ctl-row"><span class="ctl-k">Enterprise only</span><span class="ctl-v">appears <b>only at the enterprise level</b>. Covers unconfigured repos without disturbing orgs that already have one</span></p>
+<p class="ctl-row"><span class="ctl-k">Enforcement</span><span class="ctl-v">set Policy → <b>Enforce configuration</b> to <b>Enforce for repository and organization owners</b> to block org and repo admins from overriding existing repos too (use <b>Apply to → All repositories</b> to enforce across all repos)</span></p>
+<p class="ctl-row"><span class="ctl-k">Scope</span><span class="ctl-v">archived repos are included too, since secret scanning still runs on them</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghas-rollout" style="--entry-accent:var(--c-gb-green)">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🎯</span><span class="ctl-name">Pick specific repositories</span><span class="ctl-when">org and enterprise configurations</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-at-scale/configure-organization-security/establish-complete-coverage/apply-custom-configuration" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Per repo</span><span class="ctl-v"><b>Enterprise configurations can also be applied to selected repositories</b> from the organization's repository list. The selection interface is at org level; the configuration does <b>not</b> have to be created there</span></p>
+<p class="ctl-row"><span class="ctl-k">How</span><span class="ctl-v">Organization → Settings → Advanced Security → Configurations → <b>Repositories</b> tab → filter and select repos → <b>Apply configuration</b> → choose the org or enterprise configuration → <b>Apply</b></span></p>
+<p class="ctl-row"><span class="ctl-k">Who wins</span><span class="ctl-v">if an enterprise change conflicts with the org configuration the repo flips to <code>removed_by_enterprise</code> and the org config detaches. <b>Enterprise wins</b></span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghas-rollout" style="--entry-accent:var(--c-gb-green)">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">⚖️</span><span class="ctl-name">Which configuration is applied</span><span class="ctl-when">1 repo = 1 config (last applied wins)</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/reference/security-at-scale/configuration-statuses" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Core rule</span><span class="ctl-v">no merging and no stacking: <b>a repository has at most one configuration attached at a time</b>. Applying another configuration <b>replaces the current one</b> without detaching first (<a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-at-scale/configure-organization-security/manage-your-coverage/detach-security-configuration" target="_blank" rel="noopener noreferrer">detaching docs ↗</a>). Detaching alone leaves already-enabled features on</span></p>
+<p class="ctl-row"><span class="ctl-k">Precedence</span><span class="ctl-v">on existing repos, enterprise <b>All repositories</b> overwrites org choices (<b>All repositories without configurations</b> keeps them). For new repos, an <b>enterprise-enforced</b> enterprise default beats the org default for the same visibility (<a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/reference/security-at-scale/configuration-enforcement" target="_blank" rel="noopener noreferrer">enforcement docs ↗</a>). On conflict, the repo flips to <code>removed_by_enterprise</code> (<a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/reference/security-at-scale/configuration-statuses" target="_blank" rel="noopener noreferrer">statuses reference ↗</a>)</span></p>
+<p class="ctl-row"><span class="ctl-k">Check in org UI</span><span class="ctl-v">Organization → Settings → Advanced Security → Configurations → <b>Repositories</b> tab shows each repo's attached configuration name and status prefix (<code>Enforced</code>, <code>Removed</code>, <code>No configuration</code>), filterable by <b>Configuration status</b> (<a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/reference/security-at-scale/troubleshoot-security-configurations/configuration-issue-diagnosis" target="_blank" rel="noopener noreferrer">diagnosis guide ↗</a>)</span></p>
+<p class="ctl-row"><span class="ctl-k">Check via API</span><span class="ctl-v">get one repo's active config with <code>GET /repos/{owner}/{repo}/code-security-configuration</code> (<a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/rest/code-security/configurations#get-the-code-security-configuration-that-manages-a-repositorys-code-security-settings" target="_blank" rel="noopener noreferrer">REST API ↗</a>), or list every repo on a config with <code>GET /orgs/{org}/code-security/configurations/{configuration_id}/repositories</code> (plus the enterprise equivalent, <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/rest/code-security/configurations#get-repositories-associated-with-a-code-security-configuration" target="_blank" rel="noopener noreferrer">REST API ↗</a>)</span></p>
+</div>
+</details>
+</div>
+</div>
+
+## Visualizing coverage <a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/security-at-scale/security-overview" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+<details class="workshop-demo"><summary>Demo steps</summary>
+
+<div class="demo-window" role="group" aria-label="Demo steps">
+<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">Security overview</span><span class="demo-note">FOR PRESENTER ONLY</span></div>
+<ol class="demo-steps">
+<li>
+<p class="demo-step-title">ENTERPRISE LEVEL</p>
+<p>Open <a href="https://github.com/enterprises/octodemo/security/overview" target="_blank" rel="noopener noreferrer">octodemo → Security overview ↗</a> and show the detection / remediation / prevention trends. Then switch to the <b>Coverage</b> and <b>Risk</b> views.</p>
+<p class="demo-out">Only orgs where you are owner or security manager are aggregated.</p>
+</li>
+<li>
+<p class="demo-step-title">ORGANIZATION LEVEL</p>
+<p>Open <a href="https://github.com/orgs/theomonfort-org/security/overview" target="_blank" rel="noopener noreferrer">theomonfort-org → Security overview ↗</a> to show the same dashboard scoped to one org.</p>
+<p class="demo-out">This is the view teams use day to day.</p>
+</li>
+<li>
+<p class="demo-step-title">REPOSITORY LEVEL</p>
+<p>Drill down to one repository with <a href="https://github.com/theomonfort-org/ghas-test-1/security" target="_blank" rel="noopener noreferrer">ghas-test-1 → Security and quality ↗</a>.</p>
+<p class="demo-out">Enterprise → Org → Repo: the same alerts, narrowed step by step.</p>
+</li>
+</ol>
+</div>
+</details>
+
+Once the configuration is out, the question becomes "how far are we actually covered?" The **Security and quality** tab answers it at both **Enterprise** and **Organization** level.
+
+| View | What it answers | Level |
+| --- | --- | :---: |
+| 📊 **Overview** | Detection / remediation / prevention trends | Ent + Org |
+| 📈 **Coverage** | Which repos have which feature enabled | Ent + Org |
+| 🛡️ **Risk** | Which repos carry the most alerts | Ent + Org |
+| 🌐 **Public monitoring** | Secrets your members leaked in **public repos across GitHub** | **Ent only** |
+
+- 🏢 **Org-level Coverage** is the day-to-day view — enterprise views only aggregate orgs where you are an owner or security manager
+- 🌐 **Public monitoring** (public preview, needs Secret Protection) attributes leaks by enterprise membership and verified domain. Turn it on at **Enterprise → Settings → Advanced Security → Code security**
+- 📤 **Export CSV** on Overview / Coverage / Risk keeps the filters you already applied

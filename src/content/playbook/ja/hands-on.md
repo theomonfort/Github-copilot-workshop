@@ -27,7 +27,7 @@ links:
 
 ## 一言で
 
-<div class="hero-quote hero-quote-mona">
+<div data-playbook-article="hands-on" class="hero-quote hero-quote-mona">
   <p>
     題材は <strong>このプレイブックサイトの簡略版</strong>。今読んでいるこのサイトを、<strong>Copilot と一緒にゼロから作り直します</strong>。
   </p>
@@ -42,7 +42,7 @@ links:
 
 Playbook で **「なぜ」** を学んだら、ハンズオンで **その知識を実践に落とし込みます** ── 題材は他でもないこのプレイブック自身。読んだ機能をそのまま使って、自分の手で再構築できます。
 
-<img src="/handson/img/intro-context-window.png" alt="今日作る Copilot Playbook サイトのプレビュー（Context Engineering ページ）" class="build-preview" />
+<img src="https://theomonfort.github.io/theomonfort/handson/img/intro-context-window.png" alt="今日作る Copilot Playbook サイトのプレビュー（Context Engineering ページ）" class="build-preview" />
 
 ## ワークショップで体験する流れ
 
@@ -59,9 +59,9 @@ flowchart TB
   Plan --> Code --> Review --> Improve --> Operate
 
   classDef prep fill:#0a1a14,stroke:#9bbc0f,color:#9bbc0f,stroke-width:2px
-  classDef dev  fill:#1a0a2e,stroke:#ff2e88,color:#ff2e88,stroke-width:2px
+  classDef dev  fill:#11162c,stroke:#ff2e88,color:#ff2e88,stroke-width:2px
   classDef rev  fill:#1a1408,stroke:#ffb000,color:#ffb000,stroke-width:2px
-  classDef ops  fill:#0a0e27,stroke:#00f0ff,color:#00f0ff,stroke-width:2px
+  classDef ops  fill:#0b1420,stroke:#00f0ff,color:#00f0ff,stroke-width:2px
   class Plan prep
   class Code,Improve dev
   class Review rev

@@ -20,6 +20,12 @@ links:
   - group: 📖 公式ドキュメント
     label: Agent Skills 仕様（オープン標準）
     url: https://agentskills.io/specification
+  - group: 📖 公式ドキュメント
+    label: Agent Plugins 1.0 — プラグインの作り方
+    url: https://agent-plugins.org/plugin-authors/build-an-agent-plugin
+  - group: 📖 公式ドキュメント
+    label: GitHub Docs — プラグインについて
+    url: https://docs.github.com/en/copilot/concepts/agents/about-plugins
   - group: 🌟 コミュニティ製スキル
     label: github/awesome-copilot — Skills 一覧
     url: https://github.com/github/awesome-copilot/blob/main/docs/README.skills.md
@@ -32,14 +38,20 @@ links:
   - group: 🌟 コミュニティ製スキル
     label: GitHub Agent Finder — スキル/MCP/エージェント探索
     url: https://github.com/agentfinder
+  - group: 🛠️ 参考実装
+    label: agent-plugins-example — サンプルと移行ガイド
+    url: https://github.com/agentplugins/agent-plugins-example
   - group: 📰 Recent Changelog
     label: "Manage agent skills with the GitHub CLI (2026-04-16)"
     url: https://github.blog/changelog/2026-04-16-manage-agent-skills-with-github-cli
+  - group: 📰 Recent Changelog
+    label: "Agent Plugins 1.0 in VS Code, Copilot CLI, and the Copilot app (2026-08-12)"
+    url: https://github.blog/changelog/2026-08-12-agent-plugins-1-0-in-vs-code-copilot-cli-and-the-copilot-app/
 ---
 
 ## 一言で
 
-<div class="hero-quote">
+<div data-playbook-article="agent-skills" class="hero-quote">
   <p>
     <strong>Agent Skills</strong> は、Copilot に <strong>専門タスクのこなし方</strong> を教える再利用可能な指示セット。
   </p>
@@ -59,102 +71,90 @@ links:
 
 ## 仕組み
 
-Agent Skills は **段階的開示** で読み込まれる。  
-最初から全スキルの本文をコンテキストに入れるのではなく、まず軽い **metadata** だけを見て、ユーザーの依頼に合うものだけを展開する。
-
+**段階的開示**：まず軽いメタデータだけを読み、依頼に合うスキルの本文だけを展開する。
 
 | 段階 | 読み込むもの | いつ読む？ | 役割 |
 | --- | --- | --- | --- |
-| 1 | `name` / `description` | 起動時・候補選定時 | どのスキルが使えそうかを判断する<br/>※ **「何をするスキルか」+「いつ使うスキルか」** を明確に書く |
+| 1 | `name` / `description` | 起動時・候補選定時 | **「何をするか + いつ使うか」** でスキルを選ぶ |
 | 2 | `SKILL.md` 本体 | description が依頼と一致した時 | 具体的な実行手順をエージェントに渡す |
 | 3 | scripts / references / assets | `SKILL.md` が必要とした時 | 実行に必要な補助情報だけを追加する |
 
 ## ハーネスの中で何が起きる？
 
-ユーザーが依頼をすると、ハーネスはまず全スキルの **メタデータだけ** をコンテキストに載せる。LLM が「このスキルが必要」と判断したら、ハーネスがその **本体（SKILL.md）を完全展開** してコンテキストに追加する。
+まず **全スキルのメタデータ** を読み、必要になった時だけ **SKILL.md の本文** を追加する。
 
-<figure class="rpi-pipeline" style="margin:2em 0;">
-<svg viewBox="0 0 1080 490" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;font-family:'DotGothic16','Courier New',monospace;">
-  <defs>
-    <marker id="arrow-orange" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="10" markerHeight="10" orient="auto" markerUnits="userSpaceOnUse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#ffb000"/>
-    </marker>
-    <marker id="arrow-blue" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="10" markerHeight="10" orient="auto" markerUnits="userSpaceOnUse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6"/>
-    </marker>
-    <marker id="arrow-pink" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="10" markerHeight="10" orient="auto" markerUnits="userSpaceOnUse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#ff2e88"/>
-    </marker>
-  </defs>
-  <path d="M 260 50 L 720 50" fill="none" stroke="#ffb000" stroke-width="2" marker-end="url(#arrow-orange)"/>
-  <path d="M 140 85 L 140 400 L 400 400 L 400 420" fill="none" stroke="#ffb000" stroke-width="2" marker-end="url(#arrow-orange)"/>
-  <path d="M 410 290 L 410 400 L 515 400 L 515 420" fill="none" stroke="#ff2e88" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrow-pink)"/>
-  <path d="M 620 420 L 620 376" fill="none" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow-blue)"/>
-  <path d="M 660 375 L 750 375 L 750 420" fill="none" stroke="#ffb000" stroke-width="2" marker-end="url(#arrow-orange)"/>
-  <path d="M 660 340 L 690 340 L 690 200 L 720 200" fill="none" stroke="#ffb000" stroke-width="2" marker-end="url(#arrow-orange)"/>
-  <rect x="20" y="15" width="240" height="70" rx="12" fill="#0a0e27" stroke="#ffb000" stroke-width="2"/>
-  <text x="35" y="36" fill="#ffb000" font-size="11" font-weight="bold" letter-spacing="1">ハーネス</text>
-  <text x="35" y="58" fill="#e8f4ff" font-size="12" font-weight="bold">全スキルの description を</text>
-  <text x="35" y="74" fill="#e8f4ff" font-size="12" font-weight="bold">Context に追加</text>
-  <rect x="720" y="15" width="340" height="215" rx="6" fill="#0a0e27" stroke="#1e2a4a" stroke-width="1"/>
-  <text x="735" y="40" font-size="10" fill="#cfe9ff">
-    <tspan x="735" dy="0" fill="#555">---</tspan>
-    <tspan x="735" dy="14"><tspan fill="#ffb000">name:</tspan> api-endpoint</tspan>
-    <tspan x="735" dy="14"><tspan fill="#ffb000">description:</tspan> Generate REST API</tspan>
-    <tspan x="735" dy="14">  endpoints for the OctoCAT Supply</tspan>
-    <tspan x="735" dy="14">  Chain application following</tspan>
-    <tspan x="735" dy="14">  established patterns. Use this</tspan>
-    <tspan x="735" dy="14">  skill when creating new CRUD</tspan>
-    <tspan x="735" dy="14">  endpoints, adding routes,</tspan>
-    <tspan x="735" dy="14">  implementing JPA repositories.</tspan>
-    <tspan x="735" dy="14" fill="#555">---</tspan>
-    <tspan x="735" dy="22" fill="#00f0ff" font-weight="bold"># API Endpoint Development</tspan>
-    <tspan x="735" dy="22" fill="#00f0ff" font-weight="bold">## Architecture Overview</tspan>
-  </text>
-  <rect x="370" y="230" width="80" height="60" rx="10" fill="#0a0e27" stroke="#ff2e88" stroke-width="2"/>
-  <text x="410" y="252" fill="#ff2e88" font-size="10" font-weight="bold" letter-spacing="1" text-anchor="middle">ユーザー</text>
-  <text x="410" y="271" fill="#e8f4ff" font-size="11" font-weight="bold" text-anchor="middle">「API を</text>
-  <text x="410" y="284" fill="#e8f4ff" font-size="11" font-weight="bold" text-anchor="middle">作って」</text>
-  <rect x="420" y="305" width="240" height="70" rx="12" fill="#0a0e27" stroke="#ffb000" stroke-width="2"/>
-  <text x="435" y="326" fill="#ffb000" font-size="11" font-weight="bold" letter-spacing="1">ハーネス</text>
-  <text x="435" y="348" fill="#e8f4ff" font-size="12" font-weight="bold">スキル本体を</text>
-  <text x="435" y="364" fill="#e8f4ff" font-size="12" font-weight="bold">Context に読み込む</text>
-  <text x="635" y="389" fill="#3b82f6" font-size="10" font-weight="bold">API スキルが</text>
-  <text x="635" y="402" fill="#3b82f6" font-size="10" font-weight="bold">必要</text>
-  <text x="20" y="445" fill="#e8f4ff" font-size="11" font-weight="bold">モデル</text>
-  <text x="20" y="461" fill="#e8f4ff" font-size="11" font-weight="bold">コンテキスト</text>
-  <rect x="95" y="420" width="110" height="55" rx="10" fill="#9bbc0f"/>
-  <text x="150" y="444" fill="#05060f" font-size="11" font-weight="bold" text-anchor="middle">SYSTEM</text>
-  <text x="150" y="460" fill="#05060f" font-size="11" font-weight="bold" text-anchor="middle">&amp; TOOLS</text>
-  <rect x="215" y="420" width="110" height="55" rx="10" fill="#00f0ff"/>
-  <text x="270" y="453" fill="#05060f" font-size="11" font-weight="bold" text-anchor="middle">INSTRUCTIONS</text>
-  <rect x="335" y="420" width="130" height="55" rx="10" fill="#ffb000"/>
-  <text x="400" y="444" fill="#05060f" font-size="11" font-weight="bold" text-anchor="middle">SKILLS</text>
-  <text x="400" y="460" fill="#05060f" font-size="11" font-weight="bold" text-anchor="middle">DESCRIPTION</text>
-  <rect x="475" y="420" width="80" height="55" rx="10" fill="#ff2e88"/>
-  <text x="515" y="453" fill="#05060f" font-size="11" font-weight="bold" text-anchor="middle">PROMPT</text>
-  <rect x="565" y="420" width="110" height="55" rx="10" fill="#00f0ff"/>
-  <text x="620" y="444" fill="#05060f" font-size="11" font-weight="bold" text-anchor="middle">SKILL</text>
-  <text x="620" y="460" fill="#05060f" font-size="11" font-weight="bold" text-anchor="middle">REQUEST</text>
-  <rect x="685" y="420" width="130" height="55" rx="10" fill="#ffb000"/>
-  <text x="750" y="444" fill="#05060f" font-size="11" font-weight="bold" text-anchor="middle">SKILL</text>
-  <text x="750" y="460" fill="#05060f" font-size="11" font-weight="bold" text-anchor="middle">DOCUMENT</text>
+<figure class="skills-pipeline">
+<svg viewBox="0 0 1100 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="skills-title skills-desc">
+<title id="skills-title">ハーネスによるスキルの段階的な読み込み</title>
+<desc id="skills-desc">ハーネスは全スキルのメタデータをモデルのコンテキストに追加する。モデルが API スキルを要求したら、SKILL.md の本文を読み込んで追加する。</desc>
+<defs>
+<marker id="skills-amber" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="10" markerHeight="10" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10z" fill="var(--c-crt-amber)"/></marker>
+<marker id="skills-cyan" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="10" markerHeight="10" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10z" fill="var(--c-neon-cyan)"/></marker>
+<marker id="skills-magenta" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="10" markerHeight="10" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10z" fill="var(--c-neon-magenta)"/></marker>
+</defs>
+<g fill="none" stroke-width="2">
+<path d="M320 70 H730" stroke="var(--c-crt-amber)" marker-end="url(#skills-amber)"/>
+<path d="M170 120 V375 H522.5 V390" stroke="var(--c-crt-amber)" marker-end="url(#skills-amber)"/>
+<path d="M525 255 V365 H680 V390" stroke="var(--c-neon-magenta)" stroke-dasharray="6 5" marker-end="url(#skills-magenta)"/>
+<path d="M817.5 390 V360" stroke="var(--c-neon-cyan)" marker-end="url(#skills-cyan)"/>
+<path d="M920 325 H1090 V215 H1080" stroke="var(--c-crt-amber)" marker-end="url(#skills-amber)"/>
+<path d="M870 360 V372 H990 V390" stroke="var(--c-crt-amber)" marker-end="url(#skills-amber)"/>
+</g>
+<rect x="20" y="20" width="300" height="100" rx="3" fill="var(--c-midnight)" stroke="var(--c-crt-amber)" stroke-width="2"/>
+<text x="38" y="48" fill="var(--c-crt-amber)" font-size="20" font-weight="700">ハーネス</text>
+<text x="38" y="78" fill="var(--c-phosphor)" font-size="19"><tspan x="38">全スキルのメタデータを</tspan><tspan x="38" dy="25">コンテキストに追加</tspan></text>
+<rect x="730" y="20" width="350" height="240" rx="3" fill="var(--c-midnight)" stroke="var(--c-neon-cyan)" stroke-width="1.5"/>
+<text x="746" y="45" fill="var(--c-neon-cyan)" font-size="18" font-weight="700">SKILL.md</text>
+<text x="746" y="72" fill="var(--c-phosphor)" font-size="16">
+<tspan x="746"><tspan fill="var(--c-crt-amber)">name:</tspan> api-endpoint</tspan>
+<tspan x="746" dy="23"><tspan fill="var(--c-crt-amber)">description:</tspan> REST API endpoints</tspan>
+<tspan x="746" dy="23">for OctoCAT Supply Chain.</tspan>
+<tspan x="746" dy="23">Use for CRUD endpoints, routes,</tspan>
+<tspan x="746" dy="23">and JPA repositories; follow patterns.</tspan>
+<tspan x="746" dy="30" fill="var(--c-neon-cyan)" font-weight="700"># API Endpoint Development</tspan>
+<tspan x="746" dy="24" fill="var(--c-neon-cyan)" font-weight="700">## Architecture Overview</tspan>
+</text>
+<rect x="430" y="155" width="190" height="100" rx="3" fill="var(--c-midnight)" stroke="var(--c-neon-magenta)" stroke-width="2"/>
+<text x="525" y="187" text-anchor="middle" fill="var(--c-neon-magenta)" font-size="20" font-weight="700">ユーザー</text>
+<text x="525" y="222" text-anchor="middle" fill="var(--c-phosphor)" font-size="20">「API を作って」</text>
+<rect x="620" y="290" width="300" height="70" rx="3" fill="var(--c-midnight)" stroke="var(--c-crt-amber)" stroke-width="2"/>
+<text x="638" y="318" fill="var(--c-crt-amber)" font-size="18" font-weight="700">ハーネス（必要な時だけ）</text>
+<text x="638" y="343" fill="var(--c-phosphor)" font-size="18">選んだスキルの本文を追加</text>
+<text x="10" y="414" fill="var(--c-phosphor)" font-size="17" font-weight="700"><tspan x="10">モデル</tspan><tspan x="10" dy="24">CONTEXT</tspan></text>
+<rect x="110" y="390" width="135" height="60" rx="3" fill="var(--c-gb-green)"/>
+<rect x="260" y="390" width="160" height="60" rx="3" fill="var(--c-neon-cyan)"/>
+<rect x="435" y="390" width="175" height="60" rx="3" fill="var(--c-crt-amber)"/>
+<rect x="625" y="390" width="110" height="60" rx="3" fill="var(--c-neon-magenta)"/>
+<rect x="742.5" y="390" width="150" height="60" rx="3" fill="var(--c-neon-cyan)"/>
+<rect x="900" y="390" width="180" height="60" rx="3" fill="var(--c-crt-amber)"/>
+<g fill="var(--c-shadow-ink)" text-anchor="middle" font-size="17" font-weight="700">
+<text x="177.5" y="414"><tspan x="177.5">SYSTEM</tspan><tspan x="177.5" dy="23">+ TOOLS</tspan></text>
+<text x="340" y="426">INSTRUCTIONS</text>
+<text x="522.5" y="414"><tspan x="522.5">全スキルの</tspan><tspan x="522.5" dy="23">メタデータ</tspan></text>
+<text x="680" y="426">PROMPT</text>
+<text x="817.5" y="414"><tspan x="817.5">スキル要求</tspan><tspan x="817.5" dy="23" font-size="14">api-endpoint</tspan></text>
+<text x="990" y="414"><tspan x="990">選んだスキルの</tspan><tspan x="990" dy="23">本文</tspan></text>
+</g>
 </svg>
 </figure>
 
 ## Example
 
-スキルは自分で書くだけでなく、コミュニティ製のものをそのままインストールできる。  
-GitHub-hosted skill は GitHub CLI（v2.90.0+）の `gh skill install` で、今のリポジトリの skill directory（例：`.github/skills/` or `.copilot/skills/`）に追加する。
+自作もコミュニティ製も利用できる。`gh skill install`（GitHub CLI v2.90.0+）で、GitHub-hosted skill を今のリポジトリの skill directory（例：`.github/skills/` or `.copilot/skills/`）に追加する。
+
+<div class="setup-cards skill-examples">
+<div class="setup-card">
 
 ### [github/awesome-copilot](https://awesome-copilot.github.com/skills)
 
-GitHub 公式キュレーションのスキル集。欲しいスキルを選んで追加できる。
-
+GitHub 公式キュレーションのスキル集。欲しいスキルを選んで追加。
 
 ```bash
 gh skills install github/awesome-copilot <skill-name>
 ```
+
+</div>
+<div class="setup-card">
 
 ### [skills.sh - Visit page](https://skills.sh/)
 
@@ -164,10 +164,47 @@ gh skills install github/awesome-copilot <skill-name>
 gh skills install <owner>/<repo> <skill-name>
 ```
 
+</div>
+<div class="setup-card">
+
 ### [GitHub Agent Finder](https://github.com/agentfinder)
 
-タスクに合う **MCP サーバー・ツール・スキル・エージェント** を横断検索する発見サービス。`agentfinder` スキルを入れれば `/agentfinder <やりたいこと>` で候補を一覧できる。スキル定義は [SKILL.md](https://github.com/ards-project/connectors/blob/main/skills/github-copilot/SKILL.md) を参照。
+タスクに合う **MCP サーバー、ツール、スキル、エージェント** を検索。`agentfinder` を入れ、`/agentfinder <やりたいこと>` で候補を一覧できる。[SKILL.md](https://github.com/ards-project/connectors/blob/main/skills/github-copilot/SKILL.md)
 
 ```bash
 gh skills install ards-project/connectors skills/github-copilot
 ```
+
+</div>
+</div>
+
+## Agent Plugins 1.0
+
+**Agent Plugins 1.0** は、**Agent Skills と MCP サーバーを 1 つのインストール可能なプラグインにまとめる**ベンダー中立のオープン標準。
+
+| パス | 中身 | 可搬性 |
+| --- | --- | --- |
+| 📦 `plugin.json` | マニフェスト。`$schema` で 1.0 を指定 | ✅ 全クライアント |
+| 🧠 `skills/` | スキル 1 つにつき 1 フォルダ + `SKILL.md` | ✅ 全クライアント |
+| 🔌 `mcp.json` | MCP サーバー設定（ローカル / リモート） | ✅ 全クライアント |
+| 🐙 `com.github.copilot/` | カスタムエージェント、コマンド、フック等 | ⬜ Copilot 専用 |
+
+標準化されるのはスキルと MCP。Copilot 固有の機能は名前空間付きフォルダに収まり、他クライアントは読み飛ばす。
+
+> 🌐 一度作れば VS Code / Copilot CLI / SDK / Copilot アプリで動く。全プランで GA。
+> 🏢 **Enterprise**: 許可するプラグインとマーケットプレイスは従来どおり `managed-settings.json` で統制できる。
+
+## プラグインの導入と利用
+
+マーケットプレイスは 2 つが標準で使える。**`copilot-plugins`**（GitHub 公式）と **`awesome-copilot`**（コミュニティ）。
+
+| コマンド | 用途 |
+| --- | --- |
+| 🔍 `copilot plugin marketplace browse awesome-copilot` | 一覧を見る |
+| 📥 `copilot plugin install <name>@awesome-copilot` | マーケットプレイスから導入 |
+| 📋 `copilot plugin list` | 導入済みと有効状態を確認 |
+| 🗑️ `copilot plugin uninstall <name>` | 削除する |
+
+`owner/repo`、`owner/repo:path`、Git URL からも導入できる。`copilot --plugin-dir ./my-plugin` なら導入せずローカルから読み込める。
+
+> ⚠️ 導入は**リポジトリ単位ではなくユーザー単位**。`~/.copilot/installed-plugins/` に入り、全プロジェクトに適用される。

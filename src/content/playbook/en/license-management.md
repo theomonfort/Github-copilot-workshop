@@ -1,7 +1,7 @@
 ---
-title: Copilot Licence
-titleEn: Copilot Licence
-summary: How GitHub Copilot is billed at the Enterprise level, assigned at the Enterprise or Org level, and how policies / billing behave when a user belongs to multiple organizations — including outside collaborators and EMU guest collaborators.
+title: GHE & Copilot Licences
+titleEn: GHE & Copilot Licences
+summary: Copilot billing, assignment, multi-org policies, and external collaborators. GHE Cloud licence consumption, unaffiliated users, Visual Studio bundles, and budget alerts.
 icon: /icons/license-crown.png
 color: magenta
 accent:
@@ -14,6 +14,18 @@ order: 30
 category: administration
 related: ['github-copilot', 'copilot-metrics']
 links:
+  - group: 📖 GHE licensing
+    label: People who consume a GitHub licence
+    url: https://docs.github.com/en/billing/reference/github-license-users
+  - group: 📖 GHE licensing
+    label: Assigning Copilot directly to enterprise users
+    url: https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-for-enterprise/manage-access/grant-access
+  - group: 📖 GHE licensing
+    label: Setting up Visual Studio subscriptions with GitHub Enterprise
+    url: https://docs.github.com/en/enterprise-cloud@latest/billing/how-tos/set-up-payment/set-up-vs-subscription
+  - group: 📖 GHE licensing
+    label: Budgets and alerts
+    url: https://docs.github.com/en/billing/concepts/budgets-and-alerts
   - label: Docs — GitHub Copilot plans
     url: https://docs.github.com/en/copilot/about-github-copilot/plans-for-github-copilot
   - label: Docs — Policy conflicts (multi-org precedence)
@@ -30,7 +42,7 @@ links:
 
 ## In a nutshell
 
-<div class="hero-quote hero-quote-admin">
+<div data-playbook-article="license-management" class="hero-quote hero-quote-admin">
   <p>
     GitHub Copilot is <strong>billed at the Enterprise level</strong> and <strong>assigned at the Enterprise or Organization level</strong>.
   </p>
@@ -41,14 +53,14 @@ links:
 
 ## GitHub License & Service Procurement
 
-<div style="font-size:0.56em;line-height:1.25;--proc-row:8.45rem;--proc-gap:0.6rem;--proc-label:5.4rem;--proc-navy:#ff2e88;--proc-gray:#9bbc0f;--proc-blue:#00f0ff;--proc-copilot:#ffb000;--proc-panel:rgba(10,14,39,0.86);--proc-card:rgba(5,6,15,0.92);--proc-card-border:rgba(0,240,255,0.46);--proc-copilot-border:rgba(255,176,0,0.85);--proc-head:#ff2e88;--proc-accent:#00f0ff;--proc-dark:#05060f;--proc-ink:#e8f4ff;">
+<div style="font-size:0.56em;line-height:1.25;--proc-row:8.45rem;--proc-gap:0.6rem;--proc-label:5.4rem;--proc-navy:var(--c-neon-magenta);--proc-gray:var(--c-gb-green);--proc-blue:var(--c-neon-cyan);--proc-copilot:var(--c-crt-amber);--proc-panel:rgb(var(--rgb-deep-purple) / 0.86);--proc-card:rgb(var(--rgb-shadow-ink) / 0.92);--proc-card-border:rgb(var(--rgb-neon-cyan) / 0.46);--proc-copilot-border:rgb(var(--rgb-crt-amber) / 0.85);--proc-head:var(--c-neon-magenta);--proc-accent:var(--c-neon-cyan);--proc-dark:var(--c-shadow-ink);--proc-ink:var(--c-phosphor);">
 
 Overview of how GitHub services are licensed and billed.
 
 <div style="display:grid;grid-template-columns:minmax(0,1fr) 16.5rem;gap:1.05rem;align-items:start;margin-top:0.9rem;max-width:72rem;">
 <div style="display:grid;grid-template-rows:repeat(3,var(--proc-row));gap:var(--proc-gap);">
 <div style="display:grid;grid-template-columns:var(--proc-label) minmax(0,1fr);gap:0.25rem;min-height:0;">
-<div style="display:flex;align-items:center;justify-content:center;text-align:center;background:var(--proc-head);color:var(--proc-dark);font-weight:700;font-size:1.1em;line-height:1.35;border-bottom:0.6rem solid rgba(5,6,15,0.95);">User<br/>License</div>
+<div style="display:flex;align-items:center;justify-content:center;text-align:center;background:var(--proc-head);color:var(--proc-dark);font-weight:700;font-size:1.1em;line-height:1.35;border-bottom:0.6rem solid rgb(var(--rgb-shadow-ink) / 0.95);">User<br/>License</div>
 <div style="background:var(--proc-panel);color:var(--proc-ink);padding:0.3rem 0.7rem 0.55rem;">
 <div style="text-align:center;font-weight:700;font-size:1.05em;color:var(--proc-accent);margin-bottom:0.38rem;">Licenses for GitHub Enterprise usage</div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
@@ -64,7 +76,7 @@ Overview of how GitHub services are licensed and billed.
 </div>
 </div>
 <div style="display:grid;grid-template-columns:var(--proc-label) minmax(0,1fr);gap:0.25rem;min-height:0;">
-<div style="display:flex;align-items:center;justify-content:center;text-align:center;background:var(--proc-head);color:var(--proc-dark);font-weight:700;font-size:1.1em;line-height:1.35;border-top:0.6rem solid rgba(5,6,15,0.95);">Committer<br/>License</div>
+<div style="display:flex;align-items:center;justify-content:center;text-align:center;background:var(--proc-head);color:var(--proc-dark);font-weight:700;font-size:1.1em;line-height:1.35;border-top:0.6rem solid rgb(var(--rgb-shadow-ink) / 0.95);">Committer<br/>License</div>
 <div style="background:var(--proc-panel);color:var(--proc-ink);padding:0.3rem 0.7rem 0.55rem;display:grid;grid-template-rows:auto 1fr;">
 <div style="text-align:center;font-weight:700;font-size:1.05em;color:var(--proc-accent);margin-bottom:0.55rem;">License for DevSecOps on GitHub</div>
 <div style="background:var(--proc-card);border:1px solid var(--proc-card-border);height:100%;display:grid;grid-template-rows:auto 1fr;">
@@ -78,7 +90,7 @@ Overview of how GitHub services are licensed and billed.
 <div style="background:var(--proc-panel);color:var(--proc-ink);padding:0.35rem 0.55rem 0.55rem;">
 <div style="text-align:center;font-weight:700;font-size:1.05em;color:var(--proc-accent);margin-bottom:0.45rem;">Usage-based add-on services</div>
 <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:0.45rem;">
-<div style="background:var(--proc-card);border:2px solid var(--proc-copilot-border);height:100%;display:grid;grid-template-rows:auto 1fr;box-shadow:0 0 12px rgba(255,176,0,0.28);"><div style="background:var(--proc-copilot);color:var(--proc-dark);text-align:center;font-weight:700;padding:0.18rem 0.25rem;font-size:1.03em;">Copilot<br/>Business/Enterprise</div><div style="padding:0.45rem 0.35rem;font-weight:700;color:var(--proc-copilot);">・AI-powered code suggestion service</div></div>
+<div style="background:var(--proc-card);border:2px solid var(--proc-copilot-border);height:100%;display:grid;grid-template-rows:auto 1fr;box-shadow:0 0 12px rgb(var(--rgb-crt-amber) / 0.28);"><div style="background:var(--proc-copilot);color:var(--proc-dark);text-align:center;font-weight:700;padding:0.18rem 0.25rem;font-size:1.03em;">Copilot<br/>Business/Enterprise</div><div style="padding:0.45rem 0.35rem;font-weight:700;color:var(--proc-copilot);">・AI-powered code suggestion service</div></div>
 <div style="background:var(--proc-card);border:1px solid var(--proc-card-border);height:100%;display:grid;grid-template-rows:auto 1fr;"><div style="background:var(--proc-head);color:var(--proc-dark);text-align:center;font-weight:700;padding:0.3rem 0.25rem;font-size:1.08em;">Actions</div><div style="padding:0.55rem 0.35rem;font-weight:600;">・CI/CD<br/>・Workflow automation</div></div>
 <div style="background:var(--proc-card);border:1px solid var(--proc-card-border);height:100%;display:grid;grid-template-rows:auto 1fr;"><div style="background:var(--proc-head);color:var(--proc-dark);text-align:center;font-weight:700;padding:0.3rem 0.25rem;font-size:1.08em;">Codespaces</div><div style="padding:0.55rem 0.35rem;font-weight:600;">・Cloud development machines</div></div>
 <div style="background:var(--proc-card);border:1px solid var(--proc-card-border);height:100%;display:grid;grid-template-rows:auto 1fr;"><div style="background:var(--proc-head);color:var(--proc-dark);text-align:center;font-weight:700;padding:0.3rem 0.25rem;font-size:1.08em;">Packages</div><div style="padding:0.55rem 0.35rem;font-weight:600;">・Package management</div></div>
@@ -118,10 +130,10 @@ Overview of how GitHub services are licensed and billed.
 </div>
 </div>
 
-## Billing at the Enterprise level
+## Billing at the Enterprise level <a class="h2-doc" href="https://docs.github.com/en/billing/concepts/product-billing/github-copilot-licenses" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
 - 💳 **The Enterprise account is the billing entity** — a single invoice aggregates seats across all organizations in the enterprise.
-- 📈 Seats are counted **per active user, per month**, regardless of how many orgs the user belongs to (see *Multi-org & one bill* below).
+- 📈 Copilot seats are **billed from assignment, even if unused**, with proration for mid-cycle additions. The same user is billed once across organizations **within the same enterprise** (see *Multi-org & one bill* below).
 - 🧾 **Two plans** for organizations: **Copilot Business** and **Copilot Enterprise**. Enterprise adds Chat in GitHub.com with repo-indexed knowledge, fine-tuned models, and audit logs on top of Business.
 - 🏢 **Standalone organizations** (no enterprise) are billed directly to the org and can only use **Business**.
 
@@ -132,6 +144,7 @@ Overview of how GitHub services are licensed and billed.
 - 🏷️ **An org has exactly one Copilot plan** — Business **or** Enterprise. You can't mix tiers inside the same organization.
 - 👥 **Members of that org** are eligible for a seat of that tier. Owners assign seats from **Org Settings → Copilot → Access**.
 - 🆕 **Enterprise-level assignment (Business only, GA 2025‑10‑28)** — admins can now assign **Copilot Business** seats directly from the Enterprise settings. The license then **follows the user across every org in the enterprise**.
+- 🔒 **Users licensed by the enterprise, not through an org**, skip "Let organizations decide": those policies follow the separate **Policies for enterprise-assigned users** setting, so if it is disabled, those features are off for them. <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/copilot/concepts/enterprise/policies" target="_blank" rel="noopener noreferrer">Copilot policies ↗</a>
 
 | Where you assign | Plan available | Who gets the seat |
 | --- | --- | --- |
@@ -157,8 +170,9 @@ You can extend Copilot to people who aren't members of your org — useful for v
 
 ### Standard orgs — Outside collaborators
 
-- 🔐 **Enable at the org level first** — *Org Settings → Copilot → Access → Allow outside collaborators*.
+- 🎫 **Just assign a seat** — the dedicated Copilot toggle is gone; to give an outside collaborator Copilot, assign them a **seat** like any other member.
 - 📦 **Invite per repository** — outside collaborators don't see the rest of the org; they only get the repos you grant them.
+- 🚫 **To restrict them** — *Org → Settings → Member privileges → uncheck "Allow members to invite outside collaborators"*.
 - 💵 **Each seated outside collaborator counts as 1 license** on the enterprise invoice.
 
 ### EMU enterprises — Guest collaborators
@@ -168,3 +182,37 @@ You can extend Copilot to people who aren't members of your org — useful for v
 - 💵 A Guest collaborator with a Copilot seat is also billed as **1 license**.
 
 > 📘 Setup guides: <a href="https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/managing-outside-collaborators/adding-outside-collaborators-to-repositories-in-your-organization" target="_blank" rel="noopener noreferrer" class="retro-link">Adding outside collaborators</a> · <a href="https://docs.github.com/en/enterprise-cloud@latest/admin/managing-accounts-and-repositories/managing-users-in-your-enterprise/enabling-guest-collaborators" target="_blank" rel="noopener noreferrer" class="retro-link">Enabling guest collaborators (EMU)</a>
+
+## GHE licence management <a class="h2-doc" href="https://docs.github.com/en/billing/reference/github-license-users" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+For GitHub Enterprise Cloud, including EMU.
+
+<div class="ctl-widget">
+<p class="ctl-hint">▸ CLICK + FOR DETAILS</p>
+<div class="ctl-list">
+<details class="ctl-item" name="ghe-licensing">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🔑</span><span class="ctl-name">GHE licence</span><span class="ctl-when">Org / repo access</span><a class="ctl-doc" href="https://docs.github.com/en/billing/reference/github-license-users" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p>Consumed automatically when a user <strong>joins an organization</strong> or receives collaborator access to a <strong>private/internal repository</strong>, excluding forks.</p>
+</div>
+</details>
+<details class="ctl-item" name="ghe-licensing">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">👤</span><span class="ctl-name">Unaffiliated users</span><span class="ctl-when">Copilot Business only</span><a class="ctl-doc" href="https://docs.github.com/en/copilot/how-tos/administer-copilot/manage-for-enterprise/manage-access/grant-access" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p>Keep the user <strong>unaffiliated</strong>, without organization membership or repository access, and assign <strong>Copilot Business directly at the enterprise level</strong> to avoid consuming a standard GHE licence.</p>
+</div>
+</details>
+<details class="ctl-item" name="ghe-licensing">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">📦</span><span class="ctl-name">Visual Studio bundle</span><span class="ctl-when">Match accounts</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/billing/how-tos/set-up-payment/set-up-vs-subscription" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p>Match the GitHub account to a Visual Studio subscription that <strong>includes GitHub Enterprise</strong>. The user consumes a bundled licence instead of a standalone GHE licence, <strong>even if unaffiliated</strong>.</p>
+</div>
+</details>
+<details class="ctl-item" name="ghe-licensing">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">💰</span><span class="ctl-name">GHE budgets</span><span class="ctl-when">Alerts only</span><a class="ctl-doc" href="https://docs.github.com/en/billing/concepts/budgets-and-alerts" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p>For <strong>metered GHE licences</strong>, enable budget alerts at <strong>75%, 90%, and 100%</strong>. Budgets <strong>do not block additional licences or stop charges</strong>. They are not available for prepaid volume licences.</p>
+</div>
+</details>
+</div>
+</div>
