@@ -72,7 +72,7 @@ links:
 
 ## In a nutshell
 
-<div class="hero-quote hero-quote-chat">
+<div data-playbook-article="partner-agent" class="hero-quote hero-quote-chat">
   <p>
     <strong>Partner agents</strong> is a mechanism to line up coding agents other than Copilot alongside Copilot's workflow.
   </p>

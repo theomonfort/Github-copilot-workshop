@@ -1,8 +1,8 @@
 ---
 title: Copilot App
 titleEn: Copilot App
-summary: エージェント駆動開発のための専用デスクトップアプリ。複数のエージェントを並列で走らせ、Issue 探索から実装・レビュー・マージまでを IDE / ターミナル / ブラウザを行き来せず 1 か所で回す"司令塔"。
-icon: /github-copilot-white-icon.png
+summary: 目標とコンテキストを渡し、成果をレビュー。複数リポジトリのエージェントを指揮し、資料も作成。クラウドセッションは別の端末から続けられる。
+icon: /github-copilot-white-icon.svg
 color: magenta
 accent:
   text: text-neon-magenta
@@ -16,107 +16,229 @@ related: ['cloud-agent', 'cli', 'partner-agent', 'agentic-workflow']
 links:
   - group: 📖 公式ドキュメント
     label: About the GitHub Copilot app
-    url: https://docs.github.com/en/copilot/concepts/agents/github-copilot-app
+    url: https://docs.github.com/en/copilot/concepts/copilot-surfaces/github-copilot-app
   - group: 📖 公式ドキュメント
-    label: Getting started with the Copilot app
-    url: https://docs.github.com/en/copilot/how-tos/github-copilot-app/getting-started
+    label: Projects とコンテキスト共有
+    url: https://docs.github.com/en/copilot/how-tos/github-copilot-app/working-with-projects
   - group: 📖 公式ドキュメント
-    label: Cloud and local sandboxes
-    url: https://docs.github.com/en/copilot/concepts/about-cloud-and-local-sandboxes
-  - group: 🎓 効率化
-    label: Optimizing your AI usage
-    url: https://docs.github.com/en/copilot/tutorials/optimize-ai-usage
+    label: Connectors とアクセス制御
+    url: https://docs.github.com/en/copilot/concepts/customizations/copilot-connectors
+  - group: 📖 公式ドキュメント
+    label: 画像の生成と編集
+    url: https://docs.github.com/en/copilot/concepts/agent-capabilities/agent-powered-workflows-and-operations/image-generation
+  - group: 📖 公式ドキュメント
+    label: クラウドサンドボックスとセッション継続
+    url: https://docs.github.com/en/copilot/concepts/security-governance-and-network-settings/about-cloud-sandboxes
+  - group: 📰 発表
+    label: "Copilot app の Universe 発表 (2026-10-28)"
+    url: https://github.blog/changelog/2026-10-28-github-copilot-app-universe-releases
+  - group: 📰 発表
+    label: "Office ネイティブ対応: app v1.1.35"
+    url: https://github.com/github/app/releases/tag/v1.1.35
+  - group: 🎬 Universe
+    label: Universe 2026 の発表とデモ
+    url: https://github.com/events/universe/recap
   - group: ⬇️ ダウンロード
     label: GitHub Copilot app download
     url: https://gh.io/app
-  - group: 📰 発表
-    label: "GitHub Copilot app generally available (2026-06-17)"
-    url: https://github.blog/changelog/2026-06-17-github-copilot-app-generally-available/
-  - group: 📰 発表
-    label: "The agent-native desktop experience"
-    url: https://github.blog/news-insights/product-news/github-copilot-app-the-agent-native-desktop-experience/
 ---
 
 ## 一言で
 
-<div class="hero-quote hero-quote-stars">
-  <p>
-    <strong>Copilot App</strong> は、エージェント駆動開発のための<strong>専用デスクトップアプリ</strong>。
-  </p>
-  <p>
-    複数のエージェントを並列で指揮し、Issue・PR・CI まで GitHub とネイティブに繋がる。あなたは"書く"のではなく<strong>"指揮する"</strong>側に回る。
-  </p>
+<div data-playbook-article="copilot-app" class="hero-quote">
+  <p><strong>コードの作業だけでなく、達成したい目標を Copilot に渡す。</strong></p>
+  <p>リポジトリ、デザイン、ツールを集めて並列エージェントを指揮。<strong>資料、変更、プルリクエスト</strong>を 1 つのアプリでレビューする。</p>
 </div>
 
-> 🎯 2026-06-17 に **一般提供（GA）** 開始。macOS / Windows / Linux 対応。
-> 🆓 **すべての有料 Copilot プラン**（Pro / Pro+ / Business / Enterprise）で利用可能。
+## コードの外へ広がる 6 つの機能 <a class="h2-doc" href="https://github.blog/changelog/2026-10-28-github-copilot-app-universe-releases" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-## できること
+Universe '26 の機能、提供状況は **2026-11-11 時点**。
 
-Copilot CLI の上に構築され、リポジトリ・ブランチ・Issue・PR が**追加設定なし**で動く。
+<div class="setup-cards">
+<div class="setup-card">
+<div class="setup-card-head"><strong><a class="retro-link" href="https://docs.github.com/en/copilot/how-tos/github-copilot-app/computer-use" target="_blank" rel="noopener noreferrer">Computer use ↗</a></strong><span class="setup-card-tag tag-magenta">Public preview</span></div>
+<p>API のないアプリも操作。</p>
+</div>
+<div class="setup-card">
+<div class="setup-card-head"><strong><a class="retro-link" href="https://docs.github.com/en/copilot/concepts/customizations/copilot-connectors" target="_blank" rel="noopener noreferrer">Connectors ↗</a></strong><span class="setup-card-tag tag-magenta">Public preview</span></div>
+<p>Slack、Figma、Work IQ を活用。</p>
+</div>
+<div class="setup-card">
+<div class="setup-card-head"><strong><a class="retro-link" href="https://docs.github.com/en/copilot/concepts/agent-capabilities/agent-powered-workflows-and-operations/image-generation" target="_blank" rel="noopener noreferrer">画像の生成と編集 ↗</a></strong><span class="setup-card-tag tag-magenta">Public preview</span></div>
+<p>チャットで画像を作り、修正する。</p>
+</div>
+<div class="setup-card">
+<div class="setup-card-head"><strong><a class="retro-link" href="https://github.com/github/app/releases/tag/v1.1.35" target="_blank" rel="noopener noreferrer">Office ファイル ↗</a></strong><span class="setup-card-tag tag-cyan">App feature</span></div>
+<p>文書、表、スライドを直接編集。</p>
+</div>
+<div class="setup-card">
+<div class="setup-card-head"><strong><a class="retro-link" href="https://docs.github.com/en/copilot/concepts/security-governance-and-network-settings/about-cloud-sandboxes" target="_blank" rel="noopener noreferrer">クラウド実行 ↗</a></strong><span class="setup-card-tag tag-cyan">GA</span></div>
+<p>PC を閉じてもエージェントは動く。</p>
+</div>
+<div class="setup-card">
+<div class="setup-card-head"><strong><a class="retro-link" href="https://github.blog/changelog/2026-10-28-work-from-anywhere-with-a-new-connected-copilot-cloud-experience" target="_blank" rel="noopener noreferrer">セッションの継続 ↗</a></strong><span class="setup-card-tag tag-cyan">GA</span></div>
+<p>同じクラウド作業を別端末で継続。</p>
+</div>
+</div>
 
-- **並列ワークスペース**：複数のエージェントセッションを同時に実行。各セッションは専用の git worktree とブランチを持つ。
-- **GitHub 統合**：Issue 探索・セッション起動・PR 作成 / レビュー / マージ・CI 結果確認まで、すべてアプリ内で完結。
-- **モデル選択**：セッションごとに LLM を選び、reasoning effort を調整。**BYOK**（Bring Your Own Key）で自前プロバイダのモデルも使える。
-- **Canvas**：人とエージェントが同じ面（プラン / PR / ターミナル / ブラウザ）で協働できるカスタム UI。
-- **Automations**：繰り返しのエージェントタスクを保存し、スケジュール / オンデマンドで実行。
-- **クイックチャット**：ブランチもワークスペースも作らずに会話モードで壁打ち。
+## Projects: 目標を渡して任せる <a class="h2-doc" href="https://docs.github.com/en/copilot/how-tos/github-copilot-app/working-with-projects" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-## セッションモード
+<details class="workshop-demo"><summary>デモ手順</summary>
 
-タスクの性質に応じて、**エージェントに渡す自律性**を 3 段階で切り替える。
+<div class="demo-window" role="group" aria-label="デモ手順">
+<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">仕様書からプロジェクトへ</span><span class="demo-note">発表者専用</span></div>
+<ol class="demo-steps">
+<li><p class="demo-step-title">プロジェクトを作る</p><p><b>Projects</b> 横の <b>+</b> をクリック。所有する既存のデモリポジトリを選ぶか、リポジトリなしで開始する。</p></li>
+<li><p class="demo-step-title">仕様書を渡す</p><p><b>Library → Add → Add file…</b> から、機密情報のないサンプル仕様書を追加する。</p></li>
+<li><p class="demo-step-title">範囲を決めて依頼する</p><p><code class="demo-path">Library の仕様書を読み、実装タスク 3 件と受け入れ条件を提案して。コードの編集やプルリクエストの作成はしないで。</code></p></li>
+<li><p class="demo-step-title">結果を確認する</p><p><b>Overview</b> で進捗と <b>Needs input</b> を確認。会話や <b>Library</b> で成果を見る。</p><p class="demo-out">仕様、判断、成果が 1 つのプロジェクトにまとまる。</p></li>
+</ol>
+</div>
+</details>
 
-| モード | 動き | 使いどころ |
+**Public preview。** 継続的な目標を、**1 つ、複数、またはリポジトリなし**で進める。
+
+| 人が渡すもの | Copilot が調整するもの | 人が確認するもの |
 | --- | --- | --- |
-| 🤝 **Interactive** | 協働しながら逐次確認 | 仕様が曖昧・細かく舵を切りたい時 |
-| 📝 **Plan** | エージェントが計画し、人が承認 | スコープと方針を先に固めたい時 |
-| 🚀 **Autopilot** | 完全自律で実装まで | タスクが明確に定義済みの時 |
+| 目標と制約 | 並列エージェントセッション | **Overview** の進捗 |
+| **Library** の仕様やデザイン | 共通の文脈と成果物 | **Needs input** の判断事項 |
+| 定型作業とスケジュール | プロジェクトの自動化 | 結果と次回の実行予定 |
 
-> 💡 早い段階の探索は **Quick chat** でスコープを詰めてから本セッションを開くと、手戻りと AI クレジット消費を抑えられる。
+単一リポジトリの作業は直接 **session** を開始。広い目標に向けた調整には **project** を使う。
 
-## 並列ワークスペースとサンドボックス
+## リポジトリの外の情報をつなぐ <a class="h2-doc" href="https://docs.github.com/en/copilot/concepts/customizations/copilot-connectors" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-各セッションは**独立した git worktree**で動くため、複数タスクを進めてもファイルや文脈が衝突しない。
+**Connectors = GitHub 検証済み MCP サーバー。** 一度サインインすれば、対応する Copilot クライアントで接続を再利用できる。
 
-- 🌿 **worktree 分離**：セッションごとに専用ブランチ。1 件の完了を待たずに次へ進める。
-- ☁️ **クラウドサンドボックス**（public preview）：GitHub ホストの環境で実行。手元のマシンを起動したままにする必要がない。
-- 🖥️ **ローカルサンドボックス**：自分のマシン上で隔離実行。
+| 情報源 | できること |
+| --- | --- |
+| **Slack** | API の設計を決めた議論を探す。 |
+| **Figma** | デザインを実装のコンテキストにする。 |
+| **Work IQ** | Teams や SharePoint から要件を探す。 |
 
-> 📝 サンドボックスの詳細は <a class="retro-link" href="https://docs.github.com/en/copilot/concepts/about-cloud-and-local-sandboxes" target="_blank" rel="noopener noreferrer">Cloud and local sandboxes ↗</a> を参照。
+**発表時は 26 サービス（2026-10-28）。** App / CLI / VS Code / Web、Mobile はクラウド経由。設定は **Customize → MCP → GitHub verified**。
 
-## 自動化とカスタマイズ
+> ⚠️ Public preview。プレビューと MCP のポリシー、許可リスト、接続先の権限が必要。ローカルとクラウドサンドボックスで利用でき、**Actions 上のセッションは対象外**。
 
-繰り返す作業を**保存して再実行**でき、組織の文脈をエージェントに注入できる。
+## 回答だけでなく、ファイルを作る <a class="h2-doc" href="https://github.com/github/app/releases/tag/v1.1.35" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-- 🤖 **Automations**：定型のエージェントタスクをスケジュール / オンデマンドで実行。
-- 🔧 **カスタマイズ**：global instructions・MCP サーバー・agent skills を設定して使う。
-- 🕰️ **セッション履歴**：`/chronicle` で過去セッションの知見を引き出す。`/chronicle cost tips` でコストの高いパターンを発見。
+**画像はチャット**で、**Office ファイルはネイティブキャンバス**で作成、修正。
 
-```text
-/chronicle cost tips   # 過去セッションから無駄の多いパターンを洗い出す
-```
+| 出力 | 依頼の例 |
+| --- | --- |
+| **画像** | アイコンを生成して、背景を変更。 |
+| **Word** | 概要から仕様書を作成。 |
+| **Excel** | 表を整理してグラフを追加。 |
+| **PowerPoint** | 資料を作り、スライドを修正。 |
 
-> 🔑 BYOK や MCP・skills は <a class="retro-link" href="/playbook/mcp">MCP ↗</a> や <a class="retro-link" href="/playbook/agent-skills">Agent Skills ↗</a> と同じ拡張機構を共有する。
+Office は直接編集で、Computer use とは別機能（**v1.1.35、2026-11-04**）。共有前にレイアウトと数式を確認する。
 
-## ★ 使いどころ
+> ⚠️ <a class="retro-link" href="https://docs.github.com/en/copilot/concepts/agent-capabilities/agent-powered-workflows-and-operations/image-generation" target="_blank" rel="noopener noreferrer">画像生成 ↗</a>は Public preview。Free / Student は対象外。画像モデルの許可が必要で、AI クレジットは会話モデルと別に計上される。
 
-**多数のエージェントを同時に指揮する** ── これが Copilot App の真価。
+## Computer use: アプリを操作する <a class="h2-doc" href="https://docs.github.com/en/copilot/how-tos/github-copilot-app/computer-use" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-退社前に Issue を 5 件、それぞれ別ワークスペースで起動。Autopilot に任せられるものは任せ、判断が要るものは Plan で承認。CI が緑になった PR から順にレビューしてマージ。
+<details class="workshop-demo"><summary>デモ手順</summary>
 
-人は **何を作るか / どれを通すか** を決め、機械は **書く / 直す / 検証する** を回す。境界を分けることで、レビュー待ちの PR がパイプラインのように流れる。
+<div class="demo-window" role="group" aria-label="デモ手順">
+<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">アプリを読み取り専用で確認</span><span class="demo-note">発表者専用</span></div>
+<ol class="demo-steps">
+<li><p class="demo-step-title">ローカルで有効化</p><p>macOS または Windows のローカルセッションで、<b>Settings → Computer Use → Enable Computer Use</b> を有効化。macOS は <b>Accessibility</b> と <b>Screen Recording</b> を許可し、必要なら <b>Check again</b>。</p></li>
+<li><p class="demo-step-title">承認を手動にする</p><p><b>Tool permissions → Ask every time</b> を選ぶ。機密情報のないサンプルを、インストール済みアプリで開く。</p></li>
+<li><p class="demo-step-title">読み取りだけを依頼</p><p><code class="demo-path">APP_NAME のメイン画面を読み、要約して。値の変更や送信はしないで。</code> <b>APP_NAME</b> を実際のアプリ名に置き換え、意図したアクセスだけを承認する。</p></li>
+<li><p class="demo-step-title">確認して停止</p><p>要約を元の画面と比較。実行中の操作は <b>Stop</b> または <b>Esc</b> で中断できる。</p><p class="demo-out">API を使わず、実際のデスクトップアプリを読み取れる。</p></li>
+</ol>
+</div>
+</details>
 
-> 🎯 IDE は"1 本のタスクに集中"する道具。Copilot App は **"複数のタスクを並列に捌く"** ための司令塔。
+**Public preview、macOS / Windows のローカルセッション限定。** API、CLI、MCP がないアプリにも使える。
 
-## 既存ツールとの位置づけ
+- **読み取りと操作：** 画面の内容を読み、クリック、文字入力、画面遷移を行う。
+- **範囲を指定：** アプリ名、期待する結果、変更してはいけないものを伝える。
+- **アクセスを制御：** 有効化後も **Tool Permissions** に従う。**Esc** で停止でき、管理者による無効化も可能。
 
-同じ Copilot エージェントでも、**どこで指揮するか**で役割が変わる。
+macOS は **Accessibility + Screen Recording** の許可が必要。Office キャンバスとは別機能で、クラウドサンドボックス内では動かない。
 
-| ツール | 居場所 | 強み |
-| --- | --- | --- |
-| 🖥️ **Copilot App** | デスクトップアプリ | **複数エージェントの並列指揮**・GitHub ネイティブ統合 |
-| ⌨️ **Copilot CLI** | ターミナル | スクリプト / CI に組み込みやすい単一エージェント |
-| ☁️ **Cloud Agent** | GitHub.com | Issue を assign するだけの非同期実行 |
-| 🧩 **Partner Agent** | 各種 SDK / Harness | Claude / Codex など別ハーネスへ委譲 |
+## 同じクラウドセッションを持ち歩く <a class="h2-doc" href="https://docs.github.com/en/copilot/concepts/security-governance-and-network-settings/about-cloud-sandboxes" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-> 💡 Copilot App は Copilot CLI の上に作られている。ターミナルでの自動化は <a class="retro-link" href="/playbook/cli">Copilot CLI ↗</a>、GitHub 上の非同期実行は <a class="retro-link" href="/playbook/cloud-agent">Cloud Agent ↗</a> と使い分ける。
+**App → Mobile → Web → VS Code / CLI。** 会話、ファイル、進捗を引き継ぐ。
+
+| 機能 | できること |
+| --- | --- |
+| **実行** | GitHub 管理の隔離 Linux 環境。PC の接続を切っても動く。 |
+| **再開** | スナップショットから再開。総実行時間 1 時間の上限なし。 |
+| **継続** | Slack / Teams でも開始。DM のセッションは他クライアントで継続。 |
+
+**有料 Copilot プランで GA**（<a class="retro-link" href="https://github.blog/changelog/2026-10-28-work-from-anywhere-with-a-new-connected-copilot-cloud-experience" target="_blank" rel="noopener noreferrer">2026-10-28 ↗</a>）。クラウドのポリシーに従う。
+
+> ⚠️ 開始時に Cloud を選ぶ。ローカルセッションの自動移行ではない。計算資源とストレージは従量課金。**1 時間の上限なし ≠ 無料で無制限**。
+
+## 作業を任せても、判断は手元に <a class="h2-doc" href="https://docs.github.com/en/copilot/how-tos/github-copilot-app/agent-sessions" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+**協働のしかた**と、ツールに許可する操作は別々に選ぶ。
+
+| モード | 人の役割 |
+| --- | --- |
+| **Interactive** | 一段階ずつ方針を伝える。 |
+| **Plan** | 実行前に計画をレビューして承認する。 |
+| **Autopilot** | 明確な作業を委任し、結果をレビューする。 |
+
+- **モデルまたは Fusion** と instructions / skills を選ぶ。差分と PR をレビュー。
+- **Worktree ≠ sandbox：** 編集はブランチで分離。ローカルツールの制限にはサンドボックスを使う。
+
+アプリは **macOS / Windows / Linux** と全 Copilot プランに対応（**2026-11-11 時点**）。Business / Enterprise はアプリのポリシー許可が必要。個別機能の条件は別。
+
+## <span class="app-demo-title">デモ：不正請求スコアリング</span>
+
+<div class="app-demo-scenario">
+<style>
+.prose-akq .app-demo-scenario,.prose-akq .playbook-demo-video{font:clamp(16px,1.3vw,20px)/1.4 var(--font-prose),sans-serif;color:var(--c-phosphor)}
+.prose-akq .app-demo-scenario p,.prose-akq .playbook-demo-video p{margin:0}
+.prose-akq .app-demo-scenario .app-demo-lead{font-size:1.1em;margin-bottom:14px}
+.prose-akq .app-demo-context{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 16px}
+.prose-akq .app-demo-context span{padding:4px 10px;border:1px solid rgb(var(--rgb-neon-magenta) / 0.5);background:rgb(var(--rgb-deep-purple) / 0.8)}
+.prose-akq .app-demo-stages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.prose-akq .app-demo-stage{padding:14px;border-top:2px solid var(--c-neon-magenta);background:rgb(var(--rgb-deep-purple) / 0.8)}
+.prose-akq .app-demo-scenario .app-demo-stage h3{margin:0 0 10px;font-size:1.1em;line-height:1.3;color:var(--c-neon-magenta)}
+.prose-akq .app-demo-scenario .app-demo-control{margin-top:16px;padding-left:12px;border-left:3px solid var(--c-crt-amber)}
+.prose-akq > h2:has(.app-demo-title){margin-bottom:14px}
+.prose-akq .playbook-demo-video video{display:block;width:100%;aspect-ratio:16/9;object-fit:contain;background:var(--c-shadow-ink)}
+.prose-akq .playbook-demo-video video:fullscreen{width:100vw;height:100dvh;max-height:none;aspect-ratio:auto;border:0;background:#000}
+.prose-akq .playbook-demo-video video::backdrop{background:#000}
+.prose-akq .playbook-demo-video video:focus-visible{outline:2px solid var(--c-neon-cyan);outline-offset:3px}
+.prose-akq .playbook-video-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:12px}
+.prose-akq .playbook-video-actions button{padding:8px 14px;border:2px solid var(--c-neon-magenta);background:var(--c-deep-purple);color:var(--c-phosphor);font:600 1em var(--font-prose),sans-serif;cursor:pointer}
+.prose-akq .playbook-video-actions button:hover,.prose-akq .playbook-video-actions button:focus-visible{background:rgb(var(--rgb-neon-magenta) / 0.13);outline:2px solid var(--c-neon-magenta);outline-offset:3px}
+.prose-akq .playbook-video-actions button:disabled{opacity:.6;cursor:wait}
+.prose-akq .playbook-demo-video .playbook-video-help{margin-top:8px;font-size:14px;color:var(--c-fg-body)}
+.prose-akq .playbook-demo-video [data-video-status]{margin-top:8px;color:var(--c-crt-amber)}
+.prose-akq .playbook-demo-video [data-video-status][hidden]{display:none}
+body.present-mode .playbook-detail:has(.app-demo-scenario.akq-slide-active,.playbook-demo-video.akq-slide-active){padding-top:88px;padding-bottom:72px}
+body.present-mode .prose-akq > h2:has(.app-demo-title){margin:0 0 12px;font-size:clamp(28px,2.2vw,36px);line-height:1.2;letter-spacing:0}
+body.present-mode .prose-akq > h2:has(.app-demo-title)::before{top:.35em}
+body.present-mode .prose-akq .playbook-demo-video video:not(:fullscreen){max-height:calc(100dvh - 330px)}
+body.present-mode .prose-akq .playbook-demo-video:has([data-video-status]:not([hidden])) video:not(:fullscreen){max-height:calc(100dvh - 390px)}
+@media(max-width:767px){body.present-mode .playbook-detail:has(.app-demo-scenario.akq-slide-active,.playbook-demo-video.akq-slide-active){padding-left:20px;padding-right:20px}}
+@media(max-width:520px){.prose-akq .app-demo-stages{grid-template-columns:1fr}}
+</style>
+<p class="app-demo-lead"><b>架空の保険会社</b>に、不正請求スコアリングを導入。規程の解釈から、実際の査定業務までをつなぐ。</p>
+<p><b>最初に渡すもの：</b>Excel の仕様書と社内規程を Projects / Library に追加。</p>
+<div class="app-demo-context" aria-label="4 つのリポジトリ"><span>contracts</span><span>API</span><span>web UI</span><span>docs</span></div>
+<div class="app-demo-stages">
+<div class="app-demo-stage"><h3>01 / 整理する</h3><p>Fusion が仕様と実装の差を確認。人がルールを決め、Memory に判断を残す。</p></div>
+<div class="app-demo-stage"><h3>02 / 実装する</h3><p><code>/goal</code> で委任。リポジトリ間の PR 更新、CI、コードレビュー対応を進める。</p></div>
+<div class="app-demo-stage"><h3>03 / 業務につなぐ</h3><p>端末をまたいで継続。既存のデスクトップアプリを操作し、Automations で進捗を見守る。</p></div>
+</div>
+<p class="app-demo-control"><b>文脈を渡し、ルールを決め、重要な操作を承認するのは人。</b>このデモでは PR は未マージ。査定端末への登録も人が承認する。</p>
+</div>
+
+## <span class="app-demo-title">デモ動画：仕様から業務まで</span>
+
+<div class="playbook-demo-video" data-playbook-video data-fullscreen-error="全画面表示を利用できません。通常のプレーヤーの操作ボタンを使ってください。" data-playback-error="再生を開始できませんでした。操作ボタンを試すか、MP4 を直接開いてください。" data-media-error="動画を読み込めませんでした。ページを再読み込みするか、MP4 を直接開いてください。">
+<video id="copilot-app-demo-video" controls playsinline preload="metadata" tabindex="0" src="/media/copilot-app-fraud-scoring.mp4" poster="/media/copilot-app-fraud-scoring.jpg" aria-label="不正請求スコアリングのデモ動画、日本語テロップ付き" aria-describedby="copilot-app-video-help">
+このブラウザーでは動画を再生できません。<a href="/media/copilot-app-fraud-scoring.mp4">MP4 を直接開く</a>。
+</video>
+<div class="playbook-video-actions"><a class="retro-link" href="/media/copilot-app-fraud-scoring.mp4" target="_blank" rel="noopener noreferrer">MP4 を直接開く ↗</a></div>
+<p id="copilot-app-video-help" class="playbook-video-help">6 分 43 秒 / 日本語テロップ。標準の再生、シーク、音量操作に対応。Esc で全画面表示を終了。</p>
+<p data-video-status role="status" aria-live="polite" hidden></p>
+
+</div>

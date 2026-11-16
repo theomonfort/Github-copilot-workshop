@@ -27,7 +27,7 @@ links:
 
 ## At a Glance
 
-<div class="hero-quote hero-quote-mona">
+<div data-playbook-article="hands-on" class="hero-quote hero-quote-mona">
   <p>
     The project you'll build is <strong>a simplified version of this very playbook site</strong>. You'll rebuild the site you're reading — <strong>from scratch, together with Copilot</strong>.
   </p>
@@ -42,7 +42,7 @@ The goal isn't a contrived demo app — it's **this very site** (a simplified ve
 
 Once you've learned the **why** in the Playbook, the hands-on workshop lets you **apply that knowledge** — by rebuilding this Playbook itself, using the very features you just read about.
 
-<img src="/handson/img/intro-context-window.png" alt="Preview of the Copilot Playbook site you'll build today (Context Engineering page)" class="build-preview" />
+<img src="https://theomonfort.github.io/theomonfort/handson/img/intro-context-window.png" alt="Preview of the Copilot Playbook site you'll build today (Context Engineering page)" class="build-preview" />
 
 ## Workshop Flow
 
@@ -59,9 +59,9 @@ flowchart TB
   Plan --> Code --> Review --> Improve --> Operate
 
   classDef prep fill:#0a1a14,stroke:#9bbc0f,color:#9bbc0f,stroke-width:2px
-  classDef dev  fill:#1a0a2e,stroke:#ff2e88,color:#ff2e88,stroke-width:2px
+  classDef dev  fill:#11162c,stroke:#ff2e88,color:#ff2e88,stroke-width:2px
   classDef rev  fill:#1a1408,stroke:#ffb000,color:#ffb000,stroke-width:2px
-  classDef ops  fill:#0a0e27,stroke:#00f0ff,color:#00f0ff,stroke-width:2px
+  classDef ops  fill:#0b1420,stroke:#00f0ff,color:#00f0ff,stroke-width:2px
   class Plan prep
   class Code,Improve dev
   class Review rev
@@ -76,7 +76,7 @@ Fastest route — browser only:
 
 1. 🌐 Open the repo: <a class="retro-link" href="https://github.com/theomonfort/Github-copilot-workshop" target="_blank" rel="noopener noreferrer">theomonfort/Github-copilot-workshop ↗</a>
 2. 🟢 Click the green **Code** button → **Codespaces** tab → **Create codespace on main**
-3. 📖 Open the hands-on: <a class="retro-link" href="/en/handson/">Open the hands-on →</a>
+3. 📖 Open the hands-on: <a class="retro-link" href="https://theomonfort.github.io/theomonfort/en/handson/">Open the hands-on →</a>
 4. ⌨️ Step through one task at a time, talking to Copilot as you go
 
 > 💡 No local setup needed — Codespaces ships with all extensions and dependencies preinstalled.
