@@ -20,7 +20,8 @@
     }
   },
   "features": {
-    "ghcr.io/devcontainers/features/github-cli:1": {}
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/github/copilot-host/copilotd:0": {}
   },
   "forwardPorts": [4321, 4322],
   "portsAttributes": {
