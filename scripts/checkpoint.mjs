@@ -1,12 +1,11 @@
-import { spawnSync } from 'node:child_process';
-import { existsSync, lstatSync, realpathSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { realpathSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { prepareIssues } from './checkpoint-issues.mjs';
+import { createContext, operationLock, preflight, preserveIgnoredFiles, quote, requireThat, source } from './checkpoint-common.mjs';
 
 // Node loads this module before switch/restore can replace its on-disk files.
 const root = realpathSync(resolve(dirname(fileURLToPath(import.meta.url)), '..'));
-const source = 'https://github.com/theomonfort/Github-copilot-workshop.git';
 const stages = [
   {
     name: '01-develop',
@@ -28,20 +27,9 @@ const stages = [
   },
 ];
 const state = { completed: [], step: 'checking prerequisites' };
-const env = { ...process.env, GIT_TERMINAL_PROMPT: '0', GH_PROMPT_DISABLED: '1' };
-const quote = (value) => `'${value.replaceAll("'", "'\\''")}'`;
-
-function run(command, args, accepted = [0]) {
-  const result = spawnSync(command, args, { cwd: root, env, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
-  if (result.error) throw new Error(`${command}: ${result.error.message}`);
-  if (!accepted.includes(result.status)) {
-    throw new Error(`${command} failed (${result.status}): ${(result.stderr || result.stdout).trim()}`);
-  }
-  return { text: result.stdout.trim(), status: result.status };
-}
-const git = (args, accepted) => run('git', args, accepted);
+const context = createContext(root);
+const { git, run } = context;
 const done = (message) => { state.completed.push(message); console.log(message); };
-const requireThat = (condition, message) => { if (!condition) throw new Error(message); };
 
 function pullRequestBody(stage, checkpoint, snapshot, base) {
   const validation = stage.name === '03-tests'
@@ -71,78 +59,13 @@ function pullRequestBody(stage, checkpoint, snapshot, base) {
 </details>`;
 }
 
-function repository(remote) {
-  let host, path;
-  if (/^(https|ssh):\/\//.test(remote)) {
-    const url = new URL(remote);
-    requireThat(!url.password && (url.protocol === 'ssh:' || !url.username),
-      'Use SSH or a credential helper, not credentials embedded in an origin URL.');
-    host = url.protocol === 'ssh:' ? url.hostname : url.host;
-    path = url.pathname;
-  } else {
-    const match = remote.match(/^(?:[^@/:]+@)?([^/:]+):([^:]+)$/);
-    requireThat(match, 'origin must use a GitHub HTTPS or SSH URL.');
-    [, host, path] = match;
-  }
-  path = path.replace(/^\/|\/$/g, '').replace(/\.git$/, '');
-  requireThat(/^[a-z0-9.-]+(?::\d+)?$/i.test(host) && /^[a-z0-9_.-]+\/[a-z0-9_.-]+$/i.test(path),
-    'Cannot identify the GitHub repository from origin.');
-  requireThat(!(host.toLowerCase().replace(/:443$/, '') === 'github.com'
-    && path.toLowerCase() === 'theomonfort/github-copilot-workshop'),
-  'Run this command in your own repository, not the canonical workshop template.');
-  return { host, path, key: `${host}/${path}`.toLowerCase() };
-}
-
-function preserveIgnoredFiles(main, snapshot) {
-  const paths = new Set();
-  for (const sha of [main, snapshot]) {
-    const entries = git(['ls-tree', '-rz', sha]).text.split('\0').filter(Boolean);
-    for (const entry of entries) {
-      requireThat(!entry.startsWith('160000 '), 'Submodule snapshots are not supported.');
-      const path = entry.slice(entry.indexOf('\t') + 1);
-      paths.add(path);
-      for (let parent = dirname(path); parent !== '.'; parent = dirname(parent)) {
-        const stat = lstatSync(join(root, parent), { throwIfNoEntry: false });
-        if (stat && !stat.isDirectory()) paths.add(parent);
-      }
-    }
-  }
-  const ignored = git(['ls-files', '--others', '--ignored', '--exclude-standard', '-z', '--',
-    ...[...paths].map((path) => `:(literal)${path}`)]).text;
-  requireThat(!ignored, `Ignored files would be replaced. Move them to a safe location first:\n${ignored.split('\0').join('\n')}`);
-}
-
 function main() {
   const number = process.argv[2];
   requireThat(process.argv.length === 3 && /^[123]$/.test(number), 'Use ./checkpoint1, ./checkpoint2, or ./checkpoint3.');
-  const [major, minor] = process.versions.node.split('.').map(Number);
-  requireThat(major > 22 || (major === 22 && minor >= 12), 'Node.js 22.12+ is required.');
-  const version = git(['--version']).text.match(/(\d+)\.(\d+)/);
-  requireThat(version && (+version[1] > 2 || (+version[1] === 2 && +version[2] >= 23)), 'Git 2.23+ is required.');
-  requireThat(realpathSync(git(['rev-parse', '--show-toplevel']).text) === root, 'Run the commands from a normal workshop checkout.');
-  const fetchURLs = git(['remote', 'get-url', '--all', 'origin']).text.split('\n');
-  const pushURLs = git(['remote', 'get-url', '--push', '--all', 'origin']).text.split('\n');
-  requireThat(fetchURLs.length === 1 && pushURLs.length === 1, 'origin must have exactly one fetch URL and one push URL.');
-  const target = repository(fetchURLs[0]);
-  requireThat(repository(pushURLs[0]).key === target.key, 'origin fetch and push must point to the same participant repository.');
-  requireThat(git(['config', '--bool', '--get', 'remote.origin.mirror'], [0, 1]).text !== 'true', 'Mirror origins are not supported.');
-  requireThat(git(['config', '--bool', '--get', 'core.sparseCheckout'], [0, 1]).text !== 'true', 'Use a full checkout, not a sparse checkout.');
-  for (const marker of ['MERGE_HEAD', 'CHERRY_PICK_HEAD', 'REVERT_HEAD', 'rebase-merge', 'rebase-apply', 'sequencer', 'BISECT_LOG']) {
-    requireThat(!existsSync(resolve(root, git(['rev-parse', '--git-path', marker]).text)), `Finish the existing Git operation (${marker}) first.`);
-  }
-  requireThat(!git(['ls-files', '--unmerged']).text, 'Resolve existing Git conflicts first.');
-  requireThat(!git(['ls-files', '--stage', '-z']).text.split('\0').some((entry) => entry.startsWith('160000 ')),
-    'Submodule worktrees are not supported; their changes cannot be safely stashed here.');
-  git(['var', 'GIT_AUTHOR_IDENT']);
-  git(['var', 'GIT_COMMITTER_IDENT']);
-  run('gh', ['auth', 'status', '--hostname', target.host]);
-  const metadata = JSON.parse(run('gh', ['api', '--hostname', target.host, `repos/${target.path}`]).text);
-  const resolved = repository(metadata.clone_url);
-  requireThat(resolved.key === target.key, 'origin resolves to a different repository; update origin explicitly first.');
-  requireThat(metadata.permissions?.push === true && !metadata.archived && !metadata.disabled,
-    'Your gh account needs push access to an active participant repository.');
+  const { target, metadata } = preflight(context);
   if (number === '1') requireThat(metadata.has_issues === true,
     'checkpoint1 needs Issues enabled in the participant repository and gh access to read/create issues. Repository settings were not changed.');
+  state.release = operationLock(context, target, metadata);
   state.original = git(['symbolic-ref', '--quiet', '--short', 'HEAD'], [0, 1]).text;
   state.originalHead = git(['rev-parse', 'HEAD']).text;
   const stage = stages[Number(number) - 1];
@@ -157,14 +80,14 @@ function main() {
   git([...fetchOptions, source, `refs/heads/${checkpoint}`]);
   const snapshot = git(['rev-parse', 'FETCH_HEAD^{commit}']).text;
   const tree = git(['rev-parse', `${snapshot}^{tree}`]).text;
-  for (const path of ['checkpoint1', 'checkpoint2', 'checkpoint3', 'scripts/checkpoint.mjs', 'scripts/checkpoint-issues.mjs', 'scripts/checkpoint-issues.json']) {
+  for (const path of ['checkpoint1', 'checkpoint2', 'checkpoint3', 'reset', 'scripts/reset.mjs', 'scripts/checkpoint-common.mjs', 'scripts/checkpoint.mjs', 'scripts/checkpoint-issues.mjs', 'scripts/checkpoint-issues.json']) {
     const entry = git(['ls-tree', snapshot, '--', path]).text;
-    requireThat(entry.startsWith(path.startsWith('checkpoint') ? '100755 blob ' : '100644 blob '),
+    requireThat(entry.startsWith(path.startsWith('checkpoint') || path === 'reset' ? '100755 blob ' : '100644 blob '),
       `The canonical snapshot is missing a usable ${path}; nothing was switched.`);
   }
   done(`Fetched canonical ${checkpoint}: ${snapshot}`);
   const alreadyImported = git(['rev-parse', `${base}^{tree}`]).text === tree;
-  if (!alreadyImported) preserveIgnoredFiles(base, snapshot);
+  if (!alreadyImported) preserveIgnoredFiles(context, base, snapshot);
   if (number === '1') {
     state.step = 'preparing workshop issues';
     const catalogue = JSON.parse(git(['show', `${snapshot}:scripts/checkpoint-issues.json`]).text);
@@ -178,7 +101,7 @@ function main() {
     return;
   }
   // Issue API の待機中に増えた ignored ファイルも、checkout 変更前に保護する。
-  if (number === '1') preserveIgnoredFiles(base, snapshot);
+  if (number === '1') preserveIgnoredFiles(context, base, snapshot);
   const prefix = `workshop-checkpoint${number}`;
   const local = git(['for-each-ref', '--format=%(refname:short)', 'refs/heads']).text.split('\n');
   const remote = git(['ls-remote', '--heads', 'origin']).text
@@ -247,6 +170,7 @@ try {
   }
   process.exitCode = 1;
 } finally {
+  state.release?.();
   if (state.stash) {
     const back = state.original ? `git switch ${quote(state.original)}` : `git switch --detach ${state.originalHead}`;
     console.log(`Saved work remains in stash ${state.stash}. When safe, return to the original checkout:\n${back}\ngit stash apply --index ${state.stash}\nKeep the stash until you have checked the restored files.`);
