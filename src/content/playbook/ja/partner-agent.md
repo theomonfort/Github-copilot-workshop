@@ -72,7 +72,7 @@ links:
 
 ## 一言で
 
-<div class="hero-quote hero-quote-chat">
+<div data-playbook-article="partner-agent" class="hero-quote hero-quote-chat">
   <p>
     <strong>Partner agents</strong> は、Copilot 以外の coding agent を Copilot の workflow に並べる仕組み。
   </p>

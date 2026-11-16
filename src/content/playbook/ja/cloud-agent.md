@@ -43,7 +43,7 @@ links:
 
 ## 一言で
 
-<div class="hero-quote hero-quote-chat">
+<div data-playbook-article="cloud-agent" class="hero-quote hero-quote-chat">
   <p>
     <strong>Cloud Agent</strong> は、GitHub 上で非同期に動く Copilot。
   </p>
@@ -105,9 +105,9 @@ jobs:
 
 ## MCP サーバーで外部ツールを追加
 
-Cloud Agent には **専用の MCP サーバー設定** がある。ローカルの MCP 設定とは別管理で、ブラウザ上の `Settings → Copilot → Coding agent → MCP servers` から JSON を貼るだけ。設定したサーバーは、その Org / アカウントで起動するすべての Cloud Agent セッションに自動で接続される。
+**GitHub MCP サーバーと Playwright MCP サーバーはデフォルトで有効** — 設定不要ですぐ使える。さらに拡張したい場合、Cloud Agent には **専用の MCP サーバー設定** がある。ローカルの MCP 設定とは別管理で、ブラウザ上の `Settings → Code & automation → Copilot → MCP servers` から JSON を貼るだけ。設定したサーバーは、その Org / アカウントで起動するすべての Cloud Agent セッションに自動で接続される。
 
-**例：Context7 を MCP サーバーとして追加**
+**例：デフォルトに加えて Context7 を追加**
 
 ```json
 {
@@ -120,10 +120,6 @@ Cloud Agent には **専用の MCP サーバー設定** がある。ローカル
   }
 }
 ```
-
-- 🌐 **`type: "http"`** — リモート MCP サーバーに HTTP / SSE で接続(stdio はサンドボックス制約上ローカル子プロセスで起動するもののみ)
-- 🛠️ **`tools: ["*"]`** — そのサーバーが公開する全ツールを許可。特定ツールだけを使いたい場合はホワイトリスト指定可
-- 🔐 認証が必要なサーバーは `headers` で API トークンを渡す(GitHub Actions Secrets を `${{ secrets.* }}` で参照)
 
 > 💡 詳細は <a href="https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/extend-cloud-agent-with-mcp" target="_blank" rel="noopener noreferrer" class="retro-link">Extend Cloud Agent with MCP</a> を参照。
 
@@ -181,9 +177,9 @@ flowchart LR
   D -->|"OK"| M
   M -.->|"次の Issue へ"| A
 
-  classDef human fill:#0a0e27,stroke:#00f0ff,color:#00f0ff,stroke-width:2px
+  classDef human fill:#0b1420,stroke:#00f0ff,color:#00f0ff,stroke-width:2px
   classDef agent fill:#1a1500,stroke:#ffb000,color:#ffb000,stroke-width:2px
-  classDef decide fill:#1a0a2e,stroke:#ff2e88,color:#ff2e88,stroke-width:2px
+  classDef decide fill:#11162c,stroke:#ff2e88,color:#ff2e88,stroke-width:2px
   classDef done fill:#0a1a14,stroke:#9bbc0f,color:#9bbc0f,stroke-width:2px
   class A,B,C human
   class E,F,G agent

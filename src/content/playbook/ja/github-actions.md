@@ -22,13 +22,25 @@ links:
     url: https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions
   - group: 📖 公式ドキュメント
     label: About billing for GitHub Actions
-    url: https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions
+    url: https://docs.github.com/en/billing/concepts/product-billing/github-actions
   - group: 📖 公式ドキュメント
     label: Actions runner pricing
     url: https://docs.github.com/en/billing/reference/actions-runner-pricing
+  - group: 💰 課金
+    label: Set up budgets and alerts
+    url: https://docs.github.com/en/billing/how-tos/set-up-budgets
+  - group: 💰 課金
+    label: Using soft budgets to monitor without blocking
+    url: https://docs.github.com/en/billing/tutorials/soft-budgets
+  - group: 💰 課金
+    label: Actions usage metrics
+    url: https://docs.github.com/en/actions/concepts/metrics
   - group: 🛒 Marketplace
     label: GitHub Marketplace · Actions
     url: https://github.com/marketplace?type=actions
+  - group: 📰 Recent Changelog
+    label: "Actions workflow lockfiles are generally available (2026-10-28)"
+    url: https://github.blog/changelog/2026-10-28-github-actions-workflow-lockfiles-are-generally-available
   - group: 📰 Recent Changelog
     label: "GitHub Actions: Upcoming image migrations (2026-05-14)"
     url: https://github.blog/changelog/2026-05-14-github-actions-upcoming-image-migrations
@@ -42,14 +54,64 @@ links:
 
 ## 一言で
 
-<div class="hero-quote">
+<div data-playbook-article="github-actions" class="hero-quote">
   <p>
-    <strong>GitHub Actions</strong> は、リポジトリの中に YAML で書いた手順を、push / PR / schedule などのイベントで自動実行する CI/CD プラットフォーム。
+    <strong>GitHub Actions</strong> は「継続的インテグレーション / 継続的デリバリー(CI/CD)」のプラットフォーム。
   </p>
   <p>
-    ジョブごとに <strong>使い捨ての VM</strong>(runner)が立ち上がり、リポジトリ全体が clone されてから手順を順に実行 → 終わったら VM は破棄される。テスト・ビルド・デプロイ・リリース・Issue 自動化まで何でも書ける。
+    でも <strong>DevOps だけじゃない</strong>。push・PR・issue・label・schedule など <strong>リポジトリで起きるあらゆるイベント</strong> で workflow を走らせられる = <strong>ほぼ何でも自動化</strong> できる基盤。
   </p>
 </div>
+
+## どんな workflow を自動化できる?
+
+CI/CD だけでなく、**SDLC のあらゆる工程** をイベント起点で自動化できる。
+
+<img src="/github-actions-sdlc.svg" alt="GitHub Actions が SDLC 全体（Plan・Code・Build・Test・Release・Deploy・Operate・Monitor）で使える様子" style="width:100%;max-width:760px;display:block;margin:1.2em auto;" />
+
+## 改善する指標(DORA メトリクス)
+
+自動化(CI/CD・テスト・レビュー)の狙いは、開発の **スピードと安定性** を両立させること。ものさしは <a class="retro-link" href="https://dora.dev/" target="_blank" rel="noopener noreferrer">DORA の 4 指標 ↗</a>、これを Elite に近づける。
+
+<div class="tbl-fit">
+
+| DORA 指標 | 🟢 Elite | 🟣 High | 🟠 Medium | 🔴 Low |
+| --- | --- | --- | --- | --- |
+| 🚀 デプロイ頻度 | 1 日に複数回 | 日〜週に 1 回 | 週〜月に 1 回 | 月〜半年に 1 回 |
+| ⏱️ リードタイム | < 1 日 | 1 日〜1 週 | 1 週〜1 月 | 1〜6 か月 |
+| ❌ 変更失敗率 | 0–15% | 0–15% | 0–15% | 46–60% |
+| 🔧 平均復旧時間(MTTR) | < 1 時間 | < 1 日 | < 1 日 | 1 週〜1 月 |
+
+</div>
+
+> 🎯 スピード(頻度・リードタイム)と安定性(失敗率・復旧時間)を **同時に** 上げるのが自動化の価値。
+
+## アーキテクチャ:clone → 実行 → 破棄
+
+GitHub 上の repo が **クラウドの使い捨て VM** に clone され、そこで test 等を実行 → 結果を返して **VM は破棄** される。
+
+```mermaid
+flowchart LR
+  REPO["🐙 GitHub<br/>📦 Repository"]
+  VM["☁️ Runner VM<br/>使い捨て・クラウド"]
+  RUN["▶️ steps 実行<br/>✅ test ・ 🏗️ build"]
+  GONE["💥 VM 破棄"]
+  REPO -->|① event で起動| VM
+  VM -->|② repo を clone| RUN
+  RUN -->|③ 結果・ログを返す| REPO
+  RUN -->|④ 完了| GONE
+
+  classDef gh fill:#0b1420,stroke:#00f0ff,color:#00f0ff,stroke-width:2px
+  classDef vm fill:#11162c,stroke:#ffb000,color:#ffb000,stroke-width:2px
+  classDef run fill:#0a1a14,stroke:#9bbc0f,color:#9bbc0f,stroke-width:2px
+  classDef gone fill:#2a0a0a,stroke:#ff5555,color:#ff5555,stroke-width:2px
+  class REPO gh
+  class VM vm
+  class RUN run
+  class GONE gone
+```
+
+> 🔁 結果は checks・ログ・artifact として GitHub に戻り、VM は毎回破棄される。
 
 ## 仕組み(コアコンセプト)
 
@@ -64,94 +126,133 @@ links:
 
 > 🧠 「毎回ゼロから」が GitHub Actions の鉄則。状態を保ちたいなら `actions/cache` か artifact、デプロイ済みのものに頼る。
 
-## GitHub-hosted runner と Self-hosted runner
+## Runner を選ぶ <a class="h2-doc" href="https://docs.github.com/en/actions/concepts/runners/github-hosted-runners" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-| 観点 | 🟢 GitHub-hosted runner | 🛠️ Self-hosted runner |
+**管理を任せるなら GitHub-hosted。自社環境で動かすなら Self-hosted。**
+
+| | GitHub-hosted | Self-hosted |
 | --- | --- | --- |
-| 管理 | GitHub が提供・更新・破棄 | 自分のサーバー / VM / k8s に常駐させる |
-| OS | Linux / Windows / macOS | 何でも(Raspberry Pi、社内 LAN、GPU マシンも可) |
-| ネットワーク | 公開インターネット | 社内ネットワーク・VPN 内のリソースに直接アクセス可 |
-| スケール | 必要な時に自動起動、並列無制限(プラン枠内) | 自分でキャパシティ管理 |
-| 料金 | **時間課金**(下表) | **runner 自体は無料**(自前のインフラ代だけ) |
-| 用途 | 一般的な CI/CD、OSS、軽量ジョブ | 専用 HW、社内資産アクセス、機密案件、巨大ビルド |
+| 保守 | GitHub が環境を管理 | 更新とセキュリティは自社で管理 |
+| 容量 | プランの上限内で自動起動 | 自社設備、Kubernetes なら ARC |
+| 接続 | 公開ネットワーク / 構成したプライベート接続 | 自社ネットワークと専用機器 |
+| 実行料金 | public の標準 runner は無料、ほかは従量課金 | インフラ代のみ、Actions の実行課金なし |
 
-> 🌐 中間として **larger runners**(GitHub-hosted の高スペック)や **Actions Runner Controller** で k8s 上に自動スケールする self-hosted runner を建てる手もある。
+管理を任せたまま高性能にするなら、Team / Enterprise Cloud の **larger runners**。
 
-## Marketplace で部品を再利用
+## Marketplace で部品を再利用 <a class="h2-doc" href="https://docs.github.com/en/actions/reference/security/secure-use" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-ゼロから書く必要はない。**GitHub Marketplace** に **20,000+** の再利用可能な action が公開されている。
+各 step を自作せず、既存の action を組み合わせる。
 
-```yaml
-steps:
-  - uses: actions/checkout@v4              # GitHub 公式: リポを clone
-  - uses: actions/setup-node@v4            # Node.js 環境セットアップ
-    with: { node-version: 20 }
-  - uses: docker/build-push-action@v5      # Docker イメージビルド & push
-  - uses: aws-actions/configure-aws-credentials@v4
-```
+| やりたいこと | 再利用する action |
+| --- | --- |
+| コードを取得 | `actions/checkout` |
+| Node.js を準備 | `actions/setup-node` |
+| コンテナーをビルド | `docker/build-push-action` |
 
-- 🏷️ **公式 verified actions** — GitHub・AWS・Azure・GCP・Docker・HashiCorp ほか主要ベンダー
-- 🔓 **OSS の action** — 誰でも公開可能(`uses: owner/repo@sha` で参照)
-- 📌 **必ずバージョン固定** — タグ(`@v4`)よりも **コミット SHA で pin** が安全(supply chain 攻撃対策)
-- 🛡️ **Org で許可リスト** — `Settings → Actions → Allowed actions` で利用可能な action を絞れる
+- **ソースを確認**。認証済みの公開者でもレビューは必要。
+- **lockfile または完全な SHA で固定**。タグは移動できる。
+- **Org の許可リスト**は Settings → Actions → General で設定。
 
-## 始め方(最短ルート)
+## Workflow を 1 つ作る <a class="h2-doc" href="https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-`.github/workflows/ci.yml` を 1 つ置くだけ:
+Node.js プロジェクトに <code>.github/<wbr>workflows/<wbr>ci.yml</code> を追加:
 
 ```yaml
 name: CI
-on:
-  push:        { branches: [main] }
-  pull_request:
+on: { push: { branches: [main] }, pull_request: {} }
+permissions: { contents: read }
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 20 }
-      - run: npm ci
-      - run: npm test
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: 24 }
+      - run: npm ci && npm test
 ```
 
-push した瞬間から **Actions タブ** で実行ログが見える。失敗すれば PR にも ❌ が付く。
+push → **Actions のログと PR のチェック**。action の参照は lockfile または完全な SHA で固定する。
 
-> 🚀 まず `runs-on: ubuntu-latest` で全部書いて、必要に応じて Windows / macOS / larger runner / self-hosted へスケールアウトすれば良い。
+## 実行料金と無料枠 <a class="h2-doc" href="https://docs.github.com/en/billing/concepts/product-billing/github-actions" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-## 利用条件と料金
+<details class="workshop-demo is-info"><summary>補足</summary>
 
-**Public repo は GitHub-hosted runner も完全無料・並列上限のみ**。Private repo はプランごとに無料枠 → 超過分は従量課金。
+<div class="demo-window" role="group" aria-label="実行料金とストレージ料金">
+<div class="demo-head"><span class="demo-tag">INFO</span><span class="demo-name">実行料金とストレージ</span></div>
+<div class="info-body">
+<p>USD、2026-11-11 時点。無料の実行枠は固定の分数ではなく月ごとの金額。対象 runner とクラウドサンドボックスの CPU / メモリが同じ枠を使う。</p>
+<ul class="info-list">
+<li><b>標準単価:</b> Linux x64 2-core は $0.006/分、Windows x64 2-core は $0.010/分、macOS 3/4-core は $0.062/分。<a class="retro-link" href="https://docs.github.com/en/billing/reference/actions-runner-pricing" target="_blank" rel="noopener noreferrer">全サイズと料金 ↗</a>。</li>
+<li><b>Larger runners:</b> public repo でも有料。Team / Enterprise Cloud では対象の利用分を無料の実行枠から差し引ける。</li>
+<li><b>Artifact:</b> Free 500 MB、Pro 1 GB、Team 2 GB、Enterprise Cloud 50 GB。Packages と共有。超過は $0.25/GB-month。</li>
+<li><b>Cache:</b> repo ごとに別枠で 10 GB。追加容量を設定した場合、超過は $0.07/GB-month。カスタムイメージも別枠で、超過単価は同じ。</li>
+<li><b>請求:</b> リポジトリ所有者が支払う。ストレージは時間単位で累積し、削除しても過去の利用料金は消えない。</li>
+</ul>
+</div>
+</div>
+</details>
 
-### プランごとの無料枠(private repo / 月)
+**Public の標準 runner と self-hosted の実行は無料**。それ以外の対象利用は共通の無料枠から消費。
 
-| プラン | Actions 分 / 月 | ストレージ |
-| --- | :---: | :---: |
-| Free | 2,000 分 | 500 MB |
-| Pro | 3,000 分 | 1 GB |
-| Team | 3,000 分 | 2 GB |
-| Enterprise | 50,000 分 | 50 GB |
+| プラン | 月の実行無料枠 |
+| --- | ---: |
+| Free | $12 |
+| Pro / Team | $18 |
+| Enterprise Cloud | $300 |
 
-> 💡 無料枠は **Linux 1 分 = 1 分** カウント。Windows は **2 倍**、macOS は **10 倍** 消費するので注意。
+USD、**2026-11-11 時点**。$300 は Linux 2-core **50,000 分**相当（$0.006/分）。超過分は従量課金、ストレージは別枠。
 
-### OS / サイズ別の単価(超過時 · 2-core 標準)
+## CI 以外の利用も予算に含める <a class="h2-doc" href="https://docs.github.com/en/billing/how-tos/set-up-budgets" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-| OS / Runner | 倍率 | 単価(USD/分) | 備考 |
-| --- | :---: | :---: | --- |
-| Linux 2-core | 1× | $0.008 | 標準・最安 |
-| Windows 2-core | 2× | $0.016 | Linux の 2 倍 |
-| macOS 3-core | 10× | $0.08 | iOS / mac ビルド用 |
-| Linux 4-core(larger) | — | $0.016 | Team / Enterprise |
-| Linux 8-core(larger) | — | $0.032 | |
-| Linux 16-core(larger) | — | $0.064 | |
-| Linux 64-core(larger) | — | $0.256 | 巨大ビルド用 |
-| GPU runner | — | $0.07〜 | ML / 推論 |
+**自動化は実行枠を共有。AI クレジットは別のメーター。**
 
-> 💰 ストレージ超過は **$0.25 / GB**(artifacts + Actions cache + Packages 合算)。  
-> 🛠️ **Self-hosted runner は GitHub 課金なし**(現時点)。自前サーバー / k8s に建てれば実行時間は無料、ただしメンテと電気代は自分持ち。  
-> 🌍 課金は **active committer ベースではなく実行時間ベース**。1 人開発でも CI を回しまくれば請求が来る。
+| 利用元 | 実行枠の消費 |
+| --- | --- |
+| CI、<a class="retro-link" href="/playbook/code-scanning/">CodeQL</a>、<a class="retro-link" href="/playbook/code-quality/">Code Quality</a> | ホスト型 runner での実行 / スキャン |
+| <a class="retro-link" href="/playbook/copilot-code-review/">Copilot Code Review</a> | エージェントの文脈取得とツール実行 |
+| <a class="retro-link" href="/playbook/cloud-agent/">Copilot のクラウドタスク</a> | Actions またはサンドボックスの実行 |
 
-## Cloud Agent / Copilot Code Review もここで動く
+- **まず監視:** soft budget で **75 / 90 / 100%** の通知を設定し、Actions の利用指標を確認。
+- **停止は慎重に:** “Stop usage when budget limit is reached” は、**その予算の対象範囲**で追加の有料利用を止める。
 
-> 🤖 **Copilot Cloud Agent** がタスクを実装する時、**Copilot Code Review** が PR を読みに行く時 — どちらも裏側では **GitHub Actions の workflow** として動いている。Actions の無料枠を消費し、Actions のログとして表示される。詳細は <a class="retro-link" href="/playbook/cloud-agent/">Cloud Agent</a> ・ <a class="retro-link" href="/playbook/copilot-code-review/">Copilot Code Review</a> 参照。
+Code Review は Actions によるエージェント機能なしでも動作可能。Actions 予算で **Copilot 全体が止まるわけではない**。
 
+## Workflow lockfiles (GA) <a class="h2-doc" href="https://docs.github.com/en/actions/concepts/security/workflow-dependency-lockfiles" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+<details class="workshop-demo"><summary>デモ手順</summary>
+
+<div class="demo-window" role="group" aria-label="デモ手順">
+<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">このサイトの workflow を固定</span><span class="demo-note">発表者専用</span></div>
+<ol class="demo-steps">
+<li>
+<p class="demo-step-title">タグとコミットを比較</p>
+<p><a class="retro-link" href="https://github.com/actions/checkout/tree/v4" target="_blank" rel="noopener noreferrer">checkout@v4 ↗</a> と、<a class="retro-link" href="https://github.com/actions/checkout/commit/11d5960a326750d5838078e36cf38b85af677262" target="_blank" rel="noopener noreferrer">固定したコミット ↗</a> を開く。</p>
+<p class="demo-out">タグは移動できるが、完全な SHA は特定のリビジョンを識別する。<code>v4.4.0</code> もタグ。</p>
+</li>
+<li>
+<p class="demo-step-title">既存の LOCKFILE を開く</p>
+<p><a class="retro-link" href="https://github.com/theomonfort/theomonfort/blob/main/.github/workflows/actions.lock" target="_blank" rel="noopener noreferrer">このサイトの actions.lock ↗</a> を開き、<code class="demo-path">workflows</code> と <code class="demo-path">dependencies</code> を見せる。</p>
+<p class="demo-out">checkout の SHA をコミット画面と照合。<code>owner_id</code>、<code>repo_id</code>、推移的依存の <code>upload-artifact</code> も確認する。</p>
+</li>
+<li>
+<p class="demo-step-title">ファイルを変更せず検証</p>
+<p>最新のサイトを checkout し、<code>gh-actions-lock</code> を導入済みの環境で実行:</p>
+<code class="demo-cmd">gh actions-lock --verify .github/workflows/deploy.yml</code>
+<p class="demo-out">workflow と lockfile が一致すれば成功。現在の <code>v4</code> タグが、記録した <code>v4.4.0</code> のコミットと同じとは限らない。</p>
+</li>
+<li>
+<p class="demo-step-title">LOCKFILE を段階的に必須化</p>
+<p>権限のある管理者として <a class="retro-link" href="https://github.com/organizations/theomonfort-org/settings/actions/rules" target="_blank" rel="noopener noreferrer">theomonfort-org → Actions Policies ↗</a> を開く。</p>
+<p>場所: Organization の <code class="demo-path">Settings → Actions → Policies → New policy → New policy</code>（ドロップダウン内）。名前とデモ対象 repo / workflow を設定し、<code class="demo-path">Require lockfile</code> をオンにして保存。</p>
+<p class="demo-out">Enterprise Cloud では <code>Evaluate</code> から開始し、<code>Policy insights</code> を確認。対象 workflow の導入完了後に <code>Active</code> にする。</p>
+</li>
+</ol>
+</div>
+</details>
+
+**なぜ重要？** `v4` のような action のタグは、別のコードを指すように変更できる。workflow を変更していなくても、次のビルドで未確認の変更や悪意のあるコードが実行されるおそれがある。
+
+**何をする？** lockfile は、各 action と、その action が依存する action の正確なコミットを記録する。GitHub Actions は、移動するタグではなく、記録されたコミットを実行する。
+
+- **更新をレビュー:** Dependabot が <a class="retro-link" href="https://github.com/theomonfort/theomonfort/blob/main/.github/dependabot.yml" target="_blank" rel="noopener noreferrer">action の更新 ↗</a>と lockfile の変更を、同じプルリクエストで提案する。
+- **導入を必須化:** 管理者は、選択した workflow が lockfile を使うまで<a class="retro-link" href="https://github.com/organizations/theomonfort-org/settings/actions/rules" target="_blank" rel="noopener noreferrer">実行をブロック ↗</a>できる。

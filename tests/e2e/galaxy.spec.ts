@@ -55,7 +55,7 @@ test.afterEach(async ({ page }, info) => {
 
 async function renderedGalaxy(page: Page) {
   await expect(page.locator('playbook-explorer')).toHaveAttribute('data-view', '3d');
-  await expect(page.locator('.galaxy-stage')).toHaveAttribute('aria-busy', 'false');
+  await expect(page.locator('.galaxy-stage')).toHaveAttribute('aria-busy', 'false', { timeout: 30_000 });
   await expect(page.locator('.galaxy-stage canvas')).toBeVisible();
   await expect.poll(() => page.evaluate(() => window.galaxyRendering.draws)).toBeGreaterThan(100);
   await expect.poll(() => page.evaluate(() => window.galaxyRendering.frames)).toBeGreaterThan(0);

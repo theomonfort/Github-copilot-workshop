@@ -1,8 +1,62 @@
+  @import './pull-request-slides.css';
+  @import './fusion-slides.css';
+  @import './presentation-slides.css';
+  @import './github-platform-slide.css';
+  @import './github-summary-slides.css';
+  @import './playbook-widgets.css';
+
   .prose-akq {
+    --c-shadow-ink: #05060f;
+    --c-midnight: #0a0e27;
+    --c-deep-purple: #1a0b2e;
+    --c-neon-magenta: #ff2e88;
+    --c-neon-cyan: #00f0ff;
+    --c-crt-amber: #ffb000;
+    --c-gb-green: #9bbc0f;
+    --c-phosphor: #e8f4ff;
+    --c-fg-body: #e8f4ff;
+    --c-fg-strong: #e8f4ff;
+    --c-fg-muted: #bacddd;
+    --c-bg-elevated: #0a0e27;
+    --c-bg-elevated-hover: #1a0b2e;
+    --c-ink-on-bright: #05060f;
+    --c-link: #00f0ff;
+    --c-coral-alert: #ff5555;
+    --rgb-shadow-ink: 5 6 15;
+    --rgb-midnight: 10 14 39;
+    --rgb-deep-purple: 26 11 46;
+    --rgb-neon-magenta: 255 46 136;
+    --rgb-neon-cyan: 0 240 255;
+    --rgb-crt-amber: 255 176 0;
+    --rgb-gb-green: 155 188 15;
+    --rgb-phosphor: 232 244 255;
+    --rgb-phosphor-body: 232 244 255;
+    --font-prose: 'DotGothic16', monospace;
+    --font-mono-hud: 'VT323', monospace;
+    --radius-card: 0;
+    --radius-ui: 0;
     color: #e8f4ff;
     font-family: 'DotGothic16', monospace;
     line-height: 1.85;
   }
+  .prose-akq .h2-doc {
+    display: inline-block;
+    margin-left: 0.6em;
+    font-size: 14px;
+    vertical-align: middle;
+    color: #00f0ff;
+  }
+  .prose-akq .workshop-demo {
+    margin: 0.6em 0;
+    padding: 0.5em 0.8em;
+    border: 1px dashed #ffb000;
+    font-size: 1rem;
+    overflow-wrap: anywhere;
+  }
+  .prose-akq .workshop-demo > summary { cursor: pointer; color: #ffb000; }
+  .prose-akq .demo-head { display: flex; flex-wrap: wrap; gap: 0.8em; margin-top: 0.8em; }
+  .prose-akq .demo-steps { padding-left: 1.5em; }
+  .prose-akq .demo-path { white-space: pre-wrap; overflow-wrap: anywhere; }
   .prose-akq h2, .prose-akq h3 {
     font-family: 'DotGothic16', monospace;
     color: var(--entry-accent, #00f0ff);

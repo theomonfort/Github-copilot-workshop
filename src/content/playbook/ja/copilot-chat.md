@@ -51,7 +51,7 @@ links:
 
 ## 一言で
 
-<div class="hero-quote hero-quote-chat">
+<div data-playbook-article="copilot-chat" class="hero-quote hero-quote-chat">
   <p>
     <strong>GitHub Copilot</strong> は、<strong>VS Code</strong>、<strong>GitHub.com</strong>、<strong>GitHub Mobile</strong>、<strong>Copilot CLI</strong>、<strong>GitHub Copilot app</strong> で使える。
   </p>

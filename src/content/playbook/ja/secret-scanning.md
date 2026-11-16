@@ -1,7 +1,7 @@
 ---
-title: Secret Scanning
-titleEn: Secret Scanning
-summary: コミット・Issue・PR・履歴に紛れ込んだ API キーやトークンを自動検出する GitHub のシークレット検知機能。Public repo の基本機能は無料、private / internal repo は Secret Protection が必要。
+title: Secret Protection
+titleEn: Secret Protection
+summary: Secret scanning と push protection でシークレットの漏洩を検出、防止する GitHub の製品。Public repo の基本機能は無料、private / internal repo は Secret Protection のライセンスが必要。
 icon: /icons/secret-scanning.png
 color: cyan
 accent:
@@ -75,9 +75,9 @@ links:
 
 ## 一言で
 
-<div class="hero-quote">
+<div data-playbook-article="secret-scanning" class="hero-quote">
   <p>
-    <strong>Secret Scanning</strong> は、リポジトリに紛れ込んだ API キー・トークン・接続文字列を自動で見つけてくれる GitHub の検知機能。
+    <strong>Secret Protection</strong> は、シークレットの漏洩を検出、防止する GitHub の製品。<strong>Secret scanning</strong> で、リポジトリに紛れ込んだ API キー、トークン、接続文字列を検出する。
   </p>
   <p>
     既にコミット済みのものは <strong>アラート</strong>、これから push されるものは <strong>Push protection</strong> で <code>git push</code> の時点でブロック。漏洩前に止めるのが基本戦略。
@@ -126,12 +126,12 @@ links:
 </div>
 </div>
 
-## 主な機能 <input type="checkbox" id="demo-secret-scanning" class="demo-toggle" /><label class="h2-demo" for="demo-secret-scanning">&#9658; DEMO</label>
+## 主な機能
 
-<div class="demo-panel">
-<label class="demo-scrim" for="demo-secret-scanning" aria-label="デモ手順を閉じる"></label>
+<details class="workshop-demo"><summary>デモ手順</summary>
+
 <div class="demo-window" role="group" aria-label="デモ手順">
-<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">Secret Scanning</span><span class="demo-note">発表者専用</span><label class="demo-close" for="demo-secret-scanning" aria-label="閉じる">&#10005;</label></div>
+<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">Secret Protection</span><span class="demo-note">発表者専用</span></div>
 <ol class="demo-steps">
 <li>
 <p class="demo-step-title">PUSH PROTECTION</p>
@@ -164,7 +164,7 @@ links:
 </li>
 </ol>
 </div>
-</div>
+</details>
 
 **Push protection** は GitHub 上の全ブランチへの push 時にチェック。**ローカルのコミット時にはチェックしない**。**Merge protection** は PR のマージ前のチェック。
 
@@ -190,7 +190,7 @@ links:
 <summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🔍</span><span class="ctl-name">Secret scanning alerts</span><span class="ctl-when">コミット後・常時</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/secret-scanning" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
 <div class="ctl-body">
 <p class="ctl-row"><span class="ctl-k">何をする？</span><span class="ctl-v">検出された secret を <b>Security and quality</b> タブに通知</span></p>
-<p class="ctl-row"><span class="ctl-k">対象範囲</span><span class="ctl-v">全ブランチの Git 履歴全体・Issue・PR・GitHub Discussions・Wiki・secret gists。新しい secret type の追加時に<b>再スキャン</b>される</span></p>
+<p class="ctl-row"><span class="ctl-k">対象範囲</span><span class="ctl-v">全ブランチの Git 履歴全体・Issue・PR・GitHub Discussions・Wiki・secret gists・<a class="retro-link" href="https://theomonfort.github.io/theomonfort/changelog/#2026-11-09-secret-scanning-workflow-logs">Workflow logs ↗</a>（パブリックプレビュー）。既存の対象は新しい secret type の追加時に<b>再スキャン</b>される</span></p>
 </div>
 </details>
 <details class="ctl-item" name="ss-controls">
@@ -217,12 +217,12 @@ links:
 </div>
 </div>
 
-## 何を検出するのか <input type="checkbox" id="demo-secret-detect" class="demo-toggle" /><label class="h2-demo" for="demo-secret-detect">&#9658; DEMO</label>
+## 何を検出するのか
 
-<div class="demo-panel">
-<label class="demo-scrim" for="demo-secret-detect" aria-label="Close demo steps"></label>
+<details class="workshop-demo"><summary>デモ手順</summary>
+
 <div class="demo-window" role="group" aria-label="Demo steps">
-<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">検出タイプ</span><span class="demo-note">FOR PRESENTER ONLY</span><label class="demo-close" for="demo-secret-detect" aria-label="Close">&#10005;</label></div>
+<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">検出タイプ</span><span class="demo-note">FOR PRESENTER ONLY</span></div>
 <ol class="demo-steps">
 <li>
 <p class="demo-step-title">GENERIC PATTERNS はどこに隠れているか</p>
@@ -251,7 +251,7 @@ links:
 </li>
 </ol>
 </div>
-</div>
+</details>
 
 検出エンジンは **4 種類**。パートナー固有の厳密な形式から、AI しか拾えない非構造化 secret まで多層でカバーする。
 
@@ -294,12 +294,12 @@ links:
 </div>
 </div>
 
-## 漏洩した secret の対応方法 <input type="checkbox" id="demo-secret-campaign" class="demo-toggle" /><label class="h2-demo" for="demo-secret-campaign">&#9658; DEMO</label>
+## 漏洩した secret の対応方法
 
-<div class="demo-panel">
-<label class="demo-scrim" for="demo-secret-campaign" aria-label="デモ手順を閉じる"></label>
+<details class="workshop-demo"><summary>デモ手順</summary>
+
 <div class="demo-window" role="group" aria-label="デモ手順">
-<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">Security campaigns</span><span class="demo-note">発表者専用</span><label class="demo-close" for="demo-secret-campaign" aria-label="閉じる">&#10005;</label></div>
+<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">Security campaigns</span><span class="demo-note">発表者専用</span></div>
 <ol class="demo-steps">
 <li>
 <p class="demo-step-title">CAMPAIGNS タブ</p>
@@ -320,7 +320,7 @@ links:
 </li>
 </ol>
 </div>
-</div>
+</details>
 
 Secret が見つかった時にやることは **検知より修復が大事**。規模が大きいときは生のアラート一覧を追わず、**security campaign** として回す。
 
@@ -365,12 +365,12 @@ Secret が見つかった時にやることは **検知より修復が大事**�
 </div>
 </div>
 
-## 私のおすすめ導入チェックリスト <a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/secret-scanning" target="_blank" rel="noopener noreferrer">📖 Docs</a> <input type="checkbox" id="demo-secret-checklist" class="demo-toggle" /><label class="h2-demo" for="demo-secret-checklist">&#9658; DEMO</label>
+## 私のおすすめ導入チェックリスト <a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/secret-scanning" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-<div class="demo-panel">
-<label class="demo-scrim" for="demo-secret-checklist" aria-label="デモ手順を閉じる"></label>
+<details class="workshop-demo"><summary>デモ手順</summary>
+
 <div class="demo-window" role="group" aria-label="デモ手順">
-<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">Secret Scanning checklist</span><span class="demo-note">発表者専用</span><label class="demo-close" for="demo-secret-checklist" aria-label="閉じる">&#10005;</label></div>
+<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">Secret Protection checklist</span><span class="demo-note">発表者専用</span></div>
 <ol class="demo-steps">
 <li>
 <p class="demo-step-title">1. 社内独自の SECRET パターン</p>
@@ -400,7 +400,7 @@ Secret が見つかった時にやることは **検知より修復が大事**�
 </li>
 </ol>
 </div>
-</div>
+</details>
 
 **Secret Protection と push protection を有効化したら**、この順番で進めるのがおすすめ。
 

@@ -1,7 +1,7 @@
 ---
-title: Secret Scanning
-titleEn: Secret Scanning
-summary: GitHub's secret detection feature that automatically finds API keys and tokens in commits, issues, PRs, and history. Core coverage is free for public repositories; private and internal repositories require Secret Protection.
+title: Secret Protection
+titleEn: Secret Protection
+summary: GitHub's product for detecting and preventing secret leaks with secret scanning and push protection. Core coverage is free for public repositories; private and internal repositories require a Secret Protection license.
 icon: /icons/secret-scanning.png
 color: cyan
 accent:
@@ -75,9 +75,9 @@ links:
 
 ## In a nutshell
 
-<div class="hero-quote">
+<div data-playbook-article="secret-scanning" class="hero-quote">
   <p>
-    <strong>Secret Scanning</strong> is GitHub's detection feature that automatically finds API keys, tokens, and connection strings lurking in your repository.
+    <strong>Secret Protection</strong> is GitHub's product for detecting and preventing secret leaks. It includes <strong>secret scanning</strong> to find API keys, tokens, and connection strings in your repository.
   </p>
   <p>
     Secrets already committed get an <strong>alert</strong>; secrets about to be pushed are blocked at <code>git push</code> time by <strong>Push protection</strong>. Stopping leaks before they happen is the core strategy.
@@ -126,12 +126,12 @@ links:
 </div>
 </div>
 
-## Main capabilities <input type="checkbox" id="demo-secret-scanning" class="demo-toggle" /><label class="h2-demo" for="demo-secret-scanning">&#9658; DEMO</label>
+## Main capabilities
 
-<div class="demo-panel">
-<label class="demo-scrim" for="demo-secret-scanning" aria-label="Close demo steps"></label>
+<details class="workshop-demo"><summary>Demo steps</summary>
+
 <div class="demo-window" role="group" aria-label="Demo steps">
-<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">Secret Scanning</span><span class="demo-note">FOR PRESENTER ONLY</span><label class="demo-close" for="demo-secret-scanning" aria-label="Close">&#10005;</label></div>
+<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">Secret Protection</span><span class="demo-note">FOR PRESENTER ONLY</span></div>
 <ol class="demo-steps">
 <li>
 <p class="demo-step-title">PUSH PROTECTION</p>
@@ -164,7 +164,7 @@ links:
 </li>
 </ol>
 </div>
-</div>
+</details>
 
 **Push protection** checks pushes to all branches on GitHub, **not local commits at commit time**. **Merge protection** checks before PR merge.
 
@@ -190,7 +190,7 @@ links:
 <summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🔍</span><span class="ctl-name">Secret scanning alerts</span><span class="ctl-when">After commit, continuous</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/secret-scanning" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
 <div class="ctl-body">
 <p class="ctl-row"><span class="ctl-k">What it does</span><span class="ctl-v">Notifies you of detected secrets in the <b>Security and quality</b> tab</span></p>
-<p class="ctl-row"><span class="ctl-k">Scope</span><span class="ctl-v">Full Git history on all branches, Issues, PRs, GitHub Discussions, Wikis, secret gists. <b>Rescanned</b> as new secret types ship</span></p>
+<p class="ctl-row"><span class="ctl-k">Scope</span><span class="ctl-v">Full Git history on all branches, Issues, PRs, GitHub Discussions, Wikis, secret gists, and <a class="retro-link" href="https://theomonfort.github.io/theomonfort/en/changelog/#2026-11-09-secret-scanning-workflow-logs">workflow logs ↗</a> (public preview). Existing content is <b>rescanned</b> as new secret types ship</span></p>
 </div>
 </details>
 <details class="ctl-item" name="ss-controls">
@@ -217,12 +217,12 @@ links:
 </div>
 </div>
 
-## What gets detected <input type="checkbox" id="demo-secret-detect" class="demo-toggle" /><label class="h2-demo" for="demo-secret-detect">&#9658; DEMO</label>
+## What gets detected
 
-<div class="demo-panel">
-<label class="demo-scrim" for="demo-secret-detect" aria-label="Close demo steps"></label>
+<details class="workshop-demo"><summary>Demo steps</summary>
+
 <div class="demo-window" role="group" aria-label="Demo steps">
-<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">Detection types</span><span class="demo-note">FOR PRESENTER ONLY</span><label class="demo-close" for="demo-secret-detect" aria-label="Close">&#10005;</label></div>
+<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">Detection types</span><span class="demo-note">FOR PRESENTER ONLY</span></div>
 <ol class="demo-steps">
 <li>
 <p class="demo-step-title">WHERE THE GENERIC PATTERNS HIDE</p>
@@ -251,7 +251,7 @@ links:
 </li>
 </ol>
 </div>
-</div>
+</details>
 
 **Four** detection engines, layered from exact partner formats to unstructured secrets that only AI can catch.
 
@@ -294,12 +294,12 @@ links:
 </div>
 </div>
 
-## How to manage exposed secrets <input type="checkbox" id="demo-secret-campaign" class="demo-toggle" /><label class="h2-demo" for="demo-secret-campaign">&#9658; DEMO</label>
+## How to manage exposed secrets
 
-<div class="demo-panel">
-<label class="demo-scrim" for="demo-secret-campaign" aria-label="Close demo steps"></label>
+<details class="workshop-demo"><summary>Demo steps</summary>
+
 <div class="demo-window" role="group" aria-label="Demo steps">
-<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">Security campaigns</span><span class="demo-note">FOR PRESENTER ONLY</span><label class="demo-close" for="demo-secret-campaign" aria-label="Close">&#10005;</label></div>
+<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">Security campaigns</span><span class="demo-note">FOR PRESENTER ONLY</span></div>
 <ol class="demo-steps">
 <li>
 <p class="demo-step-title">THE CAMPAIGNS TAB</p>
@@ -320,7 +320,7 @@ links:
 </li>
 </ol>
 </div>
-</div>
+</details>
 
 When a secret is found, **remediation matters more than detection**. At scale, don't work the raw alert list, run it as a **security campaign**.
 
@@ -365,12 +365,12 @@ When a secret is found, **remediation matters more than detection**. At scale, d
 </div>
 </div>
 
-## My recommended starting checklist <a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/secret-scanning" target="_blank" rel="noopener noreferrer">📖 Docs</a> <input type="checkbox" id="demo-secret-checklist" class="demo-toggle" /><label class="h2-demo" for="demo-secret-checklist">&#9658; DEMO</label>
+## My recommended starting checklist <a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/secret-scanning" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-<div class="demo-panel">
-<label class="demo-scrim" for="demo-secret-checklist" aria-label="Close demo steps"></label>
+<details class="workshop-demo"><summary>Demo steps</summary>
+
 <div class="demo-window" role="group" aria-label="Demo steps">
-<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">Secret Scanning checklist</span><span class="demo-note">FOR PRESENTER ONLY</span><label class="demo-close" for="demo-secret-checklist" aria-label="Close">&#10005;</label></div>
+<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">Secret Protection checklist</span><span class="demo-note">FOR PRESENTER ONLY</span></div>
 <ol class="demo-steps">
 <li>
 <p class="demo-step-title">1. INTERNAL SECRET PATTERNS</p>
@@ -400,7 +400,7 @@ When a secret is found, **remediation matters more than detection**. At scale, d
 </li>
 </ol>
 </div>
-</div>
+</details>
 
 With **Secret Protection and push protection enabled**, this is the order I recommend.
 

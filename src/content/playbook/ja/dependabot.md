@@ -10,7 +10,7 @@ accent:
   glow: hover:shadow-neon-cyan
   shadow: shadow-neon-cyan
   hex: "#00f0ff"
-order: 19.3
+order: 19.7
 category: secure
 related: ['github-advanced-security', 'github-actions']
 links:
@@ -33,6 +33,9 @@ links:
     label: About dependency review
     url: https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/about-dependency-review
   - group: 📖 公式ドキュメント
+    label: Open source license compliance
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/supply-chain-security/open-source-license-compliance
+  - group: 📖 公式ドキュメント
     label: Configuring the dependency review action
     url: https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/configuring-the-dependency-review-action
   - group: 📖 公式ドキュメント
@@ -44,6 +47,9 @@ links:
   - group: 📖 公式ドキュメント
     label: Malware alerts for Dependabot
     url: https://gh.io/dependabot-malware
+  - group: 📰 Recent Changelog
+    label: "Open source license compliance GA (2026-10-16)"
+    url: https://github.blog/changelog/2026-10-16-open-source-license-compliance-generally-available/
   - group: 📰 Recent Changelog
     label: "Expanded OIDC support for Dependabot and code scanning (2026-05-19)"
     url: https://github.blog/changelog/2026-05-19-expanded-oidc-support-for-dependabot-and-code-scanning
@@ -63,7 +69,7 @@ links:
 
 ## 一言で
 
-<div class="hero-quote">
+<div data-playbook-article="dependabot" class="hero-quote">
   <p>
     <strong>Dependabot</strong> は、リポジトリの依存関係を監視する GitHub 公式 bot。
   </p>
@@ -131,7 +137,7 @@ updates:
 
 `Org → Settings → Code security` から **default settings** で全リポジトリに適用できる。
 
-## 補完機能: Dependency Review
+## 補完機能: Dependency Review <a class="h2-doc" href="https://docs.github.com/en/code-security/concepts/supply-chain-security/dependency-review" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
 **Dependency Review** は Dependabot の **PR タイム版**。脆弱な依存や違反ライセンスをマージ前に止めるゲートで、**default branch だけでなく任意の base branch** で動く。
 
@@ -149,6 +155,78 @@ updates:
 
 > ⚠️ **PR タイムのゲートであり常時監視ではない**。マージ後に公開された CVE を拾うのは Dependabot alerts の役目 — **必ず両方を併用** する。
 
+## Open source license compliance <a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/supply-chain-security/open-source-license-compliance" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+**2026-10-16 に GA。** Dependabot の補完機能として、脆弱性だけでなく依存関係のライセンスをマージ前に統制する。
+
+<div class="ctl-widget">
+<div class="ctl-list">
+<details class="ctl-item" name="license-compliance">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">📜</span><span class="ctl-name">ポリシーの一元管理</span><span class="ctl-when">Action との違い</span><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p>Dependency Review Action の allow / deny list とは異なり、許可するライセンスを <b>Enterprise 共通ポリシー</b>で定義する。Enterprise、Organization、Repository のブランチルールセットで適用できる。</p>
+<p><b>Repo → Settings → License policy</b> では、継承した項目は読み取り専用。その repo だけに適用する例外を承認でき、ローカルの項目は Enterprise ポリシーを変えずに削除できる。</p>
+</div>
+</details>
+<details class="ctl-item" name="license-compliance">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">💰</span><span class="ctl-name">利用条件</span><span class="ctl-when">Enterprise + Code Security</span><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p>Public repo も含め <b>Enterprise Cloud + Code Security</b> が必要。統合版の <b>GHAS</b> ライセンスにも Code Security が含まれる。Secret Protection だけでは利用不可。データ所在地にも対応。</p>
+<p><b>Dependency graph の有効化が必要</b>。Dependabot alerts や自動更新は前提条件ではない。依存関係のライセンス表示と SBOM エクスポートには GHAS は不要。</p>
+<p>一方、Dependency Review Action は <b>Public repo なら無料</b>で、Private repo は Code Security が必要。</p>
+</div>
+</details>
+<details class="ctl-item" name="license-compliance">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🛡️</span><span class="ctl-name">段階的な適用</span><span class="ctl-when">Evaluate / Active</span><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p>ブランチルールセットで <b>Require license compliance results before merging</b> を有効にする。<b>Active</b> は依存関係の変更がポリシーに違反すると、PR の作成ではなくマージをブロックする。</p>
+<p><b>Evaluate</b> はチェックと指摘のみで直接ブロックしない。ただし、会話の解決を必須にするブランチ保護があると、指摘がマージを妨げる場合がある。</p>
+</div>
+</details>
+<details class="ctl-item" name="license-compliance">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">✅</span><span class="ctl-name">違反の解消</span><span class="ctl-when">例外の承認</span><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p>依存関係の削除 / 置き換え、ポリシーの変更、または <b>PR のライセンス違反から理由を添えて例外を申請</b>する。指摘が出ただけでは申請は作成されない。</p>
+<p><b>Enterprise Open-Source License Manager</b> が Enterprise のセキュリティ画面とメールで申請を受け、承認 / 却下する。パッケージ、ライセンス、パッケージパターンを対象に、repo または Enterprise 単位で例外を承認できる。他のマージ条件は引き続き必要。</p>
+<p><a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-your-supply-chain/manage-your-dependency-security/configure-license-policies" target="_blank" rel="noopener noreferrer">ポリシーと例外の設定 ↗</a></p>
+</div>
+</details>
+</div>
+</div>
+
+**対象**：PR で追加 / 変更された依存関係。検出済みの推移的依存も含む。コピーされたコードやバイナリのスキャナーではない。既存の依存関係は別途監査する。
+
+<p><b>Demo:</b> <a class="retro-link" href="https://github.com/enterprises/octodemo/settings/advanced_security/license_policy/default" target="_blank" rel="noopener noreferrer">octodemo → 共通ライセンスポリシー ↗</a> / <a class="retro-link" href="https://github.com/enterprises/octodemo/security/bypass-requests/license-compliance?request_status=open" target="_blank" rel="noopener noreferrer">未処理の例外申請 ↗</a></p>
+
+## ライセンス確認：既存と新規 <a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/supply-chain-security/open-source-license-compliance" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+| 対象 | 確認方法 | 結果 / 制約 |
+| --- | --- | --- |
+| **新規 / 更新された依存関係** | License compliance のルールセット | **Active** で非準拠のマージをブロック。 |
+| **既存の依存関係** | <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-your-supply-chain/establish-provenance-and-integrity/export-dependencies-as-sbom" target="_blank" rel="noopener noreferrer">SBOM ↗</a> → <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/rest/dependency-graph/license-compliance#check-license-compliance-for-packages" target="_blank" rel="noopener noreferrer">Package-check API ↗</a> | 明示的に監査。自動再スキャンではない。 |
+| **コピー済み / 既存コード** | <a class="retro-link" href="https://www.blackduck.com/software-composition-analysis-tools/black-duck-sca.html" target="_blank" rel="noopener noreferrer">Black Duck：断片照合 ↗</a><br/><a class="retro-link" href="https://scancode-toolkit.readthedocs.io/en/stable/explanation/scancode-license-detection.html" target="_blank" rel="noopener noreferrer">ScanCode：表記検出 ↗</a> | ファイルをスキャン。<b>新旧を問わない</b>。 |
+
+<p><b>Demo:</b> <a class="retro-link" href="https://github.com/theomonfort-org/ghas-test-1/network/dependencies" target="_blank" rel="noopener noreferrer">ghas-test-1 → Export SBOM ↗</a></p>
+
+<div class="ctl-widget">
+<div class="ctl-list">
+<details class="ctl-item" name="license-check-methods">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">📦</span><span class="ctl-name">既存の依存関係を監査</span><span class="ctl-when">SBOM → API</span><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p><b>Repo → Insights → Dependency graph → Export SBOM</b> を開く。SPDX JSON の <code>packages[].licenseConcluded</code> に、判明している依存関係のライセンスが入る。<code>dataLicense</code> はパッケージではなく SBOM 文書自体のライセンス。</p>
+<p><code>packages[].externalRefs</code> の <code>referenceType: "purl"</code> から Package URL（PURL）を取り出し、<code>purls</code> として <code>POST /repos/{owner}/{repo}/license-compliance/package-checks</code> に送る。repo に適用されるポリシーと例外に照らして確認する。上限は <b>1 回 40 PURL</b>（2026-10-27 時点）。ルールセットを有効にしても、既存の依存関係にこの監査が自動実行されるわけではない。</p>
+<p><code>NOASSERTION</code> やライセンス情報の欠落は<b>不明</b>を意味し、承認済み / ライセンス不要という意味ではない。この API は依存関係が対象で、コード断片は検査しない。agent がパッケージを追加する前の確認にも使える。</p>
+</div>
+</details>
+<details class="ctl-item" name="license-check-methods">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🔎</span><span class="ctl-name">ソースコードの対象範囲</span><span class="ctl-when">専用スキャナー</span><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p>既存のコードベースや手動でコピーした新規コードには専用スキャナーを使う。<b>Black Duck の snippet scan 機能</b>は部分的な OSS コードの一致を検出し、<b>ScanCode</b> はファイル内のライセンス本文、表記、著作権表示を検出する。Code Security とは別ツールであり、検出方法も異なる。同じ保証を与えるものではないため、結果と適用される義務を確認する。</p>
+</div>
+</details>
+</div>
+</div>
+
 ## AI triage: alert を agent に渡す
 
 各 Dependabot alert に **「Assign to agent」** ボタンがあり、Copilot / Claude / Codex に渡すと、agent が advisory とリポジトリを読んで **alert ごとに on-demand で triage と修正** を行う。
@@ -162,14 +240,154 @@ updates:
 
 > 💰 Public repo は無料。Private repo は **GitHub Code Security**(旧 Advanced Security バンドル)が必要。
 
-## 利用条件と料金
+## <span class="dependency-feature-title">Reachability analysis</span> <span class="dependency-feature-links"><a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/supply-chain-security/about-reachability-analysis-for-dependabot-alerts" target="_blank" rel="noopener noreferrer">📖 Docs</a><a class="dependency-announcement" href="https://github.blog/changelog/2026-10-28-prioritize-dependabot-alerts-with-reachability-analysis" target="_blank" rel="noopener noreferrer">公式発表 ↗</a></span>
+
+<div class="dependency-feature">
+<style>
+.prose-akq .dependency-feature{font:clamp(16px,1.3vw,20px)/1.35 var(--font-prose),sans-serif;color:var(--c-phosphor)}
+.prose-akq .dependency-feature p{margin:0}
+.prose-akq .dependency-feature .dependency-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin:0 0 8px;color:var(--c-fg-body);font-size:14px}
+.prose-akq .dependency-preview{border:1px solid var(--c-crt-amber);color:var(--c-crt-amber);padding:2px 6px;white-space:nowrap}
+.prose-akq .dependency-feature .dependency-lead{margin:0 0 8px;font-size:1.1em}
+.prose-akq .dependency-flow{display:grid;grid-template-columns:1fr auto 1.2fr auto 1fr;align-items:center;gap:10px;margin:0 0 8px;border:1px solid rgb(var(--rgb-neon-cyan) / 0.33);background:rgb(var(--rgb-deep-purple) / 0.8);padding:8px 12px;text-align:center}
+.prose-akq .dependency-flow b{color:var(--c-neon-cyan)}
+.prose-akq .dependency-panels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.prose-akq .dependency-panel{min-width:0;border-top:2px solid var(--c-neon-cyan);background:rgb(var(--rgb-deep-purple) / 0.8);padding:12px}
+.prose-akq .dependency-feature .dependency-panel h3{margin:0 0 8px;font-size:1em;line-height:1.3;color:var(--c-neon-cyan)}
+.prose-akq .dependency-facts{margin:0}
+.prose-akq .dependency-facts > div{display:grid;grid-template-columns:1fr 1.15fr;gap:10px;padding:6px 0;border-top:1px solid rgb(var(--rgb-phosphor) / 0.13)}
+.prose-akq .dependency-policy > div{grid-template-columns:.7fr 1.3fr}
+.prose-akq .dependency-facts dt{font-weight:600}
+.prose-akq .dependency-facts dd{margin:0;color:var(--c-fg-body)}
+.prose-akq .dependency-feature .dependency-note{margin-top:8px;font-size:14px;color:var(--c-fg-body)}
+.prose-akq .dependency-feature .dependency-setup{list-style:none;margin:0;padding:0}
+.prose-akq .dependency-setup li{margin:0;padding:6px 0;border-top:1px solid rgb(var(--rgb-phosphor) / 0.13)}
+.prose-akq .dependency-setup b{color:var(--c-phosphor)}
+.prose-akq .dependency-setup span{color:var(--c-fg-body)}
+.prose-akq > h2:has(.dependency-feature-title){display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.prose-akq .dependency-feature-links{display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center}
+.prose-akq h2 .dependency-feature-links .h2-doc{margin:0;font-size:14px}
+.prose-akq h2 .dependency-announcement{display:inline-flex;align-items:center;padding:.2em .5em;border:1px solid rgb(var(--rgb-neon-cyan) / 0.4);color:var(--c-neon-cyan);font-size:14px;font-weight:400;line-height:1.4;letter-spacing:0;text-decoration:none;white-space:nowrap}
+.prose-akq h2 .dependency-announcement:hover,.prose-akq h2 .dependency-announcement:focus-visible{border-color:var(--c-neon-cyan);text-decoration:underline}
+.prose-akq h2 .dependency-announcement:focus-visible{outline:2px solid var(--c-neon-cyan);outline-offset:2px}
+body.present-mode .playbook-detail:has(.dependency-feature.akq-slide-active){padding-top:88px;padding-bottom:72px}
+body.present-mode .prose-akq > h2:has(.dependency-feature-title){margin:0 0 12px;font-size:clamp(28px,2.2vw,36px);line-height:1.2;letter-spacing:0}
+body.present-mode .prose-akq > h2:has(.dependency-feature-title)::before{top:.35em}
+@media(max-width:767px){body.present-mode .playbook-detail:has(.dependency-feature.akq-slide-active){padding-left:20px;padding-right:20px}}
+@media(max-height:720px){body.present-mode .dependency-panel{padding:10px}body.present-mode .dependency-facts > div,body.present-mode .dependency-setup li{padding:3px 0}}
+@media(max-width:520px){.prose-akq .dependency-panels{grid-template-columns:1fr}.prose-akq .dependency-flow{gap:6px;padding:10px 6px;font-size:14px}}
+</style>
+<p class="dependency-meta"><span class="dependency-preview">Public preview</span><span>Enterprise Cloud（データ所在地対応）</span><span>プレビュー中は無料</span></p>
+<p class="dependency-lead">脆弱関数への経路で、<b>Dependabot alert の優先度</b>を判断。</p>
+<div class="dependency-flow"><span>自分のコード<br>+ 依存関係</span><b aria-hidden="true">→</b><b>CodeQL<br>+ advisory データ</b><b aria-hidden="true">→</b><span>判定 + 呼び出し経路</span></div>
+<div class="dependency-panels">
+<div class="dependency-panel">
+<h3>判定を優先順位に使う</h3>
+<dl class="dependency-facts">
+<div><dt>Reachable</dt><dd>経路あり：優先。</dd></div>
+<div><dt>Potentially reachable</dt><dd>可能性あり：優先。</dd></div>
+<div><dt>Unreachable</dt><dd>未検出：優先度↓</dd></div>
+<div><dt>Reachability unavailable</dt><dd>判定なし。</dd></div>
+</dl>
+<p class="dependency-note">到達可能性と悪用可能性は別。アラートの自動 close / dismiss はしない。</p>
+</div>
+<div class="dependency-panel">
+<h3>有効化して判断材料を増やす</h3>
+<ul class="dependency-setup">
+<li><b>対象：</b><span>JavaScript / TypeScript。npm、pnpm、Yarn の lockfile が必要。</span></li>
+<li><b>設定：</b><span>alerts を ON にしてから reachability を有効化。既定は OFF。</span></li>
+<li><b>実行：</b><span>GitHub-hosted のみ。初回 + 毎日。push ごとの実行ではない。</span></li>
+</ul>
+<p class="dependency-note">GHAS ライセンス不要。Actions 課金なし。</p>
+</div>
+</div>
+</div>
+
+## <span class="dependency-feature-title">Package firewall</span> <span class="dependency-feature-links"><a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/protecting-endpoints-with-package-firewall" target="_blank" rel="noopener noreferrer">📖 Docs</a><a class="dependency-announcement" href="https://github.blog/changelog/2026-10-20-github-package-firewall-in-public-preview" target="_blank" rel="noopener noreferrer">公式発表 ↗</a><a class="dependency-announcement" href="https://github.com/enterprises/octodemo/settings/policies/package_firewall" target="_blank" rel="noopener noreferrer">Demo ↗</a></span>
+
+<div class="dependency-feature">
+<p class="dependency-meta"><span class="dependency-preview">Public preview</span><span>Enterprise Cloud（データ所在地対応）</span><span>プレビュー中は無料</span></p>
+<p class="dependency-lead">開発端末、agent、CI が<b>危険な npm をインストールする前にブロック</b>。</p>
+<div class="dependency-flow"><span>開発端末 / agent / CI</span><b aria-hidden="true">→</b><b>Package firewall<br>取得を許可 / 拒否</b><b aria-hidden="true">→</b><span>npm registry</span></div>
+<div class="dependency-panels">
+<div class="dependency-panel">
+<h3>Enterprise 共通ポリシー</h3>
+<dl class="dependency-facts dependency-policy">
+<div><dt>Advisory</dt><dd>Malware + 脆弱性の閾値。</dd></div>
+<div><dt>Cooldown</dt><dd>公開からの最低待機期間。</dd></div>
+<div><dt>Supply chain</dt><dd>SLSA attestation の消失 + 新たな install script。</dd></div>
+</dl>
+<p class="dependency-note">repo 内の既存依存を監視する Dependabot を補完する。</p>
+</div>
+<div class="dependency-panel">
+<h3>接続してからポリシーを適用</h3>
+<ul class="dependency-setup">
+<li><b>ポリシー：</b><span>Enterprise 管理者 / security manager が設定。</span></li>
+<li><b>接続：</b><span>npm のみ。各端末に firewall の registry URL + Enterprise メンバーの token を設定。</span></li>
+<li><b>例外：</b><span>ブロック時のログのリンクから承認を申請。</span></li>
+</ul>
+<p class="dependency-note">firewall を通る通信だけが対象。ポリシー設定だけでは経路は変わらない。</p>
+</div>
+</div>
+</div>
+
+## <span class="dependency-feature-title">Package firewall：接続構成</span> <span class="dependency-feature-links"><a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/protecting-endpoints-with-package-firewall#configuring-artifactory" target="_blank" rel="noopener noreferrer">📖 Docs</a></span>
+
+<div class="dependency-feature dependency-architecture">
+<style>
+.prose-akq .dependency-route-block{border:1px solid rgb(var(--rgb-phosphor) / 0.13);background:rgb(var(--rgb-deep-purple) / 0.8);padding:14px}
+.prose-akq .dependency-route-block + .dependency-route-block{margin-top:12px}
+.prose-akq .dependency-route-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.prose-akq .dependency-feature .dependency-route-heading h3{margin:0;font-size:1em;line-height:1.3;color:var(--c-phosphor)}
+.prose-akq .dependency-route-status{color:var(--c-crt-amber);border:1px solid rgb(var(--rgb-crt-amber) / 0.4);padding:2px 6px;font-size:14px;white-space:nowrap}
+.prose-akq .dependency-route-flow{display:grid;grid-template-columns:minmax(0,1fr) 20px minmax(0,1fr) 20px minmax(0,1.3fr) 20px minmax(0,.9fr);gap:8px;align-items:center}
+.prose-akq .dependency-route-node{display:flex;align-items:center;justify-content:center;min-width:0;min-height:76px;padding:12px 8px;border:1px solid color-mix(in srgb, var(--c-fg-body) 40%, transparent);text-align:center;overflow-wrap:anywhere}
+.prose-akq .dependency-route-node.is-firewall{border:2px solid var(--c-neon-cyan);background:rgb(var(--rgb-neon-cyan) / 0.07);color:var(--c-neon-cyan)}
+.prose-akq .dependency-route-arrow{display:flex;align-items:center;color:var(--c-neon-cyan);font-size:20px;line-height:1}
+.prose-akq .dependency-route-arrow::before{content:"";flex:1;height:2px;background:currentColor}
+.prose-akq .dependency-route-arrow::after{content:"→"}
+.prose-akq .dependency-route-arrow-long{grid-column:2 / 5}
+@media(max-width:520px){.prose-akq .dependency-route-flow{grid-template-columns:1fr}.prose-akq .dependency-route-arrow-long{grid-column:auto}.prose-akq .dependency-route-arrow{justify-content:center}.prose-akq .dependency-route-arrow::before{display:none}.prose-akq .dependency-route-arrow::after{content:"↓"}.prose-akq .dependency-route-heading{flex-wrap:wrap}}
+</style>
+<p class="dependency-lead">アーティファクト管理ツールは<b>必須ではない</b>。</p>
+<div class="dependency-route-block">
+<div class="dependency-route-heading"><h3>01 / 直接接続</h3></div>
+<div class="dependency-route-flow" role="img" aria-label="開発者、agent、CI から GitHub package firewall を経由して npm registry に直接接続する。">
+<span class="dependency-route-node"><span>開発者<br>/ agent / CI</span></span>
+<span class="dependency-route-arrow dependency-route-arrow-long" aria-hidden="true"></span>
+<span class="dependency-route-node is-firewall"><strong>GitHub<br>package firewall</strong></span>
+<span class="dependency-route-arrow" aria-hidden="true"></span>
+<span class="dependency-route-node"><span>npm<br>registry</span></span>
+</div>
+</div>
+<div class="dependency-route-block">
+<div class="dependency-route-heading"><h3>02 / Artifactory 経由（任意）</h3><span class="dependency-route-status">実験的な連携</span></div>
+<div class="dependency-route-flow" role="img" aria-label="開発者、agent、CI から、任意の Artifactory、GitHub package firewall、npm registry の順に接続する。">
+<span class="dependency-route-node"><span>開発者<br>/ agent / CI</span></span>
+<span class="dependency-route-arrow" aria-hidden="true"></span>
+<span class="dependency-route-node">Artifactory</span>
+<span class="dependency-route-arrow" aria-hidden="true"></span>
+<span class="dependency-route-node is-firewall"><strong>GitHub<br>package firewall</strong></span>
+<span class="dependency-route-arrow" aria-hidden="true"></span>
+<span class="dependency-route-node"><span>npm<br>registry</span></span>
+</div>
+</div>
+<p class="dependency-note">どちらの経路も、公開 npm パッケージの取得が firewall を通るように設定する。</p>
+</div>
+
+## 利用条件と料金 <a class="h2-doc" href="https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+Dependabot 本体は **全プラン無料**。有料は Code Security の premium 機能のみ。
 
 | 機能 | Public repo | Private repo（個人 / Free） | Private repo（Team / Enterprise） |
 | --- | :---: | :---: | :---: |
-| Dependency graph | ✅ デフォルト ON | ✅ 無料(opt-in) | ✅ 無料 |
-| Dependabot alerts | ✅ 無料 | ✅ 無料 | ✅ 無料 |
+| Dependency graph | ✅ 既定 ON | ✅ 無料(opt-in) | ✅ 無料 |
+| Dependabot alerts(malware 含む) | ✅ 無料 | ✅ 無料 | ✅ 無料 |
 | Dependabot security updates | ✅ 無料 | ✅ 無料 | ✅ 無料 |
 | Dependabot version updates | ✅ 無料 | ✅ 無料 | ✅ 無料 |
+| Custom auto-triage rules | ✅ 無料 | ❌ | 💰 Code Security |
 
-> 💰 Dependabot 本体は **どのプランでも完全無料**。GitHub Advanced Security ライセンスは不要。  
-> ⚙️ Version updates の Dependabot ジョブは GitHub-hosted runner で実行され、public repo は無料、private repo は Actions の通常無料枠を消費(超過時は従量課金)。
+**Enterprise の License compliance は無料の Dependabot とは別**。Public repo も含め、Enterprise Cloud + Code Security が必要。
+
+> ⚙️ standard / self-hosted runner なら **Actions 分数を消費しない**。課金は larger runner のみ。\
+> 🤖 Assign to agent は **Code Security** + coding agent 付き **Copilot プラン** が必要。

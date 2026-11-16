@@ -1,7 +1,7 @@
 ---
 title: Code Scanning
 titleEn: Code Scanning
-summary: CodeQL statically analyzes source code for vulnerabilities, and Copilot Autofix generates fix PRs automatically. Default setup requires no config file — just one click. Free for public repos; private repos need GHAS / Code Security.
+summary: Code scanning finds vulnerabilities with CodeQL static analysis (SAST). Eligible findings can receive Copilot Autofix suggestions or be assigned to Copilot for remediation.
 icon: /icons/code-scanning.png
 color: cyan
 accent:
@@ -10,161 +10,627 @@ accent:
   glow: hover:shadow-neon-cyan
   shadow: shadow-neon-cyan
   hex: "#00f0ff"
-order: 19.4
+order: 19.5
 category: secure
-related: ['github-advanced-security', 'dependabot', 'secret-scanning']
+related: ['code-quality', 'github-advanced-security', 'dependabot', 'secret-scanning']
 links:
   - group: 📖 Official Documentation
     label: About code scanning
-    url: https://docs.github.com/en/code-security/code-scanning/introduction-to-code-scanning/about-code-scanning
+    url: https://docs.github.com/en/code-security/concepts/code-scanning/code-scanning
   - group: 📖 Official Documentation
-    label: About CodeQL
-    url: https://docs.github.com/en/code-security/code-scanning/introduction-to-code-scanning/about-code-scanning-with-codeql
+    label: About AI Scan
+    url: https://docs.github.com/en/code-security/concepts/code-scanning/ai-scan
+  - group: 📖 Official Documentation
+    label: AI Scan for pull requests
+    url: https://docs.github.com/en/code-security/concepts/code-scanning/ai-powered-security-detections
+  - group: 📖 Official Documentation
+    label: AI Scan for repositories
+    url: https://docs.github.com/en/code-security/concepts/code-scanning/ai-scan-for-repositories
+  - group: 📖 Official Documentation
+    label: AI applications scanning for pull requests
+    url: https://docs.github.com/en/code-security/concepts/code-scanning/ai-applications-scanning-for-pull-requests
+  - group: 📰 Recent Changelog
+    label: "Changelog: AI Scan for pull request APIs (public preview)"
+    url: https://github.blog/changelog/2026-09-10-ai-scan-for-pull-request-apis-in-public-preview/
+  - group: 📰 Recent Changelog
+    label: "AI Scan for repositories public preview (2026-10-28)"
+    url: https://github.blog/changelog/2026-10-28-ai-scan-for-repositories-in-public-preview
+  - group: 📖 Official Documentation
+    label: Resolving code scanning alerts
+    url: https://docs.github.com/en/code-security/how-tos/manage-security-alerts/manage-code-scanning-alerts/resolve-alerts
   - group: 📖 Official Documentation
     label: Configuring default setup
     url: https://docs.github.com/en/code-security/code-scanning/enabling-code-scanning/configuring-default-setup-for-code-scanning
   - group: 📖 Official Documentation
-    label: About Copilot Autofix
-    url: https://docs.github.com/en/code-security/code-scanning/managing-code-scanning-alerts/about-autofix-for-codeql-code-scanning
+    label: Autofix for code scanning
+    url: https://docs.github.com/en/code-security/concepts/code-scanning/autofix-for-code-scanning
+  - group: 📖 Official Documentation
+    label: Managing access to Agentic Autofix
+    url: https://docs.github.com/en/code-security/how-tos/manage-security-alerts/manage-code-scanning-alerts/managing-access-to-agentic-autofix-for-code-scanning
+  - group: 📖 Official Documentation
+    label: Managing Copilot Autofix (separate controls)
+    url: https://docs.github.com/en/code-security/how-tos/manage-security-alerts/manage-code-scanning-alerts/disabling-copilot-autofix-for-code-scanning
   - group: 📖 Official Documentation
     label: SARIF support for code scanning
     url: https://docs.github.com/en/code-security/code-scanning/integrating-with-code-scanning/sarif-support-for-code-scanning
-  - group: 🆓 Free inventory (Risk Assessment)
+  - group: 🔬 Going deeper on CodeQL
+    label: About CodeQL (CodeQL docs)
+    url: https://codeql.github.com/docs/codeql-overview/about-codeql/
+  - group: 🔬 Going deeper on CodeQL
+    label: About CodeQL queries (writing your own)
+    url: https://codeql.github.com/docs/writing-codeql-queries/about-codeql-queries/
+  - group: 🔬 Going deeper on CodeQL
+    label: About data flow analysis (taint tracking)
+    url: https://codeql.github.com/docs/writing-codeql-queries/about-data-flow-analysis/
+  - group: 🔬 Going deeper on CodeQL
+    label: github/codeql (the open-source query packs)
+    url: https://github.com/github/codeql
+  - group: 💰 Pricing
+    label: GitHub security plans (source for $30 / $19)
+    url: https://github.com/security/plans
+  - group: 💰 Pricing
+    label: Billing for GitHub Advanced Security
+    url: https://docs.github.com/en/billing/concepts/product-billing/github-advanced-security
+  - group: 💰 Pricing
+    label: Copilot AI credits (individual plans)
+    url: https://docs.github.com/en/copilot/concepts/billing-and-usage/individuals/billing
+  - group: 💰 Pricing
+    label: Copilot AI credits (organization and enterprise pool)
+    url: https://docs.github.com/en/copilot/concepts/billing-and-usage/organizations-and-enterprises/billing
+  - group: 💰 Pricing
+    label: Billing for GitHub Actions
+    url: https://docs.github.com/en/billing/concepts/product-billing/github-actions
+  - group: 📖 Official Documentation
     label: Code security risk assessment (Docs)
     url: https://docs.github.com/en/code-security/concepts/code-scanning/code-security-risk-assessment
-  - group: 🆓 Free inventory (Risk Assessment)
-    label: Code Security Risk Assessment GA (2026/04)
-    url: https://github.blog/changelog/2026-04-08-code-security-risk-assessment-available-for-organizations/
   - group: 📰 Recent Changelog
-    label: "Expanded OIDC support for Dependabot and code scanning (2026-05-19)"
-    url: https://github.blog/changelog/2026-05-19-expanded-oidc-support-for-dependabot-and-code-scanning
+    label: "Agentic autofix now uses Copilot Memory (2026-09-25)"
+    url: https://github.blog/changelog/2026-09-25-agentic-autofix-now-uses-copilot-memory/
   - group: 📰 Recent Changelog
-    label: "CodeQL now supports sanitizers and validators in models-as-data (2026-04-21)"
-    url: https://github.blog/changelog/2026-04-21-codeql-now-supports-sanitizers-and-validators-in-models-as-data
-  - group: 📰 Recent Changelog
-    label: "Link code scanning alerts to GitHub Issues (2026-04-14)"
-    url: https://github.blog/changelog/2026-04-14-link-code-scanning-alerts-to-github-issues
-  - group: 📰 Recent Changelog
-    label: "Batch apply security alert suggestions on PRs (2026-04-07)"
-    url: https://github.blog/changelog/2026-04-07-code-scanning-batch-apply-security-alert-suggestions-on-pull-requests
-  - group: 📰 Recent Changelog
-    label: "Faster incremental CodeQL analysis on pull requests (2026-03-24)"
-    url: https://github.blog/changelog/2026-03-24-faster-incremental-analysis-with-codeql-in-pull-requests
+    label: "Agentic Autofix general availability (2026-10-15)"
+    url: https://github.blog/changelog/2026-10-15-agentic-autofix-for-code-scanning-alerts-general-availability
 ---
 
 ## In a nutshell
 
-<div class="hero-quote">
+<div data-playbook-article="code-scanning" class="hero-quote">
   <p>
-    <strong>Code Scanning</strong> is a GitHub feature that performs <strong>static analysis</strong> (SAST) on your repository's source code to find vulnerabilities.
+    <strong>Code Scanning</strong> finds vulnerabilities through static analysis (<strong>SAST</strong>), <strong>without running your code</strong>.
   </p>
   <p>
-    The analysis engine is GitHub's own <strong>CodeQL</strong> (semantic analysis), and for each finding, <strong>Copilot Autofix</strong> generates an AI-powered fix suggestion with code ready to commit. Default setup starts with a single click — no config file needed.
+    <strong>CodeQL</strong> turns code into a <strong>queryable database</strong>. Eligible findings can get <strong>Copilot Autofix</strong> suggestions or be assigned to <strong>Copilot</strong> for a fix.
   </p>
 </div>
 
-## Default setup vs Advanced setup
+## Code scanning is not CodeQL <a class="h2-doc" href="https://docs.github.com/en/code-security/concepts/code-scanning/code-scanning" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-There are two ways to enable CodeQL. **Default setup is enough to start.**
+**Code scanning is the GitHub feature; CodeQL is one analysis engine.** AI Scan complements it on pull requests and the default branch, and third-party tools can supply SARIF results.
 
-| Aspect | 🟢 Default setup | 🛠️ Advanced setup |
+<div class="det-widget det-compact">
+<p class="det-hint">▸ CLICK FOR DETAILS</p>
+<div class="det-split">
+<div class="det-list">
+<details class="det-pick" name="cs-vs-codeql">
+<summary class="det-btn"><span class="det-icon" aria-hidden="true">🖥️</span><span class="det-name">Code scanning (the feature)</span></summary>
+<div class="det-pane">
+<p class="det-head"><span class="det-icon" aria-hidden="true">🖥️</span><span class="det-title">Code scanning — GitHub's surface</span></p>
+<p class="det-why">The <b>feature</b> that collects results from <b>static analysis</b> (CodeQL, third-party tools) and <b>AI detections</b>, and surfaces them: Security tab alerts, inline PR comments, merge protection, Security overview, APIs. <b>Whatever the engine, results land here.</b></p>
+</div>
+</details>
+<details class="det-pick" name="cs-vs-codeql">
+<summary class="det-btn"><span class="det-icon" aria-hidden="true">🔬</span><span class="det-name">CodeQL (the engine)</span></summary>
+<div class="det-pane">
+<p class="det-head"><span class="det-icon" aria-hidden="true">🔬</span><span class="det-title">CodeQL — the analysis engine</span></p>
+<p class="det-why">GitHub's default semantic analysis engine (<b>acquired from Semmle, 2019</b>). <b>CodeQL CLI</b> also runs locally or in other CI systems.</p>
+<p class="det-why"><b>Supported languages:</b> C/C++, C#, Go, Java/Kotlin, JavaScript/TypeScript, Python, Ruby, Rust and Swift, plus <b>GitHub Actions workflows</b>.</p>
+<p class="det-doc">As of 2026-10-23. <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/code-scanning/codeql/codeql-code-scanning#about-codeql" target="_blank" rel="noopener noreferrer">📘 Supported languages documentation ↗</a></p>
+</div>
+</details>
+<details class="det-pick" name="cs-vs-codeql">
+<summary class="det-btn"><span class="det-icon" aria-hidden="true">🤖</span><span class="det-name">AI Scan</span></summary>
+<div class="det-pane">
+<p class="det-head"><span class="det-icon" aria-hidden="true">🤖</span><span class="det-title">AI Scan</span></p>
+<ul class="list-disc text-[0.86em] leading-[1.7] !my-0">
+<li><b>PRs (GA):</b> Changes outside CodeQL coverage; automatic, advisory.</li>
+<li><b>Repositories (preview):</b> Any language on the default branch; on demand, backlog alerts.</li>
+<li><b>AI apps / agents (preview):</b> Indirect prompt injection in PRs.</li>
+</ul>
+<p class="det-doc">As of 2026-11-11. <a class="retro-link" href="https://docs.github.com/en/code-security/concepts/code-scanning/ai-scan" target="_blank" rel="noopener noreferrer">📘 Coverage and requirements ↗</a></p>
+</div>
+</details>
+<details class="det-pick" name="cs-vs-codeql">
+<summary class="det-btn"><span class="det-icon" aria-hidden="true">📄</span><span class="det-name">SARIF (the contract)</span></summary>
+<div class="det-pane">
+<p class="det-head"><span class="det-icon" aria-hidden="true">📄</span><span class="det-title">SARIF — the format that joins them</span></p>
+<p class="det-why">The OASIS standard format for static-analysis results. Push Semgrep, Snyk or Checkmarx through <code>upload-sarif</code> and their findings sit <b>next to CodeQL's, same screen</b>.</p>
+<p class="det-doc"><a class="retro-link" href="https://docs.github.com/en/code-security/code-scanning/integrating-with-code-scanning/sarif-support-for-code-scanning" target="_blank" rel="noopener noreferrer">📘 SARIF support ↗</a></p>
+</div>
+</details>
+</div>
+<div class="det-screen" style="min-height:14em"><p class="det-empty">SELECT A TOPIC ▸</p></div>
+</div>
+</div>
+
+
+## How CodeQL works <a class="h2-doc" href="https://codeql.github.com/docs/codeql-overview/about-codeql/" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+**Extract code into a database**, then **compile and evaluate queries** against it.
+
+<figure class="harness-map split-figure">
+<img src="/diagrams/codeql-architecture-retro.svg" width="1100" height="475" style="max-height:min(440px, 46vh);object-fit:contain" alt="CodeQL architecture: source code and build monitoring feed the extractor and database. The schema, query and libraries feed the QL compiler. The evaluator combines the compiled query with the database to produce results. Build artifacts are separate." />
+</figure>
+
+The **schema** describes the data; the **database** stores it. Extraction reads source directly or monitors a build, depending on the language and <a class="retro-link" href="https://docs.github.com/en/code-security/how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/codeql-for-compiled-languages" target="_blank" rel="noopener noreferrer">build mode ↗</a>.
+
+## Reading a CodeQL query
+
+QL is a declarative logic-programming language. **You describe the shape of a bug and the evaluator finds every instance.** The structure mirrors SQL's `FROM / WHERE / SELECT`.
+
+```ql
+import java                                       // ① pull in the standard library
+
+from IfStmt ifstmt, Block block                   // ② declare the elements to inspect
+where
+  block = ifstmt.getThen() and                    // ③ constrain them
+  block.getNumStmt() = 0                          //    → a then-branch with no statements
+select ifstmt, "This if-statement is redundant."  // ④ what to report, and how
+```
+
+The whole language is that shape: **`where` is the definition of "what the bug looks like"**, and the evaluator does the searching.
+
+> 🔬 Security queries layer `DataFlow` / `TaintTracking` on top, defining **sources, sinks and sanitizers** and searching for paths between them. The packs are open source at <a class="retro-link" href="https://github.com/github/codeql" target="_blank" rel="noopener noreferrer">github/codeql ↗</a>. In practice they are enough — you write custom queries mainly to teach CodeQL the sources and sinks of your in-house framework.
+
+📘 Details: <a class="retro-link" href="https://codeql.github.com/docs/writing-codeql-queries/about-codeql-queries/" target="_blank" rel="noopener noreferrer">About CodeQL queries ↗</a> / <a class="retro-link" href="https://codeql.github.com/docs/writing-codeql-queries/about-data-flow-analysis/" target="_blank" rel="noopener noreferrer">About data flow analysis ↗</a>
+
+## What CodeQL finds
+
+<div class="det-widget">
+<p class="det-hint">▸ CLICK FOR DETAILS</p>
+<div class="det-split">
+<div class="det-list">
+<details class="det-pick" name="cs-findings">
+<summary class="det-btn"><span class="det-icon" aria-hidden="true">💉</span><span class="det-name">Injection</span></summary>
+<div class="det-pane">
+<p class="det-head"><span class="det-icon" aria-hidden="true">💉</span><span class="det-title">Injection</span></p>
+<p class="det-why"><b>SQL injection, command injection, path traversal, XSS, SSRF</b>. User input reaching an interpreter (SQL, a shell, a file path, HTML, an HTTP client) without escaping. This is <b>CodeQL's home turf</b> and where data-flow analysis pays for itself.</p>
+</div>
+</details>
+<details class="det-pick" name="cs-findings">
+<summary class="det-btn"><span class="det-icon" aria-hidden="true">🔓</span><span class="det-name">Auth, authz & crypto</span></summary>
+<div class="det-pane">
+<p class="det-head"><span class="det-icon" aria-hidden="true">🔓</span><span class="det-title">Auth, authorization and crypto</span></p>
+<p class="det-why">Broken access control, <b>weak cryptographic algorithms (MD5 / SHA-1)</b>, insecure randomness, hard-coded credentials, disabled certificate validation.</p>
+</div>
+</details>
+<details class="det-pick" name="cs-findings">
+<summary class="det-btn"><span class="det-icon" aria-hidden="true">💣</span><span class="det-name">Memory safety (C/C++)</span></summary>
+<div class="det-pane">
+<p class="det-head"><span class="det-icon" aria-hidden="true">💣</span><span class="det-title">Memory safety (C/C++)</span></p>
+<p class="det-why"><b>Buffer overflow, use after free, null dereference, integer overflow.</b> Only reachable because types and pointer flow live in the database — regex-based tools cannot go here.</p>
+</div>
+</details>
+<details class="det-pick" name="cs-findings">
+<summary class="det-btn"><span class="det-icon" aria-hidden="true">🧩</span><span class="det-name">Data flow tracking</span></summary>
+<div class="det-pane">
+<p class="det-head"><span class="det-icon" aria-hidden="true">🧩</span><span class="det-title">Data flow tracking (taint tracking)</span></p>
+<p class="det-why">The alert carries <b>the path itself</b>, source to sink. Anything crossing a sanitizer drops out, which is what keeps false positives down. <code>models-as-data</code> lets you register <b>your own framework's sources and sinks</b> without writing a query.</p>
+<p class="det-doc"><a class="retro-link" href="https://github.blog/changelog/2026-04-21-codeql-now-supports-sanitizers-and-validators-in-models-as-data" target="_blank" rel="noopener noreferrer">📘 sanitizers in models-as-data ↗</a></p>
+</div>
+</details>
+<details class="det-pick" name="cs-findings">
+<summary class="det-btn"><span class="det-icon" aria-hidden="true">⚙️</span><span class="det-name">CI/CD (Actions)</span></summary>
+<div class="det-pane">
+<p class="det-head"><span class="det-icon" aria-hidden="true">⚙️</span><span class="det-title">CI/CD (GitHub Actions)</span></p>
+<p class="det-why">Workflows are analysed too: <code>pull_request_target</code> combined with an untrusted checkout, <b>script injection</b>, excessive <code>permissions</code>, unpinned third-party actions — the <b>supply-chain side</b> of the repo.</p>
+</div>
+</details>
+</div>
+<div class="det-screen" style="min-height:15em"><p class="det-empty">SELECT A CATEGORY ▸</p></div>
+</div>
+</div>
+
+> 🌐 **Supported languages** — C/C++, C#, Go, Java/Kotlin, JavaScript/TypeScript, Python, Ruby, Rust, Swift, GitHub Actions. A repo with no CodeQL-supported language **runs no scans and burns no Actions minutes**.
+
+## Main capabilities
+
+<details class="workshop-demo"><summary>Demo steps</summary>
+
+<div class="demo-window" role="group" aria-label="Demo steps">
+<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">CodeQL Advanced setup</span><span class="demo-note">FOR PRESENTER ONLY</span></div>
+<ol class="demo-steps">
+<li>
+<p class="demo-step-title">OPEN REPOSITORY SETTINGS</p>
+<p>Open <a href="https://github.com/theomonfort-org/ghas-test-1/settings/security_analysis" target="_blank" rel="noopener noreferrer">ghas-test-1 → Advanced Security ↗</a> and show <b>Code scanning → CodeQL analysis</b>.</p>
+<p>For an unconfigured repository, the entry point is <b>Set up → Advanced</b>. This demo repository already has a workflow, so open the existing file without switching setup types.</p>
+</li>
+<li>
+<p class="demo-step-title">WALK THROUGH ADVANCED SETUP</p>
+<p>Open <a href="https://github.com/theomonfort-org/ghas-test-1/blob/main/.github/workflows/codeql.yml" target="_blank" rel="noopener noreferrer">codeql.yml ↗</a>. Show push / PR / schedule under <code class="demo-path">on</code>, the language <code class="demo-path">matrix</code>, and the runner under <code class="demo-path">runs-on</code>.</p>
+<p>C/C++ uses <b>build-mode: manual</b> with <code class="demo-path">make -C src/c</code> / <code class="demo-path">make -C src/cpp</code>; the other languages use <b>none</b>. Point out <b>queries: security-and-quality</b> and the C/C++ <b>CERT / MISRA packs</b>.</p>
+<p>These packs come from <a href="https://github.com/github/codeql-coding-standards" target="_blank" rel="noopener noreferrer">github/codeql-coding-standards ↗</a>: an example of extra query packs you can add (AUTOSAR C++14, CERT C/C++, MISRA C/C++).</p>
+<p class="demo-out">Advanced setup controls the build and execution conditions through a <b>versioned Actions workflow</b>.</p>
+</li>
+<li>
+<p class="demo-step-title">FROM CONFIGURATION TO RESULTS</p>
+<p>Open an existing run under <a href="https://github.com/theomonfort-org/ghas-test-1/actions/workflows/codeql.yml" target="_blank" rel="noopener noreferrer">Actions → CodeQL ↗</a>. Show the per-language <b>Analyze</b> jobs and their initialization, build, and analysis logs.</p>
+<p>Finish at <a href="https://github.com/theomonfort-org/ghas-test-1/security/code-scanning" target="_blank" rel="noopener noreferrer">Security → Code scanning ↗</a> to see the alerts.</p>
+<p class="demo-out">No workflow edits or commits are needed for this walkthrough. Leave the existing scans enabled.</p>
+</li>
+</ol>
+</div>
+</details>
+
+**Start with Default setup**, customize it with repository properties, and reach for Advanced only when you need your own build.
+
+<div class="ctl-widget">
+<p class="ctl-hint">▸ CLICK + FOR DETAILS</p>
+<div class="ctl-list">
+<details class="ctl-item" name="cs-capabilities">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🟢</span><span class="ctl-name">Default setup</span><span class="ctl-when">One click, org-wide</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/code-scanning/setup-types" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">What it does</span><span class="ctl-v"><b>No workflow file.</b> Detects CodeQL languages, and adds new ones automatically as they appear</span></p>
+<p class="ctl-row"><span class="ctl-k">When it runs</span><span class="ctl-v">Pushes to the default or a <b>protected branch</b>, PRs targeting them, and a <b>weekly schedule</b></span></p>
+<p class="ctl-row"><span class="ctl-k">Rollout</span><span class="ctl-v">Apply a <b>security configuration</b> to every repo in the org at once</span></p>
+</div>
+</details>
+<details class="ctl-item" name="cs-capabilities">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🧩</span><span class="ctl-name">Custom queries</span><span class="ctl-when">Default setup + repo property</span><a class="ctl-doc" href="https://github.blog/changelog/2026-08-04-customize-code-scanning-default-setup-at-scale/" target="_blank" rel="noopener noreferrer">Changelog</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">What it does</span><span class="ctl-v">Add your own queries (e.g. <b>coding standards</b>, in-house rules) <b>without switching to Advanced</b></span></p>
+<p class="ctl-row"><span class="ctl-k">How</span><span class="ctl-v"><code>github-codeql-config-file</code> merges a <b>central config file</b> (queries, paths, threat models). <code>github-codeql-extra-queries</code> only adds queries</span></p>
+<p class="ctl-row"><span class="ctl-k">Scope</span><span class="ctl-v">Set an <b>org-wide default</b>; org owners decide whether repos may override it. GA</span></p>
+</div>
+</details>
+<details class="ctl-item" name="cs-capabilities">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🛠️</span><span class="ctl-name">Advanced setup</span><span class="ctl-when">Your own workflow</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/find-and-fix-code-vulnerabilities/configure-code-scanning/configuring-advanced-setup-for-code-scanning" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">What it does</span><span class="ctl-v">You own <code>.github/workflows/codeql.yml</code>: <b>your own build</b> for compiled languages, matrix builds, triggers and schedule</span></p>
+<p class="ctl-row"><span class="ctl-k">Outside Actions</span><span class="ctl-v">Run the <b>CodeQL CLI</b> in another CI, or upload third-party results as <b>SARIF</b></span></p>
+</div>
+</details>
+<details class="ctl-item" name="cs-capabilities">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🚧</span><span class="ctl-name">Merge protection</span><span class="ctl-when">Before PR merge</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/code-scanning/merge-protection" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">On the PR</span><span class="ctl-v">New alerts show up as annotations in <b>Files changed</b>, posted by <code>github-advanced-security[bot]</code></span></p>
+<p class="ctl-row"><span class="ctl-k">Merge gate</span><span class="ctl-v">Ruleset <b>Require code scanning results</b> blocks the merge on alerts of a chosen severity, or while the required tool has not finished</span></p>
+<p class="ctl-row"><span class="ctl-k">Scope</span><span class="ctl-v">Repo or Org (Enterprise plans). Without a ruleset, code scanning <b>never blocks a merge</b></span></p>
+</div>
+</details>
+<details class="ctl-item" name="cs-capabilities">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🤖</span><span class="ctl-name">AI Scan</span><span class="ctl-when">PRs / repositories / AI apps</span><a class="ctl-doc" href="https://docs.github.com/en/code-security/concepts/code-scanning/ai-scan" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<ul class="list-disc text-[0.88em] leading-[1.6] !my-0">
+<li><b>PRs (GA):</b> Changes outside CodeQL coverage; automatic, advisory.</li>
+<li><b>Repositories (preview):</b> Any language on the default branch; on demand, backlog alerts.</li>
+<li><b>AI apps / agents (preview):</b> Indirect prompt injection in PRs.</li>
+</ul>
+</div>
+</details>
+<details class="ctl-item" name="cs-capabilities">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🔧</span><span class="ctl-name">Copilot Autofix</span><span class="ctl-when">On the alert or PR</span><a class="ctl-doc" href="https://docs.github.com/en/code-security/concepts/code-scanning/autofix-for-code-scanning" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">What it does</span><span class="ctl-v">Suggests a patch from the alert, the surrounding code and CodeQL's <b>data-flow path</b></span></p>
+<p class="ctl-row"><span class="ctl-k">Where</span><span class="ctl-v">Inline on PRs; <b>Generate fix</b> on backlog alerts. You review and apply it</span></p>
+</div>
+</details>
+<details class="ctl-item" name="cs-capabilities">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🎯</span><span class="ctl-name">Agentic Autofix</span><span class="ctl-when">1–25 backlog alerts</span><a class="ctl-doc" href="https://docs.github.com/en/code-security/how-tos/manage-security-alerts/manage-code-scanning-alerts/resolve-alerts" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">What it does</span><span class="ctl-v"><b>Assign to Copilot</b>: the cloud agent explores the repo, fixes, validates, then opens a <b>draft PR</b></span></p>
+<p class="ctl-row"><span class="ctl-k">Scope</span><span class="ctl-v">1–25 default-branch backlog alerts, including campaigns. <b>GA since 2026-10-15</b></span></p>
+</div>
+</details>
+<details class="ctl-item" name="cs-capabilities">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🗺️</span><span class="ctl-name">Security campaigns</span><span class="ctl-when">Remediation at scale</span><a class="ctl-doc" href="https://docs.github.com/en/code-security/securing-your-organization/fixing-security-alerts-at-scale/about-security-campaigns" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">What it does</span><span class="ctl-v">A <b>time-boxed</b> set of alerts (up to 1000) with a campaign manager and a due date</span></p>
+<p class="ctl-row"><span class="ctl-k">Flow</span><span class="ctl-v">Shows up in each repo's Security tab; developers fix with Autofix or Copilot</span></p>
+</div>
+</details>
+</div>
+</div>
+
+## Why shift left: fix it in the PR
+
+A vulnerability is cheapest to fix in the pull request that introduces it. Once merged, it becomes security debt, and debt rarely gets paid down.
+
+<div class="tbl-compact">
+
+| | 🟢 In the PR | 🔴 After merge |
 | --- | --- | --- |
-| Configuration | One click in the UI, no config file | Write `.github/workflows/codeql.yml` |
-| Language detection | GitHub detects automatically | Explicitly specified in YAML |
-| Queries | `default` set (GitHub recommended) | `default` / `security-extended` / `security-and-quality` / custom |
-| Triggers | push / PR / weekly schedule (automatic) | You configure them |
-| Build | No build step needed for most languages (autobuild) | You can specify your own build command |
-| Scope | Can be rolled out to all repos with a click | For cases requiring fine-grained tuning |
+| 🧠 Context | Fresh in the author's head | Rediscovered weeks later |
+| 🔁 Fix cost | One commit, same review | Ticket, PR, review, deploy |
+| 🚀 Exposure | Never reaches production | Can ship and stay live until fixed |
 
-> 🔑 Unless you have a monorepo, special build requirements, or need custom queries, **Default setup is best practice**. You can switch to Advanced later.
+</div>
 
-📘 Details: <a class="retro-link" href="https://docs.github.com/en/code-security/code-scanning/enabling-code-scanning/configuring-default-setup-for-code-scanning" target="_blank" rel="noopener noreferrer">Configuring default setup ↗</a>
+- 📉 **Merged means forgotten**: historically, only **10%** of security debt in merged code gets addressed (<a class="retro-link" href="https://github.blog/security/application-security/found-means-fixed-reduce-security-debt-at-scale-with-github-security-campaigns/" target="_blank" rel="noopener noreferrer">GitHub&nbsp;data&nbsp;↗</a>)
+- ⏱️ **In the PR, it is fast**: with Copilot Autofix, PR-time alerts were fixed in a median **28 min** vs **1.5 h** manually (<a class="retro-link" href="https://github.blog/news-insights/product-news/secure-code-more-than-three-times-faster-with-copilot-autofix/" target="_blank" rel="noopener noreferrer">GitHub,&nbsp;2024&nbsp;↗</a>)
 
-## Vulnerabilities CodeQL detects
+## Copilot Autofix: suggested fixes <a class="h2-doc" href="https://docs.github.com/en/code-security/concepts/code-scanning/autofix-for-code-scanning" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-CodeQL **converts code into "queryable data"** before analyzing it, so it understands semantics rather than just matching patterns like grep-based SAST.
+Copilot Autofix can generate a **suggested patch for an eligible alert**. You review, test and apply it; a successful fix is not guaranteed.
 
-- 🐛 **Injection** — SQL injection / Command injection / Path traversal / XSS / SSRF
-- 🔓 **Auth & authorization** — Broken access control, weak cryptographic algorithms (MD5/SHA1), insecure randomness
-- 💣 **Memory safety (C/C++)** — Buffer overflow / use after free / null dereference
-- 🧩 **Data flow tracking** — Tracks whether user input (taint source) reaches a dangerous function (sink)
-- 🌐 **Supported languages** — C/C++, C#, Go, Java/Kotlin, JavaScript/TypeScript, Python, Ruby, Swift
+- 🤖 **Input**: alert details, surrounding code and CodeQL's data-flow path inform the suggestion.
+- 💬 **On pull requests**: supported alerts can receive inline suggestions automatically.
+- 🛠️ **On default-branch backlog alerts with Agentic Autofix off**: **Generate fix → Create PR with fix**, if Copilot Autofix is enabled and supports the alert.
+- 🆓 **Cost**: no Copilot license or AI credits for classic Autofix. Included with Code Security; free on public repositories.
+- 🔌 **Enablement**: allowed by default with CodeQL unless an administrator disables it.
 
-> 🔬 CodeQL queries are open-sourced at [github/codeql](https://github.com/github/codeql). You can write and extend with your own custom queries.
+## Agentic Autofix (GA) <a class="h2-doc" href="https://docs.github.com/en/code-security/how-tos/manage-security-alerts/manage-code-scanning-alerts/resolve-alerts" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-## Copilot Autofix — AI fixes it for you ★
+<details class="workshop-demo"><summary>Demo steps</summary>
 
-The killer feature of Code Scanning. When CodeQL raises an alert, **AI generates a fix** that you can commit directly to the PR.
+<div class="demo-window" role="group" aria-label="Demo steps">
+<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">Agentic Autofix: settings to alerts</span><span class="demo-note">FOR PRESENTER ONLY</span></div>
+<ol class="demo-steps">
+<li>
+<p class="demo-step-title">1. ALLOW AT ENTERPRISE LEVEL, IF APPLICABLE</p>
+<p>An enterprise owner or security manager opens <code class="demo-path">Policies → Advanced Security → Agentic Autofix</code> and selects <code class="demo-path">All organizations: Allowed</code>. Skip this for a standalone organization. <a href="https://docs.github.com/en/code-security/how-tos/manage-security-alerts/manage-code-scanning-alerts/managing-access-to-agentic-autofix-for-code-scanning" target="_blank" rel="noopener noreferrer">Setup docs ↗</a></p>
+<p class="demo-out">Allowed grants permission to configure the feature; it does not enable any organization. Confirm the billing method and Code Security AI Credits budget before rollout.</p>
+</li>
+<li>
+<p class="demo-step-title">2. SHOW THE TWO ORGANIZATION SETTINGS</p>
+<p>Open <a href="https://github.com/organizations/theomonfort-org/settings/security_analysis" target="_blank" rel="noopener noreferrer">theomonfort-org Advanced Security settings ↗</a> as an organization owner or security manager. In <b>Global settings → Code scanning</b>, locate <b>Copilot Autofix</b> and <b>Agentic Autofix</b>.</p>
+<p><b>Copilot Autofix</b> controls classic suggestions. To enable agent remediation, set <code class="demo-path">Agentic Autofix → On</code>. Preview users must enable it again after GA.</p>
+<p class="demo-out">Turning this on enables Agentic Autofix for eligible repositories by default, not just the demo repo. Show the control without toggling it unless an organization-wide rollout is intended.</p>
+</li>
+<li>
+<p class="demo-step-title">3. CHECK THE REPOSITORY OVERRIDE</p>
+<p>In the chosen demo repository, open <code class="demo-path">Settings → Advanced Security → Code Security → Agentic Autofix</code>. A repository administrator can set it to <b>Off</b> to opt out, or <b>On</b> if higher-level settings permit. Keep <b>Copilot Autofix</b> on if you want classic suggestions too.</p>
+<p class="demo-out">With Agentic Autofix enabled, users with write access can assign default-branch backlog alerts. No Copilot license is required. Enabling the setting alone does not start a repair session.</p>
+</li>
+<li>
+<p class="demo-step-title">THE SECURITY BOT ON A PR</p>
+<p>Open <a href="https://github.com/octodemo/octocat_supply-automatic-octo-funicular/pull/57" target="_blank" rel="noopener noreferrer">octodemo/octocat_supply-automatic-octo-funicular#57 ↗</a>. In <b>Files changed</b>, show the comments from <code class="demo-path">github-advanced-security[bot]</code>.</p>
+<p class="demo-out">These findings are separate from Copilot code review. Keep this deliberately vulnerable demo PR unmerged.</p>
+</li>
+<li>
+<p class="demo-step-title">TELL CODEQL AND AI FINDINGS APART</p>
+<p>The <a href="https://github.com/octodemo/octocat_supply-automatic-octo-funicular/pull/57#discussion_r3976259388" target="_blank" rel="noopener noreferrer">CodeQL XSS comment ↗</a> is on <code class="demo-path">api/src/routes/cart.ts</code>. Show the rule title and follow <b>Show more details</b> to the Security alert.</p>
+<p>For <code class="demo-path">CartShareController.php</code>, show the risk explanation and fix advice in the <a href="https://github.com/octodemo/octocat_supply-automatic-octo-funicular/pull/57#discussion_r3976270848" target="_blank" rel="noopener noreferrer">AI SQL injection comment ↗</a> and <a href="https://github.com/octodemo/octocat_supply-automatic-octo-funicular/pull/57#discussion_r3976270856" target="_blank" rel="noopener noreferrer">command injection comment ↗</a>.</p>
+<p class="demo-out">These <b>AI Scan for pull requests</b> findings stay on the PR. The separate <b>AI Scan for repositories</b> creates backlog alerts in Security.</p>
+</li>
+<li>
+<p class="demo-step-title">FROM FINDING TO AGENTIC AUTOFIX</p>
+<p>The linked PR is in <b>octodemo</b>, so theomonfort-org settings do not apply to it. Open the <a href="https://github.com/octodemo/octocat_supply-automatic-octo-funicular/security/code-scanning/33" target="_blank" rel="noopener noreferrer">CodeQL XSS alert ↗</a> only as a reference. For remediation, choose an existing <b>default-branch backlog alert</b> in the configured demo repository; a PR-only alert cannot be assigned.</p>
+<p>Show <b>Assign to Copilot</b> when Agentic Autofix is enabled. With it off, <b>Generate fix</b> is available only if classic Copilot Autofix is enabled and supports the alert.</p>
+<p class="demo-out">A bot finding is not a remediation session. Invoking <b>Assign to Copilot</b> starts the agent's repair work and produces a <b>separate draft PR</b>. You can show the entry point without starting a session.</p>
+</li>
+</ol>
+</div>
+</details>
 
-- 🤖 **How it works** — The alert is passed to an LLM (GPT-4 family), which generates a diff based on the relevant code + surrounding context + CodeQL's description
-- 💬 **Where it shows** — On the alert page **and** inline in the PR; commit options: **Commit to existing branch** or **Commit to new branch**
-- ⚡ **Reduces MTTR** — GitHub internal data shows fix time is 3–4× faster
-- 🌐 **Coverage** — JavaScript/TypeScript, Python, Java/Kotlin, C#, and other CodeQL-supported languages
-- 🆓 **Free for OSS** — Copilot Autofix on public repos has been completely free since 2024 (no Copilot subscription required)
+**GA since 2026-10-15.** When Agentic Autofix is enabled, **Assign to Copilot replaces Generate fix** on default-branch backlog alerts.
 
-> 💡 Not just "find vulnerabilities" — **"let AI fix them too"** is the new standard. Review burden drops dramatically.
+<div class="ctl-widget">
+<p class="ctl-hint">▸ CLICK + FOR DETAILS</p>
+<div class="ctl-list">
+<details class="ctl-item" name="cs-agentic">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🎯</span><span class="ctl-name">Assign</span><span class="ctl-when">1–25 alerts</span><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Scope</span><span class="ctl-v"><b>1–25 default-branch backlog alerts</b>, including campaigns. One assignment → one session → one PR. <b>No PR-only or other-branch-only alerts</b></span></p>
+</div>
+</details>
+<details class="ctl-item" name="cs-agentic">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🔁</span><span class="ctl-name">Agent session</span><span class="ctl-when">Draft PR</span><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Flow</span><span class="ctl-v">Explore → fix → rerun CodeQL and iterate → <b>draft PR</b> with validation details. Review the session log; request changes in the session or PR comments</span></p>
+</div>
+</details>
+<details class="ctl-item" name="cs-agentic">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🧠</span><span class="ctl-name">Copilot Memory</span><span class="ctl-when">Learns fix patterns</span><a class="ctl-doc" href="https://github.blog/changelog/2026-09-25-agentic-autofix-now-uses-copilot-memory/" target="_blank" rel="noopener noreferrer">Changelog</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Reads</span><span class="ctl-v">Existing repository memories for context, when Copilot Memory is enabled</span></p>
+<p class="ctl-row"><span class="ctl-k">Writes</span><span class="ctl-v">Each fix pattern as a new memory. <b>Copilot code review and cloud agent</b> learn your secure patterns from it too</span></p>
+</div>
+</details>
+<details class="ctl-item" name="cs-agentic">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🛂</span><span class="ctl-name">Requirements</span><span class="ctl-when">No Copilot license</span><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Access</span><span class="ctl-v">GA for Code Security / GHAS customers on Enterprise Cloud, including data residency. Current docs also cover eligible personal public repos; managed-user personal repos are excluded</span></p>
+<p class="ctl-row"><span class="ctl-k">Needs</span><span class="ctl-v"><b>Agentic Autofix enabled</b>, a configured billing method and repository write access. <b>No Copilot license or pre-generated suggestion required</b>. Settings on the next slide</span></p>
+</div>
+</details>
+<details class="ctl-item" name="cs-agentic">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">💸</span><span class="ctl-name">Cost</span><span class="ctl-when">AI credits + Actions</span><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Agentic</span><span class="ctl-v"><b>Code Security AI Credits + Actions minutes</b>, including public repos. Usage appears under <b>Advanced Security</b> in billing's AI usage</span></p>
+<p class="ctl-row"><span class="ctl-k">Budget</span><span class="ctl-v">Eligible included credits are used first, then metered usage. Configure a <b>Code Security AI Credits</b> SKU budget</span></p>
+</div>
+</details>
+<details class="ctl-item" name="cs-agentic">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">⚠️</span><span class="ctl-name">Validation</span><span class="ctl-when">Best-effort</span><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Limits</span><span class="ctl-v">Cannot confirm fixes for custom queries, <code>security-extended</code> or third-party alerts. Unvalidated fixes or suspected false positives are noted in the PR. <b>Review and test before merging</b></span></p>
+</div>
+</details>
+</div>
+</div>
 
-📘 Details: <a class="retro-link" href="https://docs.github.com/en/code-security/code-scanning/managing-code-scanning-alerts/about-autofix-for-codeql-code-scanning" target="_blank" rel="noopener noreferrer">About Copilot Autofix ↗</a>
+## Autofix vs Agentic Autofix <a class="h2-doc" href="https://docs.github.com/en/code-security/concepts/code-scanning/autofix-for-code-scanning" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-## Assign to Copilot — delegate the fix to the agent (Public Preview)
+**Two independent settings**, not a cloud-agent switch (2026-10-19).
 
-**What it does** — Assign a Code Scanning alert directly to **Copilot Coding Agent**. Copilot analyzes the vulnerability, plans the fix, and opens a **draft Pull Request** for you to review.
+<div class="ctl-widget">
+<p class="ctl-hint">▸ OPEN EACH LEVEL TO SEE THE EXACT SETTINGS</p>
+<div class="ctl-list">
+<details class="ctl-item" name="cs-fix-vs">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">⚖️</span><span class="ctl-name">Compare</span><span class="ctl-when">Suggestion vs agent</span><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Classic</span><span class="ctl-v">One suggested patch for a supported alert; you review and apply it. <b>No AI credits</b></span></p>
+<p class="ctl-row"><span class="ctl-k">Agentic</span><span class="ctl-v">Investigates, fixes and validates <b>1–25 default-branch backlog alerts</b>; opens a draft PR. <b>Code Security AI Credits + Actions</b>. Neither type needs a Copilot license</span></p>
+</div>
+</details>
+<details class="ctl-item" name="cs-fix-vs">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🏢</span><span class="ctl-name">Enterprise</span><span class="ctl-when">Allow ≠ enable</span><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Where</span><span class="ctl-v"><b>Policies → Advanced Security → Agentic Autofix → All organizations: Allowed</b>. Enterprise owner or security manager</span></p>
+<p class="ctl-row"><span class="ctl-k">Effect</span><span class="ctl-v">Allows organizations to configure it; enables <b>no repositories by itself</b>. <b>Copilot Autofix</b> has a separate policy. Skip this level for standalone organizations</span></p>
+</div>
+</details>
+<details class="ctl-item" name="cs-fix-vs">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🏗️</span><span class="ctl-name">Organization</span><span class="ctl-when">Enable eligible repos</span><a class="ctl-doc" href="https://docs.github.com/en/code-security/how-tos/manage-security-alerts/manage-code-scanning-alerts/managing-access-to-agentic-autofix-for-code-scanning" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Where</span><span class="ctl-v"><b>Settings → Advanced Security → Global settings → Code scanning → Agentic Autofix → On</b>. Organization owner or security manager</span></p>
+<p class="ctl-row"><span class="ctl-k">Effect</span><span class="ctl-v">Enables eligible repositories <b>by default</b>. Coordinate opt-outs first. An enterprise block cannot be overridden here</span></p>
+</div>
+</details>
+<details class="ctl-item" name="cs-fix-vs">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">📦</span><span class="ctl-name">Repository</span><span class="ctl-when">Opt out / re-enable</span><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Where</span><span class="ctl-v"><b>Settings → Advanced Security → Code Security → Agentic Autofix → On / Off</b>. Repository administrator</span></p>
+<p class="ctl-row"><span class="ctl-k">Effect</span><span class="ctl-v">Can opt out or re-enable only when parent settings permit. Eligible personal public repos configure this directly; managed-user personal repos are excluded</span></p>
+</div>
+</details>
+<details class="ctl-item" name="cs-fix-vs">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🔧</span><span class="ctl-name">Which button?</span><span class="ctl-when">Separate controls</span><a class="ctl-doc" href="https://docs.github.com/en/code-security/how-tos/manage-security-alerts/manage-code-scanning-alerts/disabling-copilot-autofix-for-code-scanning" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Agentic on</span><span class="ctl-v"><b>Assign to Copilot</b> on default-branch backlog alerts. Assignment starts the metered session, not enablement</span></p>
+<p class="ctl-row"><span class="ctl-k">Agentic off</span><span class="ctl-v"><b>Generate fix → Create PR with fix</b> only if Copilot Autofix is on and supports the alert. Both off: no AI fix entry point</span></p>
+<p class="ctl-row"><span class="ctl-k">Classic</span><span class="ctl-v"><b>Copilot Autofix</b> is on by default with CodeQL and has its own cascading controls at the same settings levels. Its PR suggestions remain separate from agent remediation</span></p>
+</div>
+</details>
+</div>
+</div>
 
-- 🎯 **Two ways to assign** — **bulk** (select multiple alerts in a Security Campaign → "Assign Copilot" → 1 consolidated PR) or **single** (assignee picker on the alert page)
-- 🤖 **What Copilot does** — analyzes the vulnerability → drafts a fix plan → opens a draft PR; iterate via `@copilot` comments on the PR
-- 📦 **Output** — multi-file, repository-wide changes (vs Autofix's inline single-file patch)
-- 🛂 **Requirements** — GitHub Code Security or GHAS **+** Copilot Coding Agent (GHEC); the alert must already have an Autofix suggestion (Autofix-supported queries only)
-- 📅 **Status** — Public Preview (2025-10-28)
-
-📘 Details: <a class="retro-link" href="https://github.blog/changelog/2025-10-28-assign-code-scanning-alerts-to-copilot-for-automated-fixes-in-public-preview/" target="_blank" rel="noopener noreferrer">Assign code scanning alerts to Copilot (changelog) ↗</a>
-
-## Autofix vs Assign to Copilot
-
-| Aspect | 🔧 **Autofix (suggestion)** | 🤖 **Assign to Copilot** |
-| --- | --- | --- |
-| **Output** | Inline patch — commit to **existing branch** or **new branch** | Draft Pull Request opened by Copilot bot |
-| **Fix scope** | Single file, minimal local fix | Multi-file; repository-wide context |
-| **Granularity** | Per-alert only (Generate fix one by one) | Per-alert **or** bulk (Security Campaign → 1 PR for many alerts) |
-| **Validation** | None at suggestion time (post-merge re-scan) | Sandboxed analysis; CodeQL / CI run on the PR before merge |
-| **Iteration** | One-shot, no regenerate; discard if you dislike it | Comment `@copilot` on the PR to refine / re-fix |
-| **Speed** | Seconds (synchronous) | Minutes (async background) |
-| **License & cost** | Free with GHAS / GitHub Code Security — no extra license | Requires Copilot Coding Agent license; consumes premium requests |
-| **Prerequisite** | CodeQL query must support Autofix (otherwise no "Generate fix" button) | An Autofix suggestion must already exist on the alert |
-
-> 🔑 **Rule of thumb** — start with **Autofix** for quick local fixes; escalate to **Assign to Copilot** when the fix spans multiple files, needs refactoring, or warrants a full PR conversation.
+> ⚠️ Preview users must **enable Agentic Autofix again after GA**.
 
 ## Security Campaigns — drive remediation at scale
 
-**What it is** — A **time-boxed, org-wide remediation initiative**. Curate alerts, assign owners, set a deadline, track progress on a dashboard.
+Detection is the easy half; **what happens after the alert** is the real work. At scale, don't grind the raw alert list — run a **time-boxed campaign**.
 
-- 🎯 **Use case** — "Fix all critical SQLi in product X by Q2" / clear `security-extended` backlog / chase a CVE post-incident
-- 🧭 **Targeting** — filter by severity, CWE, query, language, repo, team, age (with preview)
-- 👥 **Ownership** — routed to CODEOWNERS / teams; per-team progress
-- ⏰ **Deadline & dashboard** — due date + open / fixed / overdue tracker
-- 🤖 **Pairs with Assign to Copilot** — bulk-assign Autofix-eligible alerts → 1 PR per repo
-- 🛂 **Permissions** — **security managers / org owners** at org level
-
-**How to create one**
-- `Org → Security and quality → Campaigns → New campaign` — pick **From template**, **From code scanning filters**, or **From secret scanning filters**
+<div class="rem-widget">
+<p class="rem-hint">▸ CLICK A STEP FOR DETAILS</p>
+<div class="rem-flow">
+<div class="rem-row">
+<details class="rem-slot" name="cs-campaign">
+<summary class="rem-btn"><span class="rem-icon" aria-hidden="true">🎯</span><span class="rem-name">SCOPE</span></summary>
+<div class="rem-plate">
+<p class="rem-title">🎯 SCOPE — not the whole org</p>
+<p class="rem-why"><code>Org → Security and quality → Campaigns → New campaign</code>, then pick <b>From template</b> or <b>From code scanning filters</b>.</p>
+<p class="rem-why">Filter by severity, CWE, query, language, repo, team, age. Targeting a repo custom property (<code>props.BusinessPriority:Urgent</code>) is the usual move. Hard cap: <b>1000 alerts</b>.</p>
+</div>
+</details>
+<details class="rem-slot" name="cs-campaign">
+<summary class="rem-btn"><span class="rem-icon" aria-hidden="true">⚡</span><span class="rem-name">TRIAGE</span></summary>
+<div class="rem-plate">
+<p class="rem-title">⚡ TRIAGE — make it finishable</p>
+<p class="rem-why">Start with <b>critical and high</b>, and with findings that carry a real reachable data-flow path. Dumping the whole <code>security-extended</code> backlog in guarantees nobody starts.</p>
+<p class="rem-why">Watch the count drop as you filter. Cutting it down to <b>one sprint's worth</b> is the only trick that makes campaigns work.</p>
+</div>
+</details>
+<details class="rem-slot" name="cs-campaign">
+<summary class="rem-btn"><span class="rem-icon" aria-hidden="true">👥</span><span class="rem-name">OWN</span></summary>
+<div class="rem-plate">
+<p class="rem-title">👥 OWN — a name and a date</p>
+<p class="rem-why">Every campaign gets a <b>due date</b> and a <b>campaign manager</b>. The picker only offers <b>org owners and security managers</b>.</p>
+<p class="rem-why">Alerts route to CODEOWNERS or a named team. Publishing notifies everyone who can see the alerts, and the campaign appears in each repo's Security tab.</p>
+</div>
+</details>
+<details class="rem-slot" name="cs-campaign">
+<summary class="rem-btn"><span class="rem-icon" aria-hidden="true">🤖</span><span class="rem-name">FIX</span></summary>
+<div class="rem-plate">
+<p class="rem-title">🤖 FIX — hand the batch to Copilot</p>
+<p class="rem-why">With <b>Agentic Autofix enabled</b>, select <b>1–25 default-branch backlog alerts</b> and assign them to Copilot. This consumes <b>Code Security AI Credits + Actions minutes</b>.</p>
+<p class="rem-why">For the rest, <b>batch apply</b> the Autofix suggestions on the PR. The dashboard burns down open / fixed / overdue as you go.</p>
+</div>
+</details>
+</div>
+<div class="rem-screen" style="min-height:11.4em"><p class="rem-empty">SELECT A STEP ▸</p></div>
+</div>
+</div>
 
 📘 Details: <a class="retro-link" href="https://docs.github.com/en/code-security/securing-your-organization/fixing-security-alerts-at-scale/about-security-campaigns" target="_blank" rel="noopener noreferrer">About security campaigns (GitHub Docs) ↗</a>
 
-## Getting started (fastest path)
+## My recommended starting checklist <a class="h2-doc" href="https://docs.github.com/en/code-security/concepts/code-scanning/code-scanning" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-**Step 1 — Enable Default setup (this alone is enough)**
+<details class="workshop-demo"><summary>Demo steps</summary>
 
-```
-Repo → Settings → Code security → Code scanning
-  → Set up CodeQL → Default
-```
+<div class="demo-window" role="group" aria-label="Demo steps">
+<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">Code Scanning checklist</span><span class="demo-note">FOR PRESENTER ONLY</span></div>
+<ol class="demo-steps">
+<li>
+<p class="demo-step-title">1. ENABLEMENT AND COVERAGE</p>
+<p><a href="https://github.com/theomonfort-org/ghas-test-1/settings/security_analysis" target="_blank" rel="noopener noreferrer">ghas-test-1 → Advanced Security ↗</a> / <a href="https://github.com/theomonfort-org/ghas-test-1/actions/workflows/codeql.yml" target="_blank" rel="noopener noreferrer">CodeQL runs ↗</a>: inspect the existing Advanced setup and language jobs. Do not switch this configured repository to Default setup.</p>
+</li>
+<li>
+<p class="demo-step-title">2. EXTRA QUERY PACKS</p>
+<p><a href="https://github.com/theomonfort-org/ghas-test-1/blob/main/.github/workflows/codeql.yml" target="_blank" rel="noopener noreferrer">ghas-test-1 → codeql.yml ↗</a> / <a href="https://github.com/github/codeql-coding-standards" target="_blank" rel="noopener noreferrer">MISRA / CERT / AUTOSAR packs ↗</a>: show how the workflow configures additional queries and packs.</p>
+</li>
+<li>
+<p class="demo-step-title">3. MERGE PROTECTION</p>
+<p><a href="https://github.com/theomonfort-org/ghas-test-1/settings/rules/new?target=branch&amp;enforcement=disabled" target="_blank" rel="noopener noreferrer">ghas-test-1 → New branch ruleset ↗</a>: <b>Require code scanning results → CodeQL</b>. Example: <b>Security alerts: High or higher</b>, <b>Alerts: Errors</b>, target <code class="demo-path">main</code>. Keep it disabled for a walkthrough.</p>
+</li>
+<li>
+<p class="demo-step-title">4. AI SCAN</p>
+<p><a href="https://github.com/enterprises/octodemo" target="_blank" rel="noopener noreferrer">octodemo ↗</a> → <b>Policies → Advanced Security → AI Scan</b>, then <a href="https://github.com/organizations/theomonfort-org/settings/security_analysis" target="_blank" rel="noopener noreferrer">theomonfort-org → Global settings ↗</a>. Show the separate controls: <b>AI Scan for pull requests</b>, <b>AI Scan for repositories</b>, and <b>Scan for AI applications</b>.</p>
+<p>For repository scans, open <a href="https://github.com/theomonfort-org/ghas-test-1/security/code-scanning" target="_blank" rel="noopener noreferrer">Security and quality → Code scanning ↗</a> → <b>AI Scan</b> (top right) → <b>Standard scan</b>. Findings appear in this alert list; filter by the <b>AI Scan</b> tool.</p>
+<p class="demo-out">Confirm enterprise permission and the Code Security AI Credits budget. Organization controls affect all eligible repositories. Show the controls and scan menu without toggling settings or starting a paid scan.</p>
+</li>
+<li>
+<p class="demo-step-title">5. ASSISTED REMEDIATION</p>
+<p><a href="https://github.com/organizations/theomonfort-org/settings/security_analysis" target="_blank" rel="noopener noreferrer">theomonfort-org → Autofix settings ↗</a>: show the separate <b>Copilot Autofix</b> and <b>Agentic Autofix</b> controls. Check enterprise permission before enabling Agentic Autofix.</p>
+<p><a href="https://github.com/theomonfort-org/ghas-test-1/settings/security_analysis" target="_blank" rel="noopener noreferrer">ghas-test-1 → Repository override ↗</a> / <a href="https://github.com/theomonfort-org/ghas-test-1/security/code-scanning" target="_blank" rel="noopener noreferrer">Code scanning alerts ↗</a></p>
+</li>
+<li>
+<p class="demo-step-title">6. SECURITY CAMPAIGNS</p>
+<p><a href="https://github.com/orgs/theomonfort-org/security/campaigns" target="_blank" rel="noopener noreferrer">theomonfort-org → Campaigns ↗</a>: <b>Create campaign → From code scanning filters</b>. Scope to <b>ghas-test-1</b>, choose a manager and due date, then save as a draft.</p>
+</li>
+</ol>
+</div>
+</details>
 
-GitHub auto-detects your language and generates a CodeQL workflow behind the scenes. Runs automatically on push and PR — results appear in the **Security tab** + inline comments on the PR's Files Changed tab.
+Validate detection, protect new code, then reduce the backlog.
 
-**Step 2 — Enable Copilot Autofix**
+<div class="ctl-widget">
+<p class="ctl-hint">▸ CHECK COMPLETED STEPS. OPEN A STEP FOR SETTINGS</p>
+<div class="ctl-list">
+<details class="ctl-item" name="cs-start">
+<summary class="ctl-btn"><input type="checkbox" class="ctl-check" aria-labelledby="cs-start-1" /><span class="ctl-icon">1</span><span class="ctl-name" id="cs-start-1">Enable CodeQL and verify coverage</span><span class="ctl-when">ACTIVATE</span><a class="ctl-doc" href="https://docs.github.com/en/code-security/how-tos/find-and-fix-code-vulnerabilities/configure-code-scanning/configure-code-scanning" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Start</span><span class="ctl-v"><a class="retro-link" href="https://github.com/OWNER/REPO/settings/security_analysis" target="_blank" rel="noopener noreferrer">CodeQL settings ↗</a>: start with <b>Default setup</b>. Check the first scan, languages and Actions usage before rolling out with security configurations.</span></p>
+</div>
+</details>
+<details class="ctl-item" name="cs-start">
+<summary class="ctl-btn"><input type="checkbox" class="ctl-check" aria-labelledby="cs-start-2" /><span class="ctl-icon">2</span><span class="ctl-name" id="cs-start-2">Add extra query packs if needed</span><span class="ctl-when">OPTIONAL</span><a class="ctl-doc" href="https://docs.github.com/en/code-security/reference/code-scanning/workflow-configuration-options#specifying-codeql-query-packs" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Customize</span><span class="ctl-v"><a class="retro-link" href="https://github.com/OWNER/REPO/settings/security_analysis" target="_blank" rel="noopener noreferrer">CodeQL configuration ↗</a>: add <a class="retro-link" href="https://github.com/github/codeql-coding-standards" target="_blank" rel="noopener noreferrer">MISRA / CERT / AUTOSAR packs ↗</a> for C/C++, or internal queries. Adapt the configuration to your build.</span></p>
+</div>
+</details>
+<details class="ctl-item" name="cs-start">
+<summary class="ctl-btn"><input type="checkbox" class="ctl-check" aria-labelledby="cs-start-3" /><span class="ctl-icon">3</span><span class="ctl-name" id="cs-start-3">Block high-risk findings before merge</span><span class="ctl-when">RULESETS</span><a class="ctl-doc" href="https://docs.github.com/en/code-security/how-tos/find-and-fix-code-vulnerabilities/manage-your-configuration/set-merge-protection" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Example</span><span class="ctl-v"><a class="retro-link" href="https://github.com/OWNER/REPO/settings/rules" target="_blank" rel="noopener noreferrer">Rulesets ↗</a>: <b>Require code scanning results</b> (CodeQL). <b>Security alerts: High or higher</b>; <b>Alerts: Errors</b>. Target <code>main</code> and restrict bypass.</span></p>
+</div>
+</details>
+<details class="ctl-item" name="cs-start">
+<summary class="ctl-btn"><input type="checkbox" class="ctl-check" aria-labelledby="cs-start-4" /><span class="ctl-icon">4</span><span class="ctl-name" id="cs-start-4">Choose your AI Scan coverage</span><span class="ctl-when">AI SCAN</span><a class="ctl-doc" href="https://docs.github.com/en/code-security/concepts/code-scanning/ai-scan#managing-ai-scan" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Opt in</span><span class="ctl-v"><a class="retro-link" href="https://github.com/organizations/ORG/settings/security_analysis" target="_blank" rel="noopener noreferrer">Org settings ↗</a>: check enterprise permission, each feature's eligibility and <b>AI credits</b> budget. Enable <b>PR scanning</b>, <b>repository scanning</b>, and <b>Scan for AI applications</b> separately; repositories can opt out.</span></p>
+<p class="ctl-row"><span class="ctl-k">Run</span><span class="ctl-v">PR detectors run automatically and are advisory. Repository scans run on demand from <b>Code scanning → AI Scan</b>, across all languages on the default branch, including CodeQL-supported ones. They select code within a fixed budget, not every file. <b>CodeQL default setup is not required</b> for AI Scan.</span></p>
+</div>
+</details>
+<details class="ctl-item" name="cs-start">
+<summary class="ctl-btn"><input type="checkbox" class="ctl-check" aria-labelledby="cs-start-5" /><span class="ctl-icon">5</span><span class="ctl-name" id="cs-start-5">Set up assisted remediation</span><span class="ctl-when">AUTOFIX</span><a class="ctl-doc" href="https://docs.github.com/en/code-security/concepts/code-scanning/autofix-for-code-scanning" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Prepare</span><span class="ctl-v"><a class="retro-link" href="https://github.com/organizations/ORG/settings/security_analysis" target="_blank" rel="noopener noreferrer">Org settings ↗</a>: classic Autofix is on with CodeQL unless disabled. Optionally enable <b>Agentic Autofix</b> for draft PRs; budget AI credits + Actions.</span></p>
+</div>
+</details>
+<details class="ctl-item" name="cs-start">
+<summary class="ctl-btn"><input type="checkbox" class="ctl-check" aria-labelledby="cs-start-6" /><span class="ctl-icon">6</span><span class="ctl-name" id="cs-start-6">Create security campaigns</span><span class="ctl-when">CAMPAIGNS</span><a class="ctl-doc" href="https://docs.github.com/en/code-security/how-tos/manage-security-alerts/remediate-alerts-at-scale/creating-managing-security-campaigns" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Remediate</span><span class="ctl-v"><a class="retro-link" href="https://github.com/orgs/ORG/security/campaigns" target="_blank" rel="noopener noreferrer">Campaigns ↗</a>: select code scanning alerts, prioritize risk, set a manager and due date. Start with a small backlog.</span></p>
+</div>
+</details>
+</div>
+</div>
 
-Enable **Copilot Autofix** inside Code scanning settings. A "Generate fix" button will appear on alert pages.
+URL templates: replace `ORG`, `OWNER`, `REPO`.
 
-**Step 3 — Migrate to Advanced setup (if needed)**
+## Advanced setup and SARIF
+
+When Default is not enough (monorepo, unusual build, another SAST tool), write the workflow yourself.
 
 ```yaml
 # .github/workflows/codeql.yml
@@ -182,60 +648,120 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: github/codeql-action/init@v3
-        with:
-          languages: ${{ matrix.language }}
-          queries: security-extended
+        with: { languages: '${{ matrix.language }}', queries: security-extended }
       - uses: github/codeql-action/analyze@v3
+
+      # third-party SAST (Semgrep, Snyk, ESLint security) lands in the same UI:
+      - uses: github/codeql-action/upload-sarif@v3
+        with: { sarif_file: results.sarif }
 ```
 
-**Step 4 — Integrate third-party SAST tools (SARIF)**
+> 💡 Point `runs-on` at a **self-hosted runner** and the Actions minutes are not billed — the first lever when scan cost bites at scale.
 
-Tools like Semgrep, ESLint security, and Snyk can upload results in **SARIF** format to appear alongside CodeQL in the Security tab.
+## Pricing: three meters <a class="h2-doc" href="https://docs.github.com/en/billing/concepts/product-billing/github-advanced-security#how-ai-feature-usage-is-billed" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-```yaml
-- uses: github/codeql-action/upload-sarif@v3
-  with:
-    sarif_file: results.sarif
-```
+<p class="spec-hint">▸ + UNFOLDS THE DETAIL</p>
 
-**Step 5 — Enable org-wide / enterprise-wide**
+<div class="spec-widget spec-compact">
+<table class="compact-table" style="table-layout:fixed">
+<colgroup><col style="width:22%" /><col style="width:40%" /><col style="width:38%" /></colgroup>
+<thead>
+<tr><th style="white-space:normal">Cost</th><th>How it is measured</th><th>Good to know</th></tr>
+</thead>
+<tbody>
+<tr>
+<td style="white-space:normal">💺 License</td>
+<td><b>$30 / active committer / month</b><br>GitHub Code Security</td>
+<td>
+<div class="spec-list">
+<details class="spec-item" name="cs-billing">
+<summary class="spec-btn"><span class="spec-icon" aria-hidden="true">📦</span><span class="spec-key">What's included</span><span class="spec-toggle" aria-hidden="true"></span></summary>
+<p class="spec-what">CodeQL (default and advanced), <b>Copilot Autofix</b>, SARIF upload, Security overview, Security campaigns, custom queries. <b>Autofix costs nothing extra.</b></p>
+</details>
+<details class="spec-item" name="cs-billing">
+<summary class="spec-btn"><span class="spec-icon" aria-hidden="true">👤</span><span class="spec-key">Who counts</span><span class="spec-toggle" aria-hidden="true"></span></summary>
+<p class="spec-what">Active committers have a commit pushed to an enabled repo in the last <b>90 days</b>. <b>One license per person</b> across enabled repos and orgs in the enterprise; GitHub App bots are excluded. Code Security is sold <b>standalone</b>.</p>
+</details>
+</div>
+</td>
+</tr>
+<tr>
+<td style="white-space:normal">⚙️ Actions minutes</td>
+<td>CodeQL <b>runs on Actions</b>. Private scans consume minutes; overages are billed.</td>
+<td>
+<div class="spec-list">
+<details class="spec-item" name="cs-billing">
+<summary class="spec-btn"><span class="spec-icon" aria-hidden="true">🔁</span><span class="spec-key">When it runs</span><span class="spec-toggle" aria-hidden="true"></span></summary>
+<p class="spec-what">Default setup runs on pushes to the default or protected branches, PRs against them and a <b>weekly schedule</b>. Minutes depend on <b>run duration, repository count, languages and frequency</b>.</p>
+</details>
+<details class="spec-item" name="cs-billing">
+<summary class="spec-btn"><span class="spec-icon" aria-hidden="true">💳</span><span class="spec-key">Cap the spend</span><span class="spec-toggle" aria-hidden="true"></span></summary>
+<p class="spec-what"><b>Self-hosted runners are not billed</b>, or set an Actions budget. Minutes are <b>not</b> included in the Code Security license. Trap: <b>larger runners are charged even on public repos</b>.</p>
+</details>
+<details class="spec-item" name="cs-billing">
+<summary class="spec-btn"><span class="spec-icon" aria-hidden="true">📊</span><span class="spec-key">Measure it</span><span class="spec-toggle" aria-hidden="true"></span></summary>
+<p class="spec-what">Filter Actions usage metrics <b>by workflow name</b> to isolate what CodeQL alone costs, so the conversation runs on real numbers instead of estimates.<br /><code>github.com/orgs/&lt;org&gt;/actions/metrics/usage?filters=codeql.yml</code></p>
+</details>
+</div>
+</td>
+</tr>
+<tr>
+<td style="white-space:normal">🤖 AI credits</td>
+<td>Metered: <b>AI Scan</b> (detection) and <b>Agentic Autofix</b> (fixing). Classic Autofix suggestions remain free.</td>
+<td>
+<div class="spec-list">
+<details class="spec-item" name="cs-billing">
+<summary class="spec-btn"><span class="spec-icon" aria-hidden="true">🔎</span><span class="spec-key">AI Scan</span><span class="spec-toggle" aria-hidden="true"></span></summary>
+<p class="spec-what">As of <b>2026-11-11</b>: automatic PR scans and on-demand repository scans consume <b>Code Security AI Credits</b>, even without a fix request. On an <b>organization-owned repo</b>, the organization's billing account pays (standalone org or enterprise), <b>not the initiating user's personal credits</b>. Neither requires a Copilot license. <a class="retro-link" href="https://docs.github.com/en/code-security/concepts/code-scanning/ai-scan-for-repositories#billing" target="_blank" rel="noopener noreferrer">Repository scan billing ↗</a>. The separate <b>AI applications</b> detector has its own <a class="retro-link" href="https://docs.github.com/en/code-security/concepts/code-scanning/ai-applications-scanning-for-pull-requests#billing" target="_blank" rel="noopener noreferrer">licensing and AI credit requirements ↗</a>.</p>
+</details>
+<details class="spec-item" name="cs-billing">
+<summary class="spec-btn"><span class="spec-icon" aria-hidden="true">🆓</span><span class="spec-key">Copilot Autofix</span><span class="spec-toggle" aria-hidden="true"></span></summary>
+<p class="spec-what">Classic suggestions, including <b>Generate fix → Create PR with fix</b>, consume <b>no AI credits</b>. No Copilot license required; included with Code Security and free on public repos. <a class="retro-link" href="https://docs.github.com/en/code-security/concepts/code-scanning/autofix-for-code-scanning#choosing-an-autofix-type" target="_blank" rel="noopener noreferrer">Docs ↗</a></p>
+</details>
+<details class="spec-item" name="cs-billing">
+<summary class="spec-btn"><span class="spec-icon" aria-hidden="true">💸</span><span class="spec-key">Agentic Autofix</span><span class="spec-toggle" aria-hidden="true"></span></summary>
+<p class="spec-what">As of <b>2026-10-26</b>: <b>Security → Assign to Copilot</b> or campaign assignment consumes <b>Code Security AI Credits + Actions minutes</b>. On an <b>organization-owned repo</b>, the org or enterprise billing account pays, <b>not your personal credits</b>, even when you assign the alert yourself. No Copilot license required. Set a <b>Code Security AI Credits</b> SKU budget. <a class="retro-link" href="https://docs.github.com/en/billing/concepts/product-billing/github-advanced-security#how-ai-feature-usage-is-billed" target="_blank" rel="noopener noreferrer">Billing docs ↗</a></p>
+</details>
+<details class="spec-item" name="cs-billing">
+<summary class="spec-btn"><span class="spec-icon" aria-hidden="true">👤</span><span class="spec-key">Copilot Chat / agent</span><span class="spec-toggle" aria-hidden="true"></span></summary>
+<p class="spec-what">Asking <b>Copilot Chat</b> or starting a <b>regular cloud-agent task</b> to fix a vulnerability is Copilot usage, not Agentic Autofix. It consumes AI credits under <b>your Copilot plan</b>: your allowance on an individual plan, or the <b>shared org / enterprise pool</b> on Business / Enterprise. <a class="retro-link" href="https://docs.github.com/en/copilot/concepts/billing-and-usage/individuals/billing" target="_blank" rel="noopener noreferrer">Individual ↗</a> / <a class="retro-link" href="https://docs.github.com/en/copilot/concepts/billing-and-usage/organizations-and-enterprises/billing" target="_blank" rel="noopener noreferrer">Organization ↗</a></p>
+</details>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 
-Use `Org → Settings → Code security → default settings` to apply to new and existing repos at once. Security campaigns let you manage goals like "fix all critical alerts across all repos within 30 days" (Code Security).
+## Eligibility by repository type <a class="h2-doc" href="https://github.blog/changelog/2025-03-04-introducing-github-secret-protection-and-github-code-security/" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-## Eligibility and pricing
+<table class="availability-table">
+<thead>
+<tr><th scope="col">Feature</th><th scope="col">Public repo</th><th scope="col">Private repo<br>without Code Security</th><th scope="col">Private repo<br>with Code Security</th></tr>
+</thead>
+<tbody>
+<tr><td>Core code scanning</td><td>✅ Free</td><td>❌</td><td>✅ Included</td></tr>
+<tr><td>Security campaigns</td><td>❌</td><td>❌</td><td>✅ Included</td></tr>
+<tr><td>Actions minutes</td><td>Free*</td><td>Not applicable</td><td>Separate usage*</td></tr>
+</tbody>
+</table>
 
-| Feature | Public repo | Private repo (No GHAS / Code Security) | Private repo (With GHAS / Code Security) |
-| --- | :---: | :---: | :---: |
-| CodeQL (default + advanced) | ✅ Free | ❌ | ✅ |
-| Third-party SARIF upload | ✅ Free | ❌ | ✅ |
-| Copilot Autofix | ✅ Free (since 2024) | ❌ | ✅ |
-| Security overview / campaigns | ✅ Free | ❌ | ✅ |
-| PR inline comments | ✅ Free | ❌ | ✅ |
-| Custom CodeQL queries | ✅ Free | ❌ | ✅ |
-
-> 💰 In 2025, GHAS was split — if you only need code scanning, **GitHub Code Security** ($30/month/active committer) is enough (no full GHAS contract required). Combine with Secret Protection if you also want secret scanning.  
-> 🆓 **Public repos get CodeQL and Autofix completely free**. If you're OSS, there's no reason not to enable this right now.  
-> ⚙️ Code scanning workflows run on GitHub-hosted runners — free for public repos; included in GHAS/Code Security for private repos (no additional Actions charges).
-
-📘 Details:
-- <a class="retro-link" href="https://github.blog/changelog/2025-03-04-introducing-github-secret-protection-and-github-code-security/" target="_blank" rel="noopener noreferrer">Introducing GitHub Secret Protection & Code Security (2025 Mar) ↗</a>
-- <a class="retro-link" href="https://docs.github.com/en/code-security/code-scanning/integrating-with-code-scanning/sarif-support-for-code-scanning" target="_blank" rel="noopener noreferrer">SARIF support for code scanning ↗</a>
-- <a class="retro-link" href="https://docs.github.com/en/code-security/how-tos/secure-at-scale/configure-organization-security/establish-complete-coverage/configuring-global-security-settings-for-your-organization" target="_blank" rel="noopener noreferrer">Org default security settings ↗</a>
+> 📦 **Core**: CodeQL, custom queries, SARIF uploads, eligible Autofix suggestions, PR annotations and Security overview.
+>
+> 💰 **Actions***: standard hosted runners are free for public repos. Private repos consume included minutes, then bill overages. Larger runners are always billed.
+>
+> ⚠️ **Public → private**: Code Security is required to keep code scanning enabled.
 
 ## Code Security Risk Assessment (free inventory scan)
 
-**What it does** — scans the **up to 20 most active repositories** in your org with a single click using CodeQL, surfacing where vulnerabilities are hiding. **No GHAS / Code Security license required — completely free** (GA April 2026).
+One click, CodeQL scans the **20 most active repos** in your org and shows where the vulnerabilities are. **No GHAS / Code Security license needed, completely free** (GA April 2026).
 
-- 🔎 **Scope** — up to 20 repos with the most recent active commits (re-selectable each run)
-- 📊 **Output** — aggregated report by **severity, language, rule type**, including **how many are fixable by Copilot Autofix**
-- 🕒 **Frequency** — re-runnable **once every 90 days** (point-in-time inventory)
-- 🛂 **Permissions** — Organization owners / security managers only
+- 🔎 **Scope** — up to 20 repos with the most recent commits, re-selectable each run
+- 📊 **Output** — report by **severity, language, rule type**, plus **how many Copilot Autofix can fix**
+- 🕒 **Frequency** — re-runnable **once every 90 days**; org owners / security managers only
 - 🚀 **How to run** — `Org → Security → Assessments → Run code security risk assessment`
-- 🆓 **Cost** — no license, no Actions minutes charged — perfect for evaluating Code Security before purchase
+- 🆓 **Cost** — no license, no Actions minutes — ideal for evaluating Code Security before buying
 
-> 📊 Pair this with Secret Risk Assessment (see <a class="retro-link" href="/en/playbook/secret-scanning">Secret Scanning ↗</a>) to get a complete picture of your organization's security posture in a single day. Use the results to decide whether to adopt **Code Security**.
+> 📊 Pair this with Secret Risk Assessment (see <a class="retro-link" href="https://theomonfort.github.io/theomonfort/en/playbook/secret-scanning">Secret Protection ↗</a>) and you get a full posture read in a single day, then decide on **Code Security** with real numbers.
 
-📘 Details:
-- <a class="retro-link" href="https://github.blog/changelog/2026-04-08-code-security-risk-assessment-available-for-organizations/" target="_blank" rel="noopener noreferrer">Code Security Risk Assessment GA (2026/04) ↗</a>
-- <a class="retro-link" href="https://docs.github.com/en/code-security/concepts/code-scanning/code-security-risk-assessment" target="_blank" rel="noopener noreferrer">Code security risk assessment (GitHub Docs) ↗</a>
-- <a class="retro-link" href="https://github.blog/security/application-security/how-exposed-is-your-code-find-out-in-minutes-for-free/" target="_blank" rel="noopener noreferrer">How exposed is your code? Find out in minutes — for free ↗</a>
+📘 Details: <a class="retro-link" href="https://docs.github.com/en/code-security/concepts/code-scanning/code-security-risk-assessment" target="_blank" rel="noopener noreferrer">Code security risk assessment ↗</a> / <a class="retro-link" href="https://github.blog/security/application-security/how-exposed-is-your-code-find-out-in-minutes-for-free/" target="_blank" rel="noopener noreferrer">How exposed is your code? ↗</a>

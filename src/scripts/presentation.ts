@@ -52,6 +52,10 @@ function showSlide(i: number) {
     slide.forEach((el) => {
       el.classList.toggle('akq-slide-hidden', !active);
       el.classList.toggle('akq-slide-active', active);
+      if (!active) {
+        if (el instanceof HTMLVideoElement) el.pause();
+        el.querySelectorAll('video').forEach((video) => video.pause());
+      }
     });
   });
   updateChrome();
@@ -295,6 +299,7 @@ function initPresent() {
 function onKey(e: KeyboardEvent) {
   const t = e.target as HTMLElement | null;
   if (e.altKey || e.ctrlKey || e.metaKey || t?.closest('input,textarea,select,[contenteditable="true"]')) return;
+  if (t?.closest('video,audio') || (e.key === ' ' && t?.closest('summary'))) return;
   const section = document.querySelector<HTMLElement>('.playbook-detail');
   if (!section) return;
   const present = document.body.classList.contains('present-mode');
