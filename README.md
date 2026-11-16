@@ -43,6 +43,38 @@ npm run preview
 
 preview はポート **4322**。サイトはドメイン直下 (`base: /`) 用です。元サイトの `/theomonfort` サブパスや pnpm は不要です。
 
+## Copilot アプリから Codespace に接続 / Connect from the Copilot app
+
+`.devcontainer/devcontainer.json` に `ghcr.io/github/copilot-host/copilotd:0` を追加済みです。コンテナ起動時にホスト `copilotd` を起動し、Codespace を自動登録します。既存のイメージ、開発ツール、拡張機能、ポート、作成時コマンドは維持しています。Actions 用の `copilot-setup-steps.yml` とは別の設定です。
+
+1. **Copilot ライセンス、カスタム環境へのアクセス、Codespaces の利用権限**が必要です。このテンプレートから新しいリポジトリを作成し、設定を含むブランチで Codespace を作成します。
+2. 既存の派生リポジトリは自動更新されません。設定を取り込み、既存 Codespace の作業を保存してコンテナをリビルドしてください。main と `checkpoint1` / `checkpoint2` / `checkpoint3` の全スナップショットに同じ feature があり、チェックポイントの取り込みで削除されません。
+3. コンテナ起動と**ホスト登録の完了**を待ちます。JSON を追加しただけでは接続できません。Copilot アプリで Codespace 所有者と同じ GitHub アカウントにサインインし、**Environments** から Codespace を選択します。アプリの認証トークンには `codespace` スコープが必要です。
+
+**English:** Requires a Copilot license, access to custom environments, and Codespaces access. New template repositories inherit the host feature; existing generated repositories do not update automatically. Create a Codespace on the branch containing the committed/pushed configuration, or save your work, update the configuration and rebuild an existing Codespace. All three checkpoint snapshots retain the feature. Wait for startup and host registration, then sign in to the Copilot app as the Codespace owner using a client token with the `codespace` scope. Open **Environments** and select the registered Codespace. Adding JSON alone does not register a running environment.
+
+GitHub CLI を使う場合 / Optional commands (authenticated `gh` required):
+
+```bash
+gh codespace create -r OWNER/REPOSITORY -b BRANCH
+```
+
+または、更新した既存環境をリビルド / Or rebuild an existing Codespace after updating its configuration:
+
+```bash
+gh codespace rebuild -c CODESPACE-NAME
+```
+
+登録済みの停止中 Codespace を選ぶと、自動で起動して `copilotd` を開始します。表示されない場合は権限、アカウント、設定の反映と登録を確認し、Codespace 内のログを確認してください。**アプリを閉じても Codespace は停止しません。** 利用後は Codespaces 側で停止し、コンピューティングの課金を管理してください。
+
+Selecting a registered, stopped Codespace wakes it and starts `copilotd`. If it is missing, check access, account, applied configuration and registration, then inspect the host log **inside the Codespace**. Closing the app does not stop billed compute; stop the Codespace when finished.
+
+```bash
+tail -F /workspaces/.copilotd/logs/copilotd.log
+```
+
+公式手順 / Source: [Creating a custom environment for agents](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/create-a-custom-environment)
+
 ## Workspace MCP
 
 現在の VS Code で **Session Target → Copilot** を選び、**Customizations → MCP Servers → Workspace** を開きます。`.vscode/settings.json` で `chat.mcp.workspaceRootConfig.enabled` を有効にしています。対応する VS Code / Copilot のバージョンが必要です。Codespaces でもこの Workspace 設定を使います。
