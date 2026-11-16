@@ -41,7 +41,9 @@ export function prepareIssues(catalogue, { directory, target, metadata, run, don
     }
     requireThat(receipt?.version === 1 && receipt.issues && typeof receipt.issues === 'object'
       && !Array.isArray(receipt.issues) && Object.entries(receipt.issues).every(([key, number]) => validKey(key) && validNumber(number))
-      && new Set(Object.values(receipt.issues)).size === Object.keys(receipt.issues).length,
+      && new Set(Object.values(receipt.issues)).size === Object.keys(receipt.issues).length
+      && (receipt.created === undefined || (receipt.created && typeof receipt.created === 'object' && !Array.isArray(receipt.created)
+        && Object.entries(receipt.created).every(([key, item]) => validKey(key) && validNumber(item?.number) && validNumber(item?.id)))),
     `Invalid issue receipt: ${receiptPath}. Inspect it before retrying; do not discard recorded issue identities.`);
     const save = () => {
       const temporary = `${receiptPath}.tmp`;
@@ -93,6 +95,11 @@ export function prepareIssues(catalogue, { directory, target, metadata, run, don
         `Issue #${issue.number} already belongs to another catalogue key; inspect its identity before retrying.`);
       done(`${existing ? 'Reused' : 'Created'} issue ${item.key}: #${issue.number} (${issue.state}) ${issue.html_url}`);
       receipt.issues[item.key] = issue.number;
+      // 再利用した Issue と区別できる場合だけ、reset 用の作成記録を残す。
+      if (!existing && validNumber(issue.id)) {
+        receipt.created ??= {};
+        receipt.created[item.key] = { number: issue.number, id: issue.id };
+      }
       save();
       if (existing) reused++; else { created++; issues.push(issue); }
     }
