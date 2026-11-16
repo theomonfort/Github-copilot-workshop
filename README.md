@@ -152,6 +152,27 @@ Keep the printed stash SHA; return to the original branch and use the printed `g
 
 メンテナー用テスト / Maintainer tests: `node --test tests/checkpoint.test.mjs` (isolated local repositories, fake GitHub CLI, no live issues or PRs).
 
+## 最初からやり直す / Reset the workshop
+
+自分のリポジトリで、エディタの未保存内容を保存してから `./reset` を実行します。checkpoint と同じ Node / Git / `gh` の前提に加え、対象 Issue / PR を閉じる権限とブランチ削除権限が必要です。公式テンプレート自体では実行できません。
+
+最初に実際の対象リポジトリ、starter の SHA、閉じる Issue / PR の番号と URL、削除するリモートブランチと SHA、保持する対象を表示します。表示された `RESET github.com/OWNER/REPOSITORY` を完全一致で入力した場合だけ続行します。確認を省略するオプションはありません。取消時は fetch による Git メタデータ取得以外、checkout / remote を変更しません。
+
+- 現在の公式 `main` の**全追跡ファイル**から、新しい参加者ブランチと starter 復帰 PR を作成します。履歴は書き換えず、**参加者 main が戻るのは PR を確認・マージした後**です。サイトやテストの削除差分も確認してください。既に starter と一致する場合は新規 PR を作らず、確認した整理だけを行います。
+- 明示的な教材マーカー、またはこの版以降の「実際に作成した」ローカル記録で識別できる Issue を**閉じます**。タイトルだけ、作成 / 再利用を区別できない旧記録だけ、重複マーカーは対象外です。本文・履歴は削除しません。**次の `./checkpoint1` も閉じた Issue を再利用し、自動で開き直しません。** 再度取り組む Issue は自分で開き直してください。
+- 同じリポジトリの checkpoint PR は、元 snapshot SHA・参加者の親 commit・完全なファイル tree・PR 本文が確認できた場合だけ閉じます。追加コミットや provenance の変更があるものは保持します。ブランチ名だけでは削除せず、元 snapshot SHA を確認できる生成リモートブランチだけを整理します。
+- 使用中 worktree、保持する open PR、reset 自身を保護します。fork または fork を持つ repo では外部 PR を網羅できないためブランチを削除しません。preview 後に変更された対象も保持します。**ローカルブランチは常に残し**、削除前の commit を `refs/workshop-reset/recovery/<SHA>` に保持して復帰コマンドを表示します。
+
+変更済み / 未追跡ファイルは、checkout を切り替える場合に名前付き stash に保存します。自動で戻したり削除したりしません。ignored ファイル (`node_modules` など) は残し、starter と衝突すれば停止します。Codespace、認証、repo / アカウント設定、タグ、必須チェックは変更しません。starter がテスト workflow を削除しても既存 ruleset の必須チェックは残ります。チェックを回避せず、PR の条件を確認してください。reset の snapshot commit は `git commit-tree` で作り、`commit.gpgsign` を尊重しますが commit hook は実行しません。
+
+途中失敗時は成功済みの処理と復帰情報を確認し、原因を解消して `./reset` を再実行します。確認を再度行い、既存の reset PR / 同じ commit を再利用し、閉じた対象や削除済みブランチは重複処理しません。マージせず閉じた reset PR は自動で開き直さず、新しい PR も重複作成しません。必要なら手動で開き直してください。変更された reset ブランチや、古い main / starter に対する未完了 reset は上書きせず停止します。Git 共通メタデータの `workshop-resets/` 記録を消さずに確認してください。古い未完了 reset を中止する場合も、その PR・ブランチ・記録の整合を手動で確認してから進めます。
+
+**English:** Run `./reset` in your own repo after saving editor buffers. It previews the exact repo, starter SHA, issue/PR URLs, remote branch SHAs and skipped objects. Only typing the displayed `RESET github.com/OWNER/REPOSITORY` confirms writes; there is no `--yes`. It opens a full tracked-file starter-restoration PR from current canonical main, **not a rewrite of participant main**. Main changes only after you review and merge that PR. If main already matches, cleanup can still run without a new PR.
+
+Cleanup **closes**, never permanently deletes, provably identified workshop issues and unmodified checkpoint PRs. Titles/prefixes alone and legacy reused-issue receipts are insufficient. Ambiguous or edited resources are retained. A later `./checkpoint1` reuses the closed issues without reopening or recreating them; reopen desired tasks yourself. Generated remote branches are deleted only with verified import commit/tree provenance, exact-SHA leases and recovery refs. Local branches, worktree-used branches, reset branches, and branches backing other open PRs are kept. Fork networks disable branch deletion conservatively.
+
+Dirty/untracked work is stashed only if switching the checkout, never discarded or automatically reapplied. Existing stashes, ignored files, Codespaces, tags, settings and required checks stay intact; ignored-file collisions stop the operation. A starter PR may remove a workflow without removing its required-check rules. Snapshot commits honor signing configuration but do not run commit hooks. After partial failures, inspect the printed results and rerun: existing reset PRs/commits are reused, not duplicated. Closed-unmerged, edited or stale pending resets require manual inspection. Keep Git's `workshop-resets/` journal and `refs/workshop-reset/recovery/` refs. Never run checkpoint/reset commands concurrently, including across separate clones; local locks cannot coordinate different clones.
+
 ## 意図的な解析演習 / Intentional analysis exercises
 
 `workshop-exercises/` に、各 checkpoint で新しいセキュリティ問題 1 件と品質問題 1 件を追加します (累積 1 / 2 / 3 件ずつ)。**製品用コードではなく、通常アプリから import / 実行しません。** [講師用マップ、修正方法、実際の検出の見方](workshop-exercises/README.md)を確認してください。
