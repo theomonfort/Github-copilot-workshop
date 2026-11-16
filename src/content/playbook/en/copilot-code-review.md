@@ -46,11 +46,20 @@ links:
   - group: 📰 Recent Changelog
     label: "Code review now runs on an agentic architecture (2026-03-05)"
     url: https://github.blog/changelog/2026-03-05-copilot-code-review-now-runs-on-an-agentic-architecture
+  - group: 📰 Recent Changelog
+    label: "Auto-resolution and analysis updates (2026-09-11)"
+    url: https://github.blog/changelog/2026-09-11-auto-resolution-and-analysis-updates-in-copilot-code-review/
+  - group: 📰 Recent Changelog
+    label: "Max public preview and approvals GA (2026-10-28)"
+    url: https://github.blog/changelog/2026-10-28-copilot-code-review-merge-with-confidence-with-max-and-approvals
+  - group: 💰 Billing
+    label: "Estimated code review consumption"
+    url: https://docs.github.com/en/copilot/concepts/agents/code-review#estimated-consumption
 ---
 
 ## In a nutshell
 
-<div class="hero-quote hero-quote-stars">
+<div data-playbook-article="copilot-code-review" class="hero-quote hero-quote-stars">
   <p>
     <strong>Copilot Code Review</strong> is a feature that lets you <strong>assign Copilot as a reviewer — manually or automatically</strong>.
   </p>
@@ -133,7 +142,7 @@ Define review standards by **just adding files to your repo** — Copilot code r
 | **`NAME.instructions.md`** | under `.github/instructions/` | Extra instructions scoped via `applyTo` to specific paths or languages |
 | **`AGENTS.md`** | repository **root** | If an `AGENTS.md` already exists, it's used as context automatically — share the same conventions across Cloud Agent / CLI |
 
-> 💡 **Key point**: If you already run on `AGENTS.md`, the same conventions apply to reviews with zero extra setup. <a class="retro-link" href="/en/playbook/harness-engineering/?present=1&amp;slide=6">What is AGENTS.md? ↗</a>
+> 💡 **Key point**: If you already run on `AGENTS.md`, the same conventions apply to reviews with zero extra setup. <a class="retro-link" href="https://theomonfort.github.io/theomonfort/en/playbook/harness-engineering/?present=1&amp;slide=6">What is AGENTS.md? ↗</a>
 >
 > 📘 Official guide: <a href="https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/add-custom-instructions/add-repository-instructions" target="_blank" rel="noopener noreferrer" class="retro-link">Adding repository custom instructions for GitHub Copilot</a> — covers all three file types and which features support them
 
@@ -147,6 +156,59 @@ Copilot code review runs on an **agentic architecture**, executing on **GitHub A
 | **Content exclusion** | Repo / Org / Enterprise settings (path-based rules) | Exclude sensitive or irrelevant files/directories from review context |
 
 > 🔧 **Shaping the runner environment**: Control runner size / self-hosted / Windows switching via `copilot-setup-steps.yml`. See <a class="retro-link" href="/playbook/cloud-agent/">Cloud Agent ↗</a> (same mechanism as Code Review).
+
+## Review depth, cost, and agents <a class="h2-doc" href="https://docs.github.com/en/copilot/concepts/agent-capabilities/agent-powered-workflows-and-operations/code-review#review-effort-level" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+<div class="det-widget">
+<p class="det-hint">▸ SELECT A LEVEL / ESTIMATED USD PER REVIEW (2026-11-11)</p>
+<div class="det-split">
+<div class="det-list">
+<details class="det-pick" name="review-effort">
+<summary class="det-btn"><span class="det-name"><b>Lite</b> / $0.05 to $1</span></summary>
+<div class="det-pane">
+<p class="det-head"><span class="det-title">Lite</span></p>
+<p class="det-why">Fast, cost-efficient feedback for <b>routine changes</b>. An ensemble of agents reviews from different perspectives and combines the findings into one review.</p>
+</div>
+</details>
+<details class="det-pick" name="review-effort">
+<summary class="det-btn"><span class="det-name"><b>Balanced</b> / $0.25 to $5</span></summary>
+<div class="det-pane">
+<p class="det-head"><span class="det-title">Balanced (default)</span></p>
+<p class="det-why">A <b>higher-reasoning model</b> analyzes complex logic, security-sensitive code, and cross-service changes. Deeper analysis uses more AI credits than Lite.</p>
+</div>
+</details>
+<details class="det-pick" name="review-effort" open>
+<summary class="det-btn"><span class="det-name"><b>Max</b> / $1.50 to $25</span></summary>
+<div class="det-pane">
+<p class="det-head"><span class="det-title">Max / Public preview</span></p>
+<p class="det-why"><b>High-risk PRs:</b> independent high-reasoning agents across providers, with findings reconciled and verified. Deepest analysis, more time and AI credits.</p>
+</div>
+</details>
+<details class="det-pick" name="review-effort">
+<summary class="det-btn"><span class="det-name">Access &amp; controls</span></summary>
+<div class="det-pane">
+<p class="det-head"><span class="det-title">Access &amp; controls</span></p>
+<p class="det-why"><b>Plans:</b> Pro / Pro+ / Max / Business / Enterprise. Enable code review.<br /><b>Select:</b> PR <b>Reviewers</b> or a default in settings.<br /><b>Admins:</b> enterprise / org / repo defaults and effort caps. The cap must allow Max.</p>
+</div>
+</details>
+<details class="det-pick" name="review-effort">
+<summary class="det-btn"><span class="det-name">Cost &amp; agent context</span></summary>
+<div class="det-pane">
+<p class="det-head"><span class="det-title">Estimates, not caps</span></p>
+<p class="det-why">AI credits vary with PR size and instructions; costs can exceed estimates. <b>Actions minutes are extra.</b><br />Without Actions, reviews continue without agentic features such as full-project context gathering.</p>
+</div>
+</details>
+<details class="det-pick" name="review-effort">
+<summary class="det-btn"><span class="det-name">Approvals / GA</span></summary>
+<div class="det-pane">
+<p class="det-head"><span class="det-title">Approvals / GA</span></p>
+<p class="det-why"><b>Separate from Max and off by default.</b> When enabled, Copilot approvals count toward required approvals. New commits dismiss the approval; request another review for a fresh assessment.</p>
+</div>
+</details>
+</div>
+<div class="det-screen"><p class="det-empty">SELECT A LEVEL ▸</p></div>
+</div>
+</div>
 
 ## Limits and the human role
 

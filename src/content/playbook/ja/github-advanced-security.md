@@ -1,7 +1,7 @@
 ---
 title: GitHub Advanced Security
 titleEn: GHAS
-summary: GitHub のセキュリティ機能をまとめた有料製品。2025 年 4 月に GitHub Secret Protection ($19) と GitHub Code Security ($30) の 2 つに分割され、active committer 単位で課金される。Public repo は引き続き無料。
+summary: GitHub のセキュリティ製品スイート。Secret Protection ($19) がクレデンシャルの漏洩を防ぎ、Code Security ($30) がコード自体の脆弱性を検出する 2 製品構成。active committer 単位の課金で、public repo は無料。
 icon: /icons/ghas.png
 color: cyan
 accent:
@@ -10,7 +10,7 @@ accent:
   glow: hover:shadow-neon-cyan
   shadow: shadow-neon-cyan
   hex: "#00f0ff"
-order: 19.8
+order: 19.3
 category: secure
 related: ['secret-scanning', 'code-scanning', 'dependabot']
 links:
@@ -21,53 +21,377 @@ links:
     label: About GitHub Advanced Security
     url: https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security
   - group: 📖 公式ドキュメント
-    label: GitHub plans pricing
-    url: https://docs.github.com/en/get-started/learning-about-github/githubs-plans
-  - group: 📰 発表
-    label: Introducing Secret Protection & Code Security (2025/03)
-    url: https://github.blog/changelog/2025-03-04-introducing-github-secret-protection-and-github-code-security/
-  - group: 💰 課金の仕組み
+    label: GitHub security features (無料 / ライセンスの線引き)
+    url: https://docs.github.com/en/code-security/getting-started/github-security-features
+  - group: 🗃️ 脆弱性データベース
+    label: GitHub Advisory Database
+    url: https://github.com/advisories
+  - group: 🗃️ 脆弱性データベース
+    label: NVD (National Vulnerability Database)
+    url: https://nvd.nist.gov/
+  - group: 💰 課金と無料の棚卸し
     label: About billing for GitHub Advanced Security
     url: https://docs.github.com/en/billing/concepts/product-billing/github-advanced-security
-  - group: 🆓 無料の棚卸し (Risk Assessment)
-    label: Secret Risk Assessment (Docs)
+  - group: 💰 課金と無料の棚卸し
+    label: Secret Risk Assessment
     url: https://docs.github.com/en/code-security/how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/assess-your-secret-risk
-  - group: 🆓 無料の棚卸し (Risk Assessment)
-    label: Code Security Risk Assessment (Docs)
+  - group: 💰 課金と無料の棚卸し
+    label: Code Security Risk Assessment
     url: https://docs.github.com/en/code-security/concepts/code-scanning/code-security-risk-assessment
-  - group: 🆓 無料の棚卸し (Risk Assessment)
-    label: Code Security Risk Assessment GA (2026/04)
-    url: https://github.blog/changelog/2026-04-08-code-security-risk-assessment-available-for-organizations/
-  - group: 📰 Recent Changelog
-    label: "Start a GitHub Advanced Security trial from a risk assessment (2026-05-19)"
-    url: https://github.blog/changelog/2026-05-19-start-a-github-advanced-security-trial-from-a-risk-assessment
-  - group: 📰 Recent Changelog
-    label: "GitHub Advanced Security setup made simple (2026-03-17)"
-    url: https://github.blog/changelog/2026-03-17-github-advanced-security-setup-made-simple
+  - group: 🏢 エンタープライズ展開
+    label: Creating a custom security configuration
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-at-scale/configure-enterprise-security/establish-complete-coverage/create-custom-configuration
+  - group: 🏢 エンタープライズ展開
+    label: Applying a custom security configuration
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-at-scale/configure-enterprise-security/establish-complete-coverage/apply-custom-configuration
+  - group: 🏢 エンタープライズ展開
+    label: Security configuration statuses
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/reference/security-at-scale/configuration-statuses
+  - group: 🏢 エンタープライズ展開
+    label: Code security configurations REST API
+    url: https://docs.github.com/en/enterprise-cloud@latest/rest/code-security/configurations
+  - group: 🏢 エンタープライズ展開
+    label: Code scanning merge protection
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/code-scanning/merge-protection
+  - group: 📊 可視化 (Security overview)
+    label: Security overview
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/security-at-scale/security-overview
+  - group: 📊 可視化 (Security overview)
+    label: Exporting data from security overview (CSV)
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/view-and-interpret-data/analyze-organization-data/export-data
+  - group: 🔐 権限
+    label: リポジトリロールとセキュリティ権限
+    url: https://docs.github.com/en/enterprise-cloud@latest/organizations/managing-user-access-to-your-organizations-repositories/managing-repository-roles/repository-roles-for-an-organization#access-requirements-for-security-features
+  - group: 🔐 権限
+    label: Security overview の権限
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/reference/permissions/security-overview
+  - group: 🔐 権限
+    label: Security manager の権限
+    url: https://docs.github.com/en/enterprise-cloud@latest/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization
+  - group: 🔐 権限
+    label: キャンペーンのアラートを Copilot に割り当てる
+    url: https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/manage-security-alerts/remediate-alerts-at-scale/fixing-alerts-in-security-campaign#assigning-alerts-to-copilot
 ---
 
 ## 一言で
 
-<div class="hero-quote">
+<div data-playbook-article="github-advanced-security" class="hero-quote">
   <p>
-    <strong>GitHub Advanced Security (GHAS)</strong> は、GitHub のセキュリティ機能をまとめた有料アドオン。Code scanning と Secret scanning を private repo でも有効化するためのライセンスだった。
+    <strong>GitHub Advanced Security (GHAS)</strong> は GitHub のセキュリティ製品スイート。開発者がうっかり混入させてしまう 2 つのもの、<strong>クレデンシャル</strong> と <strong>脆弱なコード</strong> をリポジトリからスキャンして検出する。
   </p>
   <p>
-    <strong>2025 年 4 月</strong> に <strong>GitHub Secret Protection</strong> と <strong>GitHub Code Security</strong> の 2 つに分割され、欲しい機能だけを選んで購入できるようになった。
+    製品は <strong>Secret Protection</strong> と <strong>Code Security</strong> の 2 つで、それぞれ単体で購入できる。
   </p>
 </div>
 
-> 🌐 Public repo はすべて引き続き無料。GHAS / Secret Protection / Code Security のライセンスが必要になるのは **private / internal repo** で機能を有効化したい場合だけ。
-> 🤖 **Dependabot 本体** (alerts / security updates / version updates / dependency graph) は <strong>どのプランでも完全無料</strong>・GHAS 不要。詳細は <a class="retro-link" href="/playbook/dependabot">Dependabot ↗</a>。
+## なぜ今なのか
 
-## 何が入っている?
+<details class="workshop-demo is-info"><summary>補足</summary>
 
-| 製品 | 主な機能 | 詳細エントリー |
-| --- | --- | --- |
-| 🔑 **Secret Protection** | Secret scanning · Push protection (org/repo lvl) · Custom patterns · AI detection · Validity checks | <a class="retro-link" href="/playbook/secret-scanning">Secret Scanning ↗</a> |
-| 🔍 **Code Security** | Code scanning (CodeQL) · Copilot Autofix · Security campaigns · Dependency review (PR enforcement) · Security overview | <a class="retro-link" href="/playbook/code-scanning">Code Scanning ↗</a> |
+<div class="demo-window" role="group" aria-label="FIRST とは">
+<div class="demo-head"><span class="demo-tag">INFO</span><span class="demo-name">FIRST（Forum of Incident Response and Security Teams）とは？</span></div>
+<div class="info-body">
+<p class="info-lead">世界中のサイバーセキュリティ専門チームが集まる、国際的なネットワーク組織。</p>
+<p>1990 年に設立。世界 110 カ国以上、850 を超える企業、政府機関、大学などのセキュリティチームが加盟している。</p>
+<p class="info-h">主な活動</p>
+<ol class="info-list">
+<li><b>サイバー攻撃の情報共有</b>：世界中で起きているサイバー攻撃やシステムの欠陥（脆弱性）の情報を共有し、被害の拡大を防ぐ。</li>
+<li><b>世界共通の「危険度のモノサシ」を作る</b>
+<ul>
+<li><a class="retro-link" href="https://www.first.org/cvss/" target="_blank" rel="noopener noreferrer">CVSS ↗</a>（共通脆弱性評価システム）：バグが「どれくらい危険か」を点数で表す世界標準の基準。</li>
+<li><a class="retro-link" href="https://www.first.org/epss/" target="_blank" rel="noopener noreferrer">EPSS ↗</a>（脆弱性悪用予測システム）：そのバグが「実際に攻撃者に悪用される確率」を AI やデータで予測する仕組み。</li>
+</ul>
+</li>
+</ol>
+<p class="info-h">2026 年 6 月の発表（超要約）</p>
+<ul class="info-list">
+<li>AI のおかげでバグの発見数は過去最多ペース。ただし、実際に危険な攻撃が増えたわけではない。</li>
+<li>すべてのバグを片っ端から直すのではなく、EPSS などの指標を使って「本当に危険なバグ」から優先して直すことが大切。</li>
+</ul>
+<p class="info-sum"><b>一言で：</b>世界中で協力して、インターネットを安全に使うための情報共有やルール作りをしている組織。</p>
+</div>
+</div>
+</details>
 
-## 料金 (2025 年 4 月以降)
+<div class="surge-steps">
+<div class="surge-step is-alert">
+<p class="surge-k">CVE が史上最多</p>
+<p class="surge-v"><a class="retro-link" href="https://www.first.org/newsroom/releases/20260615" target="_blank" rel="noopener noreferrer">FIRST ↗</a> は 2026 年の 1 年間に新たに公開される <a class="retro-link" href="https://github.com/advisories" target="_blank" rel="noopener noreferrer">CVE ↗</a> を約 <strong>66,000 件</strong>と予測。史上初めて 7 万件に迫るペースで、AI による脆弱性発見が大きな要因。</p>
+</div>
+<div class="surge-step is-alert">
+<p class="surge-k">GHSA 前年比 +449%</p>
+<p class="surge-v">GitHub はキュレーション体制を拡大し AI 支援も導入。無料公開の <a class="retro-link" href="https://github.com/advisories" target="_blank" rel="noopener noreferrer">Advisory Database ↗</a> が Dependabot アラートの元になる（左）。</p>
+</div>
+<div class="surge-step">
+<p class="surge-k">AI 対 AI のレース</p>
+<p class="surge-v">AI による exploit 生成と、AI によるパッチ生成の競争。悪用までの時間はすでに <strong>24 時間</strong>（右）。</p>
+</div>
+</div>
+
+<div class="duo-fig">
+<div class="duo-panel is-alert">
+<p class="duo-cap">Dependabot アラートが 4 倍超に</p>
+<p class="duo-sub">GitHub 全体の新規アラート数（四半期）。</p>
+<div class="qbars">
+<div class="qbar"><div class="qbar-fill" style="height:14.6%"><span class="qbar-val">52M</span></div><p class="qbar-lab">Q1 25</p></div>
+<div class="qbar"><div class="qbar-fill" style="height:19.7%"><span class="qbar-val">70M</span></div><p class="qbar-lab">Q2 25</p></div>
+<div class="qbar"><div class="qbar-fill" style="height:21.6%"><span class="qbar-val">77M</span></div><p class="qbar-lab">Q3 25</p></div>
+<div class="qbar"><div class="qbar-fill" style="height:23.1%"><span class="qbar-val">82M</span></div><p class="qbar-lab">Q4 25</p></div>
+<div class="qbar is-peak"><div class="qbar-fill" style="height:100.0%"><span class="qbar-val">357M</span></div><p class="qbar-lab">Q1 26</p></div>
+<div class="qbar is-peak"><div class="qbar-fill" style="height:87.7%"><span class="qbar-val">313M</span></div><p class="qbar-lab">Q2 26</p></div>
+</div>
+<p class="duo-foot">2025 年の <strong>7,000〜8,000 万</strong>から急増。CVE アラートも 2026 年 2 月以降、全体で <strong>6 倍</strong>。</p>
+</div>
+<div class="duo-panel">
+<p class="duo-cap">脆弱性から悪用までの時間</p>
+<p class="duo-sub">CVE 公開から初の実悪用までの平均日数。</p>
+<div class="tte">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 292" role="img" aria-label="Mean time from CVE disclosure to first confirmed exploitation, 2018 to 2026">
+<style>html .tte svg text[font-family]{font-family:inherit}</style>
+<line x1="52.0" y1="70.6" x2="574.0" y2="70.6" stroke="rgb(var(--rgb-neon-cyan) / 0.16)" stroke-width="1.2"/>
+<text x="42.0" y="76.6" text-anchor="end" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.68)">1y</text>
+<line x1="52.0" y1="146.6" x2="574.0" y2="146.6" stroke="rgb(var(--rgb-neon-cyan) / 0.16)" stroke-width="1.2"/>
+<text x="42.0" y="152.6" text-anchor="end" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.68)">1mo</text>
+<line x1="52.0" y1="190.8" x2="574.0" y2="190.8" stroke="rgb(var(--rgb-neon-cyan) / 0.16)" stroke-width="1.2"/>
+<text x="42.0" y="196.8" text-anchor="end" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.68)">7d</text>
+<line x1="52.0" y1="250.0" x2="574.0" y2="250.0" stroke="rgb(var(--rgb-neon-cyan) / 0.16)" stroke-width="1.2"/>
+<text x="42.0" y="256.0" text-anchor="end" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.68)">1d</text>
+<polyline points="52.0,45.3 117.2,54.5 182.5,62.6 247.8,76.2 313.0,80.7 378.2,102.5 443.5,129.3 508.8,156.7 574.0,250.0" fill="none" stroke="var(--c-neon-cyan)" stroke-width="6" stroke-linejoin="round" stroke-linecap="round" opacity="0.22"/>
+<polyline points="52.0,45.3 117.2,54.5 182.5,62.6 247.8,76.2 313.0,80.7 378.2,102.5 443.5,129.3 508.8,156.7 574.0,250.0" fill="none" stroke="var(--c-neon-cyan)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="52.0" cy="45.3" r="4.6" fill="var(--c-phosphor)"/>
+<text x="52.0" y="31.3" text-anchor="middle" font-size="18" fill="rgb(var(--rgb-phosphor) / 0.88)">2.3y</text>
+<circle cx="117.2" cy="54.5" r="4.6" fill="var(--c-phosphor)"/>
+<text x="117.2" y="40.5" text-anchor="middle" font-size="18" fill="rgb(var(--rgb-phosphor) / 0.88)">1.7y</text>
+<circle cx="182.5" cy="62.6" r="4.6" fill="var(--c-phosphor)"/>
+<text x="182.5" y="48.6" text-anchor="middle" font-size="18" fill="rgb(var(--rgb-phosphor) / 0.88)">1.3y</text>
+<circle cx="247.8" cy="76.2" r="4.6" fill="var(--c-phosphor)"/>
+<text x="247.8" y="62.2" text-anchor="middle" font-size="18" fill="rgb(var(--rgb-phosphor) / 0.88)">10mo</text>
+<circle cx="313.0" cy="80.7" r="4.6" fill="var(--c-phosphor)"/>
+<text x="313.0" y="66.7" text-anchor="middle" font-size="18" fill="rgb(var(--rgb-phosphor) / 0.88)">8.6mo</text>
+<circle cx="378.2" cy="102.5" r="4.6" fill="var(--c-phosphor)"/>
+<text x="378.2" y="88.5" text-anchor="middle" font-size="18" fill="rgb(var(--rgb-phosphor) / 0.88)">4.2mo</text>
+<circle cx="443.5" cy="129.3" r="4.6" fill="var(--c-phosphor)"/>
+<text x="443.5" y="115.3" text-anchor="middle" font-size="18" fill="rgb(var(--rgb-phosphor) / 0.88)">53d</text>
+<circle cx="508.8" cy="156.7" r="4.6" fill="var(--c-phosphor)"/>
+<text x="508.8" y="142.7" text-anchor="middle" font-size="18" fill="rgb(var(--rgb-phosphor) / 0.88)">21.5d</text>
+<circle cx="574.0" cy="250.0" r="6.5" fill="var(--c-coral-alert)"/>
+<text x="559.0" y="257.0" text-anchor="end" font-family="'Orbitron', 'IBM Plex Mono', sans-serif" font-size="20" font-weight="700" fill="var(--c-coral-alert)">24h</text>
+<text x="52.0" y="281" text-anchor="middle" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.72)">2018</text>
+<text x="117.2" y="281" text-anchor="middle" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.72)">2019</text>
+<text x="182.5" y="281" text-anchor="middle" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.72)">2020</text>
+<text x="247.8" y="281" text-anchor="middle" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.72)">2021</text>
+<text x="313.0" y="281" text-anchor="middle" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.72)">2022</text>
+<text x="378.2" y="281" text-anchor="middle" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.72)">2023</text>
+<text x="443.5" y="281" text-anchor="middle" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.72)">2024</text>
+<text x="508.8" y="281" text-anchor="middle" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.72)">2025</text>
+<text x="574.0" y="281" text-anchor="middle" font-size="17" fill="rgb(var(--rgb-phosphor) / 0.72)">2026</text>
+</svg>
+</div>
+<p class="duo-foot">悪用が確認された 3,500 件超の CVE に基づく（CISA KEV + VulnCheck KEV）· zerodayclock.com</p>
+</div>
+</div>
+
+## FIRST の 4 つの提言 <a class="h2-doc" href="https://www.first.org/newsroom/releases/20260615" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+**従来のセキュリティが追いつかない。** AI が生成する新規コードの量は従来のレビュープロセスが検査できる範囲を超え、しかも一度に多数の新しい面から流れ込む。エージェントが変更を複数リポジトリへ波及させた後では、PR でのゲートはすでに手遅れ。
+
+<div class="imp2">
+<div class="imp2-col">
+<p class="imp2-k">🔧 パッチ作業の倍増に備える</p>
+<p class="imp2-v">ソフトウェアを保守する側の作業は倍増する。一方、稼働中システムへのパッチ量は 2026 年末まで比較的安定。</p>
+</div>
+<div class="imp2-col">
+<p class="imp2-k">💰 セキュリティに予算を割く</p>
+<p class="imp2-v">CVE の増加とソフトウェア資産の拡大を考えると、セキュリティ専用の予算確保は不可欠。</p>
+</div>
+<div class="imp2-col">
+<p class="imp2-k">🎯 深刻度と悪用可能性で絞り込む</p>
+<p class="imp2-v">FIRST は <a class="retro-link" href="https://www.first.org/cvss/v3.1/specification-document#Qualitative-Severity-Rating-Scale" target="_blank" rel="noopener noreferrer">CVSS ↗</a> を自社環境に合わせて調整し、深刻度を評価することも推奨。悪用可能性の指標も併用する。Dependabot アラートには <a class="retro-link" href="https://github.blog/changelog/2025-02-19-dependabot-helps-users-focus-on-the-most-important-alerts-by-including-epss-scores-that-indicate-likelihood-of-exploitation-now-generally-available/" target="_blank" rel="noopener noreferrer">EPSS スコア ↗</a>（実際に悪用される可能性）が表示される。</p>
+</div>
+<div class="imp2-col">
+<p class="imp2-k">🤖 防御側の AI を今すぐ使う</p>
+<p class="imp2-v">悪用はかつてなく速い。攻撃者も同じ最新モデルを使えて、コストは障害にならない。防御側がトリアージするより速くリスクを見つけて武器化し、サプライチェーン攻撃も人間のレビューサイクルより速く動く。</p>
+</div>
+</div>
+
+## 日本の情報漏えい事例（2026-10-22 時点） <a class="h2-doc" href="https://docs.github.com/en/code-security/getting-started/github-security-features" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+日付は企業の公表日（参照した続報や訂正を含む）。
+
+<div class="ctl-widget">
+<div class="ctl-list">
+<details class="ctl-item" name="ghas-japan-incidents">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🔑</span><span class="ctl-name">トヨタ T-Connect（2022-10-07）</span><span class="ctl-when">漏えいの可能性：296,019件</span><a class="ctl-doc" href="https://global.toyota/jp/newsroom/corporate/38095972.html" target="_blank" rel="noopener noreferrer">一次情報</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">公表内容</span><span class="ctl-v"><b>DB のアクセスキーを含むコードが GitHub 上で公開</b>。2017年12月から2022年9月まで露出。第三者のデータアクセスは未確認。</span></p>
+<p class="ctl-row"><span class="ctl-k">GitHub の対策</span><span class="ctl-v"><a class="retro-link" href="https://docs.github.com/en/code-security/concepts/secret-security/secret-scanning" target="_blank" rel="noopener noreferrer">Secret Protection ↗</a>：コードと履歴のキーを検出。<a class="retro-link" href="https://docs.github.com/en/code-security/reference/secret-security/secret-scanning-scope" target="_blank" rel="noopener noreferrer">Push protection ↗</a>：対応する secret の push をブロック。検出範囲は形式と設定に依存。</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghas-japan-incidents">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🔐</span><span class="ctl-name">マネーフォワード（2026-05-01）</span><span class="ctl-when">コード内のキーとパスワード</span><a class="ctl-doc" href="https://corp.moneyforward.com/news/info/20260501-mf-press-1/" target="_blank" rel="noopener noreferrer">一次情報</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">公表内容</span><span class="ctl-v">漏えいした GitHub 認証情報でリポジトリをコピーされた。<b>コード内の認証キーとパスワードを無効化し、再発行</b>。</span></p>
+<p class="ctl-row"><span class="ctl-k">GitHub の対策</span><span class="ctl-v"><a class="retro-link" href="https://docs.github.com/en/code-security/concepts/secret-security/secret-scanning" target="_blank" rel="noopener noreferrer">Secret Protection ↗</a>：侵害前にコード内の認証情報を検出して rotate。Push protection で対応 secret の追加を防ぐ。初期侵入ではなく<b>侵害後のアクセス拡大</b>を抑える。</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghas-japan-incidents">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🖼️</span><span class="ctl-name">Gyazo（2026-10-21）</span><span class="ctl-when">対象範囲：約2,362万アカウント</span><a class="ctl-doc" href="https://corp.helpfeel.com/news/news-20261021" target="_blank" rel="noopener noreferrer">一次情報</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">公表内容</span><span class="ctl-v">動画変換処理の<b>コマンドインジェクション</b>。実際の送信件数は不明。</span></p>
+<p class="ctl-row"><span class="ctl-k">GitHub の対策</span><span class="ctl-v"><a class="retro-link" href="https://codeql.github.com/codeql-query-help/javascript/js-command-line-injection/" target="_blank" rel="noopener noreferrer">Code Security / CodeQL ↗</a>：対応コードで、この種の入力処理の弱点を検出。</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghas-japan-incidents">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">📧</span><span class="ctl-name">KDDI ISP メール（2026-07-21）</span><span class="ctl-when">漏えい：12,231,954人</span><a class="ctl-doc" href="https://newsroom.kddi.com/news/assets/2026/kddi_nr_s-73_4619/kddi_nr_s-73_4619_pdf_01.pdf" target="_blank" rel="noopener noreferrer">一次情報</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">公表内容</span><span class="ctl-v">メールアドレスが漏えい。第三者製ソフトの脆弱性は<b>検知時点でベンダー未把握</b>。</span></p>
+<p class="ctl-row"><span class="ctl-k">GitHub の対策</span><span class="ctl-v"><a class="retro-link" href="https://docs.github.com/en/code-security/concepts/supply-chain-security/dependabot-alerts" target="_blank" rel="noopener noreferrer">Dependabot ↗</a>：対応依存関係の<b>既知の脆弱性</b>が対象。未知の脆弱性を防ぐものではない。</span></p>
+</div>
+</details>
+</div>
+</div>
+
+## 日本企業で相次ぐデータ漏洩
+
+**2026年、サイバー脅威が急拡大。** 警察庁の観測では、上半期の不審アクセスは前年同期比 **51% 増**。ランサムウェア被害報告は **123 件で半期最多**（<a class="retro-link" href="https://www.npa.go.jp/publications/statistics/cybersecurity/data/R8kami/R08_kami_cyber_jousei.pdf" target="_blank" rel="noopener noreferrer">警察庁 ↗</a>）。
+
+公表日（続報や訂正を含む）の古い順。2026-10-22 時点。
+
+<div class="imp2">
+<div class="imp2-col">
+<p class="imp2-v">
+<a class="retro-link" href="https://www.nttdata-act.com/info/detail/231017.html" target="_blank" rel="noopener noreferrer">NTT西日本（2023-10-17）</a><br />
+<a class="retro-link" href="https://www.universal-music.co.jp/press-releases/2026-05-18/" target="_blank" rel="noopener noreferrer">ユニバーサル ミュージック（2026-05-18）</a><br />
+<a class="retro-link" href="https://directcloud.jp/contents/information_leak_cases/#list-01" target="_blank" rel="noopener noreferrer">九州電力送配電（2026-07-08）</a><br />
+<a class="retro-link" href="https://japansecuritysummit.org/2026/07/14714/" target="_blank" rel="noopener noreferrer">佐川急便 通知設定ミス（2026-07-18）</a><br />
+<a class="retro-link" href="https://itpostjp.com/security/aflac-unauthorized-access-investigation-results/" target="_blank" rel="noopener noreferrer">アフラック生命保険（2026-07-31）</a><br />
+<a class="retro-link" href="https://internet.watch.impress.co.jp/docs/news/2141530.html" target="_blank" rel="noopener noreferrer">ムラウチドットコム（2026-09-15）</a><br />
+<a class="retro-link" href="https://internet.watch.impress.co.jp/docs/news/2142333.html" target="_blank" rel="noopener noreferrer">ニチレイ（2026-09-18）</a><br />
+<a class="retro-link" href="https://share.timescar.jp/news/2026/0929/1816.html" target="_blank" rel="noopener noreferrer">タイムズカー（2026-09-29）</a><br />
+<a class="retro-link" href="https://www.secoma.co.jp/info/pdf/202609290017.pdf" target="_blank" rel="noopener noreferrer">セイコーマート（2026-09-29）</a>
+</p>
+</div>
+<div class="imp2-col">
+<p class="imp2-v">
+<a class="retro-link" href="https://starts-pub.jp/info20261001" target="_blank" rel="noopener noreferrer">OZmall（2026-10-01）</a><br />
+<a class="retro-link" href="https://www.monogatari.co.jp/news/261005_news/" target="_blank" rel="noopener noreferrer">焼肉きんぐ（2026-10-05）</a><br />
+<a class="retro-link" href="https://www.asahi-kasei.co.jp/pharma/oshirase_20261006.html" target="_blank" rel="noopener noreferrer">旭化成セラピューティクス（2026-10-06）</a><br />
+<a class="retro-link" href="https://mrmax.co.jp/info/incident_20261006/" target="_blank" rel="noopener noreferrer">ミスターマックス（2026-10-06）</a><br />
+<a class="retro-link" href="https://www.his.co.jp/assets/20261007.pdf" target="_blank" rel="noopener noreferrer">HIS（2026-10-07）</a><br />
+<a class="retro-link" href="https://www2.sagawa-exp.co.jp/information/detail/426/" target="_blank" rel="noopener noreferrer">佐川急便 貨物追跡（2026-10-09）</a><br />
+<a class="retro-link" href="https://www.metpo.jp/news/Gn52e-Vm" target="_blank" rel="noopener noreferrer">東京メトロ（2026-10-15）</a><br />
+<a class="retro-link" href="https://www.yamato-hd.co.jp/important/info_260929_1.html" target="_blank" rel="noopener noreferrer">ヤマト運輸 後払い（2026-10-16）</a>
+</p>
+</div>
+</div>
+
+## GHAS はどう応えるか
+
+スキャンツールは通常プラットフォームの外側にある。別のコンソール、別のバックログ、そしてコードを書いた数日後に届く検出結果。GHAS はこの 4 ステップすべてを、コードがすでに置かれている場所で実行する。
+
+<div class="rem-widget">
+<p class="rem-hint">▸ ステップをクリックで詳細</p>
+<div class="rem-flow">
+<div class="rem-row">
+<details class="rem-slot" name="ghas-answer">
+<summary class="rem-btn"><span class="rem-icon" aria-hidden="true">🔎</span><span class="rem-name">FIND</span></summary>
+<div class="rem-plate">
+<p class="rem-title">🔎 FIND — すでに存在するものを洗い出す</p>
+<p class="rem-why"><b>git 履歴全体</b>と全ブランチを走査して漏れた認証情報を検出し、コードをクエリ可能なデータベース化して脆弱なデータフローを追跡する。</p>
+<p class="rem-why">組織内のすべてのリポジトリが対象。各チームに何かをインストールさせたり設定させたりする必要はない。</p>
+</div>
+</details>
+<details class="rem-slot" name="ghas-answer">
+<summary class="rem-btn"><span class="rem-icon" aria-hidden="true">🚧</span><span class="rem-name">PREVENT</span></summary>
+<div class="rem-plate">
+<p class="rem-title">🚧 PREVENT — 入り込む前に止める</p>
+<p class="rem-why"><b>Push protection</b> が secret を含む push 自体を拒否する。リモートに到達しないので、ローテーション作業も発生しない。</p>
+<p class="rem-why"><b>ルールセット</b>で「code scanning がクリーンになるまで PR をマージさせない」ことができる。レビュアーの記憶ではなくリポジトリのルールがゲートになる。</p>
+</div>
+</details>
+<details class="rem-slot" name="ghas-answer">
+<summary class="rem-btn"><span class="rem-icon" aria-hidden="true">🔧</span><span class="rem-name">FIX</span></summary>
+<div class="rem-plate">
+<p class="rem-title">🔧 FIX — プルリクエストの中で直す</p>
+<p class="rem-why">アラートは<b>差分へのアノテーション</b>として届く。開発者が別ツールを開きに行く必要のあるチケットではない。</p>
+<p class="rem-why"><b>Copilot Autofix</b> が説明付きの修正パッチを提案するので、脆弱性の種類を調べるところから始めるのではなく、変更をレビューするところから始められる。</p>
+</div>
+</details>
+<details class="rem-slot" name="ghas-answer">
+<summary class="rem-btn"><span class="rem-icon" aria-hidden="true">📊</span><span class="rem-name">PROVE</span></summary>
+<div class="rem-plate">
+<p class="rem-title">📊 PROVE — エンタープライズ全体で示す</p>
+<p class="rem-why">1 つの<b>セキュリティ構成</b>がすべての組織とリポジトリに適用される。明日作られるリポジトリも含む。</p>
+<p class="rem-why"><b>Security overview</b> がカバー済み・未カバーのリポジトリとバックログの推移を可視化する。カバレッジが「たぶん大丈夫」ではなく数値になる。</p>
+</div>
+</details>
+</div>
+<div class="rem-screen"><p class="rem-empty">ステップを選択 ▸</p></div>
+</div>
+</div>
+
+## 何が入っている? <a class="h2-doc" href="https://docs.github.com/en/code-security/getting-started/github-security-features" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+<div class="trio-widget">
+<input class="trio-radio" type="radio" name="ghas-inside" id="gi-secret" checked />
+<input class="trio-radio" type="radio" name="ghas-inside" id="gi-code" />
+<input class="trio-radio" type="radio" name="ghas-inside" id="gi-dep" />
+<div class="trio-bar">
+<label class="trio-tab" for="gi-secret"><span class="trio-name"><span class="trio-icon" aria-hidden="true">🔑</span>Secret scanning</span><span class="trio-prod">SECRET PROTECTION · $19</span></label>
+<label class="trio-tab" for="gi-code"><span class="trio-name"><span class="trio-icon" aria-hidden="true">🔍</span>Code scanning</span><span class="trio-prod">CODE SECURITY · $30</span></label>
+<label class="trio-tab" for="gi-dep"><span class="trio-name"><span class="trio-icon" aria-hidden="true">📦</span>Dependabot</span><span class="trio-prod">CODE SECURITY · $30</span></label>
+</div>
+<div class="trio-panels">
+
+<div class="trio-panel">
+<details class="trio-row trio-intro" name="ghas-feature"><summary class="trio-summary"><span class="trio-k"><span class="trio-q" aria-hidden="true">?</span><b>Secret scanning</b> とは<span class="trio-sub">コードに置き忘れた鍵を探す</span></span><span class="trio-chip is-intro">基礎知識</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">脆弱性ではなく、<b>コードや git 履歴に書いてしまった API キー、トークン、パスワード</b>を探す。攻撃者にとって一番安上がりな侵入口なので、SAST より優先度が高いことも多い。<b>行を消しても履歴には残る</b>ため、漏れた secret は無効化とローテーションが必須。</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Secret scanning</span><span class="trio-chip is-free">PUBLIC は無料</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v"><b>git 履歴全体</b>と新規 push を <b>200 以上のプロバイダーパターン</b>で走査。<b>Validity check</b> で漏れたトークンの生死を判定。</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Push protection</span><span class="trio-chip is-free">PUBLIC は無料</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">secret を含む push 自体を拒否する。リモートに到達しないのでローテーションも不要。</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">AI-detected secrets</span><span class="trio-chip is-paid">ライセンスのみ</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">正規表現で表現できない<b>非構造の</b>認証情報を検出。設定ファイル内のパスワードや文章中の secret など。</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Custom patterns</span><span class="trio-chip is-paid">ライセンスのみ</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">自社独自のトークン形式。社内サービス、レガシー認証情報、パートナーが登録しない命名規則。</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Delegated bypass</span><span class="trio-chip is-paid">ライセンスのみ</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">push protection のバイパスを、指定レビュアーグループへの承認申請に変える。</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Public monitoring</span><span class="trio-chip is-paid">ライセンスのみ</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v"><b>Enterprise 向け、Public preview。</b>自社所有でない repo も含め、GitHub 全体の Public repo に漏れた secret を検出する。<b>Enterprise のメンバーシップまたは検証済みドメイン</b>で自社との関連を判定。Secret Protection または GHAS が必要。<a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/public-monitoring" target="_blank" rel="noopener noreferrer">Docs ↗</a></p></details>
+</div>
+
+<div class="trio-panel">
+<details class="trio-row trio-intro" name="ghas-feature"><summary class="trio-summary"><span class="trio-k"><span class="trio-q" aria-hidden="true">?</span><b>SAST</b> とは<span class="trio-sub">自分が書いたコードを、実行せずに読む</span></span><span class="trio-chip is-intro">基礎知識</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v"><b>Static Application Security Testing</b>。ソースコードを<b>実行せずに</b>解析するので、ビルドもデプロイも不要で <b>PR の時点で回せる</b>（shift-left）。修正コストが一番安いタイミング。反面、<b>実行時にしか分からない設定ミスや認証フローの穴は見えない</b>。そこは動いているアプリを外から叩く <b>DAST</b> の領分（GitHub 純正機能はなし、結果は SARIF で取り込める）。</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Code scanning (CodeQL)</span><span class="trio-chip is-free">PUBLIC は無料</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">コードを<b>クエリ可能な DB</b> にコンパイルし、危険なシンクへのデータフローを追跡。インジェクション、パストラバーサルなど。</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Copilot Autofix</span><span class="trio-chip is-free">PUBLIC は無料</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">アラートを PR 上の<b>説明付き修正差分</b>に変える。修正率が実際に動くのはここ。</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">AI-powered detections</span><span class="trio-chip is-paid">ライセンスのみ</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">CodeQL のクエリが無い言語やフレームワークをカバーする AI エンジン。PR レビュー時に動く。</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Third-party SARIF</span><span class="trio-chip is-free">PUBLIC は無料</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">SARIF を出力するスキャナーなら同じアラート一覧に取り込める。バックログもダッシュボードも 1 つ。</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Security campaigns</span><span class="trio-chip is-paid">ライセンスのみ</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">バックログを、担当者と期限が付いた<b>終わらせられるリスト</b>に切り出し、コードを持つチームと直接進める。</p></details>
+</div>
+
+<div class="trio-panel">
+<details class="trio-row trio-intro" name="ghas-feature"><summary class="trio-summary"><span class="trio-k"><span class="trio-q" aria-hidden="true">?</span><b>SCA</b> とは<span class="trio-sub">他人が書いたコード（依存関係）を洗う</span></span><span class="trio-chip is-intro">基礎知識</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v"><b>Software Composition Analysis</b>。マニフェストや lock ファイルから、自分が書いていない<b>ライブラリ側の既知の脆弱性（CVE）</b>を洗い出す。現代のアプリはコードの大半が依存パッケージなので、件数ベースでは一番のヒット源になりやすい。<b>SAST は自分のコード、SCA は他人のコード</b>。守備範囲が違うので、どちらか一方では埋まらない。</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Dependency review</span><span class="trio-chip is-free">PUBLIC は無料</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">PR が追加 / 削除 / 更新する依存関係を表示。Dependency Review Action を必須チェックに設定すると、既知の脆弱性や許可されていないライセンスのマージをブロックできる。</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">License compliance</span><span class="trio-chip is-paid">ライセンスのみ</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v"><b>2026-10-16 に GA。</b>Enterprise 共通のライセンスポリシーをブランチルールセットでマージ前に適用し、例外は <b>Enterprise Open-Source License Manager</b> が承認する。Public repo も含め <b>Enterprise Cloud + Code Security</b> が必要。データ所在地にも対応。<a class="retro-link" href="/playbook/dependabot/?present=1&amp;slide=6">License compliance のスライド ↗</a> / <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/supply-chain-security/open-source-license-compliance" target="_blank" rel="noopener noreferrer">Docs ↗</a></p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">カスタム auto-triage ルール</span><span class="trio-chip is-free">PUBLIC は無料</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">Dependabot アラートを自社ルールで一括自動クローズ・再オープン。実リスクだけがバックログに残る。</p></details>
+<details class="trio-row" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">Security overview</span><span class="trio-chip is-paid">ライセンスのみ</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">サプライチェーンのリスクとカバレッジを、全リポジトリ横断で組織全体に集約。</p></details>
+<details class="trio-row trio-foot" name="ghas-feature"><summary class="trio-summary"><span class="trio-k">その他のサプライチェーン機能</span><span class="trio-chip is-free">全プランで無料</span><span class="trio-toggle" aria-hidden="true"></span></summary><p class="trio-v">Dependency graph、Dependabot alerts、security / version updates、マルウェアアラート、プリセット auto-triage ルール、SBOM エクスポートは <b>全プランで無料</b>。</p></details>
+</div>
+
+</div>
+</div>
+
+## 誰が何をできる? <a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/organizations/managing-user-access-to-your-organizations-repositories/managing-repository-roles/repository-roles-for-an-organization#access-requirements-for-security-features" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+**Org owner / Security manager** は全アラートを閲覧、管理できる。その他の組織メンバーは以下の権限がある repo のみ。
+
+| 操作 | 場所 | Code scanning | Secret scanning |
+| --- | --- | --- | --- |
+| 一覧を見る | Repo → Security | **Write+** | **Admin**¹ |
+| org のアラートを見る | Org → Security | **Write+** | **Admin** |
+| ステータスを変更 | Repo → アラート | **Write+** | **Admin**¹ |
+| Copilot に割り当てる | Org → Campaigns → repo | **Write+** ² | 非対応 |
+
+¹ **Write / Maintain** でも**自分のコミット**の secret は閲覧、管理できる。一覧は閲覧できない。
+
+² **Agentic Autofix 有効化 + 対象 repo の Write** が必要。Security manager 単独では **Read** のみ。
+
+組織 repo の標準権限（2026-11-10）。**Write+** = Write / Maintain / Admin。
+
+## 料金 <a class="h2-doc" href="https://docs.github.com/en/billing/concepts/product-billing/github-advanced-security" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
 | 製品 | 価格 | 課金単位 |
 | --- | :---: | --- |
@@ -75,52 +399,158 @@ links:
 | 🔍 **GitHub Code Security** | **$30** / 月 | active committer |
 | 📦 両方セット | $49 / 月 | active committer |
 
-- 👥 **active committer** = 過去 90 日間に、機能が ON になっているリポジトリへ push したユニークなコミッター。同じ人は何リポジトリに push しても 1 人とカウント
-- 💳 **従量課金 (metered)** モデル。月初にライセンス本数を予約する必要はなく、実際に push した人数だけ請求される
-- 🏷️ **GitHub Team プラン** からも購入可能 (以前は Enterprise 限定だった)
-- 🆓 **Public repo は完全無料**。Open source プロジェクトはライセンス不要
+- 👥 **active committer** = 過去 90 日間に、機能が ON のリポジトリへ push した人。何リポジトリ・何 org でも 1 人分。GitHub App の bot は対象外
+- 🏷️ **GitHub Team** と **GitHub Enterprise** で購入可能。**Enterprise Server** と **GHE.com** では全リポジトリにライセンスが必要
+- 🌐 **public repo は「ほとんど」無料だが「全部」ではない** — custom patterns、delegated bypass、AI-detected secrets、campaigns、Security overview はライセンスが必要 (<a class="retro-link" href="https://docs.github.com/en/code-security/getting-started/github-security-features" target="_blank" rel="noopener noreferrer">正確な線引き ↗</a>)
 
-> 💡 Secret scanning だけ欲しいなら **Secret Protection 単体 ($19)** で OK。CodeQL も使いたくなったら **Code Security ($30)** を追加、という段階的な購入ができるのが分割後の利点。
 
-## ライセンスを考えるときの順番
+## 購入前の棚卸し — Risk Assessments <a class="h2-doc" href="https://docs.github.com/en/code-security/how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/assess-your-secret-risk" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-1. 🌐 **Public repo だけなら何もしなくていい** — すべて無料で使える
-2. 🆓 **Private repo でもまず無料機能を ON** — Dependabot (alerts / updates) ・ ユーザーレベルの push protection ・ Secret Risk Assessment (1 回限りの棚卸し)
-3. 🔑 **シークレット漏洩を組織レベルで強制したい** → **Secret Protection** を購入
-4. 🔍 **コード脆弱性 (CodeQL) や Autofix まで欲しい** → **Code Security** を追加
+**Org → Security → Assessments** から実行できる無料の棚卸しが 2 つある。ライセンスもトライアルも不要で、購入を判断する前に実際の数字を見られる。
 
-> 🎯 まずは Risk Assessment (下記) で「うちの組織にどれだけ secret や脆弱性が眠っているか」を可視化してから、Secret Protection / Code Security の費用対効果を判断するのが定石。
-
-## 購入前の棚卸し — Risk Assessments
-
-<div class="hero-quote hero-quote-plain">
-  <p>
-    GitHub には <strong>ライセンス不要・完全無料</strong> で組織のセキュリティ姿勢を可視化できる 2 つの <strong>Risk Assessment</strong> が用意されている。
-  </p>
-  <p>
-    どちらも <strong>Org → Security → Assessments</strong> から 1 クリックで実行でき、結果を見てから Secret Protection / Code Security の購入を判断できる。
-  </p>
+<div class="assess">
+<div class="assess-card">
+<p class="assess-name">🔑 Secret Risk Assessment</p>
+<p class="assess-what">組織のリポジトリに眠っている secret の種類と件数を、カテゴリ別に集計する。</p>
+<dl class="assess-meta">
+<div class="assess-line"><dt>対象</dt><dd>すべての repo — public / private / internal / archived</dd></div>
+<div class="assess-line"><dt>頻度</dt><dd>1 回限り</dd></div>
+<div class="assess-line"><dt>出力</dt><dd>件数のみ。secret の値は保存されない</dd></div>
+</dl>
+</div>
+<div class="assess-card is-code">
+<p class="assess-name">🔍 Code Security Risk Assessment</p>
+<p class="assess-what">CodeQL が検出したコードの脆弱性を、深刻度・言語・Copilot Autofix で修正可能な件数に分けて表示する。</p>
+<dl class="assess-meta">
+<div class="assess-line"><dt>対象</dt><dd>最もアクティブな最大 20 repo</dd></div>
+<div class="assess-line"><dt>頻度</dt><dd>90 日に 1 回</dd></div>
+<div class="assess-line"><dt>出力</dt><dd>集計レポート。Actions 実行枠は消費しない</dd></div>
+</dl>
+</div>
 </div>
 
-| 棚卸し | 何を見る? | 対象 | 頻度 | 詳細 |
-| --- | --- | --- | :---: | --- |
-| 🔑 **Secret Risk Assessment** | Org 内のリポに眠る secret の種類・件数 | **すべての repo**(public / private / internal / archived) | 1 回限り | <a class="retro-link" href="/playbook/secret-scanning">Secret Scanning ↗</a> |
-| 🔍 **Code Security Risk Assessment** | コード脆弱性を CodeQL で検出 (severity / 言語 / Autofix 可能件数) | **最もアクティブな最大 20 repo** | 90 日に 1 回 | <a class="retro-link" href="/playbook/code-scanning">Code Scanning ↗</a> |
+- 🛂 実行できるのは **Organization owner** と **security manager** のみ
+- 🏷️ **GitHub Team** と **GitHub Enterprise Cloud** (Server は 3.22 で対応予定)
+- 🧪 結果画面からそのまま <a class="retro-link" href="https://docs.github.com/en/code-security/tutorials/trialing-github-advanced-security/planning-a-trial-of-ghas" target="_blank" rel="noopener noreferrer">GHAS トライアル ↗</a> を開始できる。数字が出た後の次の一手はこれ
 
-- 🆓 **完全無料** — どちらも GHAS / Secret Protection / Code Security のライセンス不要
-- 🛂 **権限** — Organization owner または security manager のみ実行可能
-- 📊 **出力** — 集計レポート (個別 secret の値やコードはサーバーに保存されない)
-- 🏷️ **対象プラン** — GitHub Team および GitHub Enterprise Cloud (Server は 3.22 で対応予定)
-- ⚙️ **Actions 分** — Code Security Risk Assessment は専用の Actions 実行枠を消費しない
+## エンタープライズ全体へのロールアウト手順
 
-> 💡 「予算稟議のために数字が欲しい」「導入前に効果を見たい」というケースで真っ先に使う。両方を同じ日に走らせれば 1 日で組織全体のセキュリティ姿勢が可視化できる。
+**Enterprise → Settings → Advanced Security → Code security** で configuration を 1 つ作れば配下の全 org / repo に配れる。**New configuration** は最初から **GitHub recommended**。
 
-📘 Risk Assessment 関連:
-- <a class="retro-link" href="https://docs.github.com/en/code-security/how-tos/secure-at-scale/configure-organization-security/configure-specific-tools/assess-your-secret-risk" target="_blank" rel="noopener noreferrer">Enabling Secret Risk Assessment ↗</a>
-- <a class="retro-link" href="https://docs.github.com/en/code-security/concepts/code-scanning/code-security-risk-assessment" target="_blank" rel="noopener noreferrer">Code security risk assessment(GitHub Docs)↗</a>
-- <a class="retro-link" href="https://github.blog/changelog/2026-04-08-code-security-risk-assessment-available-for-organizations/" target="_blank" rel="noopener noreferrer">Code Security Risk Assessment GA(2026/04)↗</a>
+**Enterprise の security configuration を強制適用**し、新規 / 既存リポジトリを問わず org / repo 管理者によるポリシーの上書きを防げるようになった。<a class="retro-link" href="https://github.blog/changelog/2026-09-15-enforce-github-advanced-security-configurations/" target="_blank" rel="noopener noreferrer">9 月 15 日の発表 ↗</a>
 
-📘 GHAS 全般:
-- <a class="retro-link" href="https://github.blog/changelog/2025-03-04-introducing-github-secret-protection-and-github-code-security/" target="_blank" rel="noopener noreferrer">Introducing GitHub Secret Protection & Code Security (GitHub Blog) ↗</a>
-- <a class="retro-link" href="https://docs.github.com/en/billing/concepts/product-billing/github-advanced-security" target="_blank" rel="noopener noreferrer">About billing for GitHub Advanced Security ↗</a>
-- <a class="retro-link" href="https://github.com/security/advanced-security" target="_blank" rel="noopener noreferrer">GitHub Advanced Security 製品ページ ↗</a>
+<div class="ctl-widget">
+<div class="ctl-list">
+<details class="ctl-item" name="ghas-rollout" style="--entry-accent:var(--c-crt-amber)">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🚫</span><span class="ctl-name">使わせない org は先に止める</span><span class="ctl-when">配る前にやる</span><a class="ctl-doc" href="https://docs.github.com/ja/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-code-security-and-analysis-for-your-enterprise" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">やること</span><span class="ctl-v">Enterprise → Policies → <b>Advanced Security</b> → <b>Policies</b> タブ → dropdown を <b>Allow for selected organizations</b> にして許可する org だけ残す</span></p>
+<p class="ctl-row"><span class="ctl-k">なぜ先に</span><span class="ctl-v">禁止しても<b>既に有効な repo は無効化されない</b>。止められるのは<b>追加のリポジトリ</b>だけなので、配った後では手遅れ</span></p>
+<p class="ctl-row"><span class="ctl-k">効く相手</span><span class="ctl-v"><b>repository administrator だけ</b>。org owner と security manager はポリシーに関係なく有効化できる</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghas-rollout" style="--entry-accent:var(--c-coral-alert)">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🛡️</span><span class="ctl-name">Push protection が ON になる</span><span class="ctl-when">止まるのは <code>push</code> だけ</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/push-protection" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">止まる</span><span class="ctl-v"><code>git push</code>・GitHub UI 上のコミット・ファイルアップロード・REST API 経由のリクエスト</span></p>
+<p class="ctl-row"><span class="ctl-k">止まらない</span><span class="ctl-v"><code>git pull</code>・<code>git clone</code>・<code>git fetch</code>。<b>「secret に引っかかって pull できなくなる」は誤解</b></span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghas-rollout" style="--entry-accent:var(--c-coral-alert)">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🛂</span><span class="ctl-name">bypass は write 権限者に開放</span><span class="ctl-when">デフォルト設定</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/secret-security/delegated-bypass" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">デフォルト</span><span class="ctl-v">write 権限を持つ<b>全員</b>が理由を選んで bypass 可能。ただし<b>アラート + 監査ログ + owner へのメール</b>が必ず残る</span></p>
+<p class="ctl-row"><span class="ctl-k">絞るには</span><span class="ctl-v">configuration の <b>Bypass privileges</b> を <b>Specific actors</b> に(= delegated bypass)。指定外の人は申請 → 承認フロー(申請は 7 日で失効)</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghas-rollout" style="--entry-accent:var(--c-neon-cyan)">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🔍</span><span class="ctl-name">Code scanning が 3 タイミングで走る</span><span class="ctl-when">Actions 分を消費</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/code-scanning/setup-types" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">いつ走る</span><span class="ctl-v">default / protected branch への push のたび・同ブランチ宛て PR の作成とコミットのたび(fork からの PR は除く)・<b>週 1 回</b>のスケジュール</span></p>
+<p class="ctl-row"><span class="ctl-k">コスト</span><span class="ctl-v">全社展開でいちばん効いてくる要因。CodeQL 対応言語を含まない repo は<b>スキャンも Actions 分も 0</b></span></p>
+<p class="ctl-row"><span class="ctl-k">注意</span><span class="ctl-v">code scanning 自体は <b>merge をブロックしない</b></span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghas-rollout" style="--entry-accent:var(--c-neon-cyan)">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🚧</span><span class="ctl-name">merge を止めたいなら ruleset</span><span class="ctl-when">Enterprise → Policies → Rulesets</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/code-scanning/merge-protection" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">設定場所</span><span class="ctl-v">Policies → Repository → Rulesets → <b>Require code scanning results</b></span></p>
+<p class="ctl-row"><span class="ctl-k">ブロック条件</span><span class="ctl-v">指定 severity のアラート検出・解析が実行中・<b>ツールがそのリポジトリで未設定</b></span></p>
+<p class="ctl-row"><span class="ctl-k">落とし穴</span><span class="ctl-v">CodeQL 未設定の repo に当てると<b>アラート 0 件でも全 PR がブロック</b></span></p>
+<p class="ctl-row"><span class="ctl-k">Evaluate とは</span><span class="ctl-v"><b>ブロックせず記録だけ取るお試しモード</b>。<b>Rule Insights</b> ページで「Active だったら何が弾かれたか」を確認できる。残りは Active(即適用)と Disabled(無効)</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghas-rollout" style="--entry-accent:var(--c-gb-green)">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🆕</span><span class="ctl-name">新規リポジトリに配る</span><span class="ctl-when">Policy で設定</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-at-scale/configure-enterprise-security/establish-complete-coverage/create-custom-configuration" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">やること</span><span class="ctl-v">Policy → <b>Use as default for newly created repositories</b> を設定。Code scanning は <b>Enabled with advanced setup allowed</b> を選ぶと既存の CodeQL workflow を壊さない</span></p>
+<p class="ctl-row"><span class="ctl-k">効く範囲</span><span class="ctl-v"><b>新規リポジトリのみ</b>。既存リポジトリには一切効かない</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghas-rollout" style="--entry-accent:var(--c-gb-green)">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🗂️</span><span class="ctl-name">既存リポジトリに配る</span><span class="ctl-when">Apply to で別途実行</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-at-scale/configure-enterprise-security/establish-complete-coverage/apply-custom-configuration" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">やること</span><span class="ctl-v">Configurations 一覧 → <b>Apply to</b> → <b>All repositories without configurations</b></span></p>
+<p class="ctl-row"><span class="ctl-k">enterprise 限定</span><span class="ctl-v">この選択肢は <b>enterprise レベルでのみ</b>表示。既に config が当たっている org を壊さず、未設定の repo だけカバーできる</span></p>
+<p class="ctl-row"><span class="ctl-k">強制適用</span><span class="ctl-v">Policy → <b>Enforce configuration</b> で <b>Enforce for repository and organization owners</b> を選ぶと、適用した既存 repo でも org / repo 管理者による上書きを防げる(全 repo に強制するなら <b>Apply to → All repositories</b>)</span></p>
+<p class="ctl-row"><span class="ctl-k">対象</span><span class="ctl-v">archived リポジトリにも適用される(secret scanning は archived でも動くため)</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghas-rollout" style="--entry-accent:var(--c-gb-green)">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🎯</span><span class="ctl-name">リポジトリを選んで配る</span><span class="ctl-when">org / enterprise config に対応</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-at-scale/configure-organization-security/establish-complete-coverage/apply-custom-configuration" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">repo 単位</span><span class="ctl-v">org のリポジトリ一覧から、<b>enterprise で作成した configuration も選択した repo に適用できる</b>。選択する画面が org レベルなだけで、config の作成元は <b>org に限定されない</b></span></p>
+<p class="ctl-row"><span class="ctl-k">やり方</span><span class="ctl-v">Organization → Settings → Advanced Security → Configurations → <b>Repositories</b> タブで repo を絞り込んで選択 → <b>Apply configuration</b> → org または enterprise の config を選ぶ → <b>Apply</b></span></p>
+<p class="ctl-row"><span class="ctl-k">どちらが優先</span><span class="ctl-v">enterprise 側の変更が org configuration と衝突すると repo は <code>removed_by_enterprise</code> になり org config が外れる。<b>enterprise が優先</b></span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghas-rollout" style="--entry-accent:var(--c-gb-green)">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">⚖️</span><span class="ctl-name">どの configuration が適用されるか</span><span class="ctl-when">1 repo = 1 config（後勝ち）</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/reference/security-at-scale/configuration-statuses" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">基本ルール</span><span class="ctl-v">マージや重ね掛けはなく、<b>1 リポジトリに紐づく configuration は常に 1 つだけ</b>。別の config を当てると Detach 不要で<b>後から適用した方が上書き</b>する（<a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-at-scale/configure-organization-security/manage-your-coverage/detach-security-configuration" target="_blank" rel="noopener noreferrer">Detach の仕様 ↗</a>）。なお Detach だけでは有効化済みの機能は OFF にならない</span></p>
+<p class="ctl-row"><span class="ctl-k">優先と競合</span><span class="ctl-v">既存 repo に enterprise で <b>All repositories</b> を当てると org の設定を上書きする（<b>All repositories without configurations</b> なら維持）。新規 repo のデフォルトは <b>enterprise-enforced</b> な enterprise デフォルトが org デフォルトに優先（<a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/reference/security-at-scale/configuration-enforcement" target="_blank" rel="noopener noreferrer">Enforcement の仕様 ↗</a>）。競合時は <code>removed_by_enterprise</code> になる（<a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/reference/security-at-scale/configuration-statuses" target="_blank" rel="noopener noreferrer">ステータス一覧 ↗</a>）</span></p>
+<p class="ctl-row"><span class="ctl-k">Org で確認</span><span class="ctl-v">Organization → Settings → Advanced Security → Configurations → <b>Repositories</b> タブで、各 repo の適用中 configuration 名とステータス（<code>Enforced</code>, <code>Removed</code>, <code>No configuration</code>）を確認し、<b>Configuration status</b> で絞り込める（<a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/reference/security-at-scale/troubleshoot-security-configurations/configuration-issue-diagnosis" target="_blank" rel="noopener noreferrer">診断手順 ↗</a>）</span></p>
+<p class="ctl-row"><span class="ctl-k">API で確認</span><span class="ctl-v">1 repo の適用 config は <code>GET /repos/{owner}/{repo}/code-security-configuration</code>（<a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/rest/code-security/configurations#get-the-code-security-configuration-that-manages-a-repositorys-code-security-settings" target="_blank" rel="noopener noreferrer">REST API ↗</a>）、ある config の対象 repo 一覧は <code>GET /orgs/{org}/code-security/configurations/{configuration_id}/repositories</code>（enterprise 版も同様、<a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/rest/code-security/configurations#get-repositories-associated-with-a-code-security-configuration" target="_blank" rel="noopener noreferrer">REST API ↗</a>）</span></p>
+</div>
+</details>
+</div>
+</div>
+
+## カバレッジの可視化 <a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/security-at-scale/security-overview" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+<details class="workshop-demo"><summary>デモ手順</summary>
+
+<div class="demo-window" role="group" aria-label="デモ手順">
+<div class="demo-head"><span class="demo-tag">DEMO</span><span class="demo-name">Security overview</span><span class="demo-note">発表者専用</span></div>
+<ol class="demo-steps">
+<li>
+<p class="demo-step-title">ENTERPRISE レベル</p>
+<p><a href="https://github.com/enterprises/octodemo/security/overview" target="_blank" rel="noopener noreferrer">octodemo → Security overview ↗</a> を開き、検知 / 修復 / 予防のトレンドを見せる。続けて <b>Coverage</b> と <b>Risk</b> ビューに切り替える。</p>
+<p class="demo-out">自分が owner / security manager の org だけが集計される。</p>
+</li>
+<li>
+<p class="demo-step-title">ORGANIZATION レベル</p>
+<p><a href="https://github.com/orgs/theomonfort-org/security/overview" target="_blank" rel="noopener noreferrer">theomonfort-org → Security overview ↗</a> で同じダッシュボードを org 単位で見せる。</p>
+<p class="demo-out">現場が日常的に見るのはこのビュー。</p>
+</li>
+<li>
+<p class="demo-step-title">REPOSITORY レベル</p>
+<p><a href="https://github.com/theomonfort-org/ghas-test-1/security" target="_blank" rel="noopener noreferrer">ghas-test-1 → Security and quality ↗</a> で 1 リポジトリのアラートまで降りる。</p>
+<p class="demo-out">Enterprise → Org → Repo と、同じアラートを段階的に絞り込む流れ。</p>
+</li>
+</ol>
+</div>
+</details>
+
+配り終わったら次の関心事は「実際どこまで守れているか」。**Security and quality** タブが **Enterprise / Organization** の両レベルで答えてくれる。
+
+| ビュー | わかること | レベル |
+| --- | --- | :---: |
+| 📊 **Overview** | 検知 / 修復 / 予防のトレンド推移 | Ent + Org |
+| 📈 **Coverage** | どの repo でどの機能が有効か | Ent + Org |
+| 🛡️ **Risk** | アラートが多いのはどの repo か | Ent + Org |
+| 🌐 **Public monitoring** | メンバーが **GitHub 上の public repo に漏らした** secret | **Ent のみ** |
+
+- 🏢 **Org レベルの Coverage** が現場の日常ビュー。enterprise 側は自分が owner / security manager になっている org しか集計されない
+- 🌐 **Public monitoring** (public preview・Secret Protection 必須) は enterprise メンバーと verified domain で漏洩を紐付ける。**Enterprise → Settings → Advanced Security → Code security** で ON
+- 📤 **Export CSV** は Overview / Coverage / Risk で使え、**適用中のフィルタがそのまま反映**される

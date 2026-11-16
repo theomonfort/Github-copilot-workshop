@@ -51,7 +51,7 @@ links:
 
 ## In a nutshell
 
-<div class="hero-quote hero-quote-chat">
+<div data-playbook-article="copilot-chat" class="hero-quote hero-quote-chat">
   <p>
     <strong>GitHub Copilot</strong> is available in <strong>VS Code</strong>, on <strong>GitHub.com</strong>, in <strong>GitHub Mobile</strong>, through <strong>Copilot CLI</strong>, and in the <strong>GitHub Copilot app</strong>.
   </p>
@@ -109,9 +109,9 @@ In the Copilot harness, **`@` chat participants are deprecated and unsupported**
 
 | Session | How to start |
 | --- | --- |
-| <a class="retro-link" href="/en/playbook/cli/">Copilot CLI ↗</a> | **Chat: New Copilot CLI Session**, or `copilot` in the terminal |
-| **Claude / Codex**<br/><a class="retro-link" href="/en/playbook/partner-agent/">Partner agents ↗</a> | **Session Target** → available partner harness; setup and policies apply |
-| **Cloud**<br/><a class="retro-link" href="/en/playbook/cloud-agent/">Cloud Agent ↗</a> | **Session Target → Cloud**: managed sandbox, reconnect later. <a class="retro-link" href="https://code.visualstudio.com/docs/agents/run/cloud-sandbox-sessions" target="_blank" rel="noopener noreferrer">Docs ↗</a> |
+| <a class="retro-link" href="https://theomonfort.github.io/theomonfort/en/playbook/cli/">Copilot CLI ↗</a> | **Chat: New Copilot CLI Session**, or `copilot` in the terminal |
+| **Claude / Codex**<br/><a class="retro-link" href="https://theomonfort.github.io/theomonfort/en/playbook/partner-agent/">Partner agents ↗</a> | **Session Target** → available partner harness; setup and policies apply |
+| **Cloud**<br/><a class="retro-link" href="https://theomonfort.github.io/theomonfort/en/playbook/cloud-agent/">Cloud Agent ↗</a> | **Session Target → Cloud**: managed sandbox, reconnect later. <a class="retro-link" href="https://code.visualstudio.com/docs/agents/run/cloud-sandbox-sessions" target="_blank" rel="noopener noreferrer">Docs ↗</a> |
 
 **Model ≠ harness ≠ execution location**. A Claude model does not switch the Copilot harness; **Cloud** selects where it runs.
 

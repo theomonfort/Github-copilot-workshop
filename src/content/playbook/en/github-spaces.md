@@ -42,7 +42,7 @@ links:
 
 ## In a nutshell
 
-<div class="hero-quote hero-quote-chat">
+<div data-playbook-article="github-spaces" class="hero-quote hero-quote-chat">
   <p>
     <strong>Spaces</strong> gives Copilot a <strong>curated context room</strong> for a task, system, or team.
   </p>

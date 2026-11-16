@@ -1,7 +1,7 @@
 ---
-title: Copilot Licence
-titleEn: Copilot Licence
-summary: GitHub Copilot は Enterprise レベルで課金され、Enterprise または Organization レベルで割り当てられる。複数 org に所属するユーザーの請求・ポリシーの扱い、Outside collaborator / EMU の Guest collaborator まで一通り整理。
+title: GHE と Copilot のライセンス
+titleEn: GHE & Copilot Licences
+summary: Copilot の課金、割り当て、複数 org のポリシー、外部コラボレーターを整理。GHE Cloud のライセンス消費、未所属ユーザー、Visual Studio バンドル、予算アラートも解説。
 icon: /icons/license-crown.png
 color: magenta
 accent:
@@ -14,6 +14,18 @@ order: 30
 category: administration
 related: ['github-copilot', 'copilot-metrics']
 links:
+  - group: 📖 GHE ライセンス
+    label: GitHub ライセンスを消費するユーザー
+    url: https://docs.github.com/ja/billing/reference/github-license-users
+  - group: 📖 GHE ライセンス
+    label: Enterprise ユーザーへの Copilot の直接割り当て
+    url: https://docs.github.com/ja/copilot/how-tos/administer-copilot/manage-for-enterprise/manage-access/grant-access
+  - group: 📖 GHE ライセンス
+    label: GitHub Enterprise を含む Visual Studio サブスクリプションの設定
+    url: https://docs.github.com/ja/enterprise-cloud@latest/billing/how-tos/set-up-payment/set-up-vs-subscription
+  - group: 📖 GHE ライセンス
+    label: 予算とアラート
+    url: https://docs.github.com/ja/billing/concepts/budgets-and-alerts
   - label: ドキュメント — GitHub Copilot のプラン
     url: https://docs.github.com/ja/copilot/about-github-copilot/plans-for-github-copilot
   - label: ドキュメント — ポリシー競合時の挙動（複数組織の優先順位）
@@ -30,7 +42,7 @@ links:
 
 ## 一言で
 
-<div class="hero-quote hero-quote-admin">
+<div data-playbook-article="license-management" class="hero-quote hero-quote-admin">
   <p>
     GitHub Copilot は <strong>Enterprise レベルで課金</strong>され、<strong>Enterprise または Organization レベルで割り当て</strong>られる。
   </p>
@@ -41,14 +53,14 @@ links:
 
 ## GitHub 関連ライセンス／サービスの調達方法
 
-<div style="font-size:0.56em;line-height:1.25;--proc-row:8.45rem;--proc-gap:0.6rem;--proc-label:5.4rem;--proc-navy:#ff2e88;--proc-gray:#9bbc0f;--proc-blue:#00f0ff;--proc-copilot:#ffb000;--proc-panel:rgba(10,14,39,0.86);--proc-card:rgba(5,6,15,0.92);--proc-card-border:rgba(0,240,255,0.46);--proc-copilot-border:rgba(255,176,0,0.85);--proc-head:#ff2e88;--proc-accent:#00f0ff;--proc-dark:#05060f;--proc-ink:#e8f4ff;">
+<div style="font-size:0.56em;line-height:1.25;--proc-row:8.45rem;--proc-gap:0.6rem;--proc-label:5.4rem;--proc-navy:var(--c-neon-magenta);--proc-gray:var(--c-gb-green);--proc-blue:var(--c-neon-cyan);--proc-copilot:var(--c-crt-amber);--proc-panel:rgb(var(--rgb-deep-purple) / 0.86);--proc-card:rgb(var(--rgb-shadow-ink) / 0.92);--proc-card-border:rgb(var(--rgb-neon-cyan) / 0.46);--proc-copilot-border:rgb(var(--rgb-crt-amber) / 0.85);--proc-head:var(--c-neon-magenta);--proc-accent:var(--c-neon-cyan);--proc-dark:var(--c-shadow-ink);--proc-ink:var(--c-phosphor);">
 
 GitHub サービスの利用方法は下記の通りです。
 
 <div style="display:grid;grid-template-columns:minmax(0,1fr) 16.5rem;gap:1.05rem;align-items:start;margin-top:0.9rem;max-width:72rem;">
 <div style="display:grid;grid-template-rows:repeat(3,var(--proc-row));gap:var(--proc-gap);">
 <div style="display:grid;grid-template-columns:var(--proc-label) minmax(0,1fr);gap:0.25rem;min-height:0;">
-<div style="display:flex;align-items:center;justify-content:center;text-align:center;background:var(--proc-head);color:var(--proc-dark);font-weight:700;font-size:1.1em;line-height:1.35;border-bottom:0.6rem solid rgba(5,6,15,0.95);">ユーザー<br/>ライセンス</div>
+<div style="display:flex;align-items:center;justify-content:center;text-align:center;background:var(--proc-head);color:var(--proc-dark);font-weight:700;font-size:1.1em;line-height:1.35;border-bottom:0.6rem solid rgb(var(--rgb-shadow-ink) / 0.95);">ユーザー<br/>ライセンス</div>
 <div style="background:var(--proc-panel);color:var(--proc-ink);padding:0.3rem 0.7rem 0.55rem;">
 <div style="text-align:center;font-weight:700;font-size:1.05em;color:var(--proc-accent);margin-bottom:0.38rem;">GitHub Enterprise利用のためのライセンス</div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
@@ -64,7 +76,7 @@ GitHub サービスの利用方法は下記の通りです。
 </div>
 </div>
 <div style="display:grid;grid-template-columns:var(--proc-label) minmax(0,1fr);gap:0.25rem;min-height:0;">
-<div style="display:flex;align-items:center;justify-content:center;text-align:center;background:var(--proc-head);color:var(--proc-dark);font-weight:700;font-size:1.1em;line-height:1.35;border-top:0.6rem solid rgba(5,6,15,0.95);">Committer<br/>ライセンス</div>
+<div style="display:flex;align-items:center;justify-content:center;text-align:center;background:var(--proc-head);color:var(--proc-dark);font-weight:700;font-size:1.1em;line-height:1.35;border-top:0.6rem solid rgb(var(--rgb-shadow-ink) / 0.95);">Committer<br/>ライセンス</div>
 <div style="background:var(--proc-panel);color:var(--proc-ink);padding:0.3rem 0.7rem 0.55rem;display:grid;grid-template-rows:auto 1fr;">
 <div style="text-align:center;font-weight:700;font-size:1.05em;color:var(--proc-accent);margin-bottom:0.55rem;">GitHub でDevSecOps実現するためのライセンス</div>
 <div style="background:var(--proc-card);border:1px solid var(--proc-card-border);height:100%;display:grid;grid-template-rows:auto 1fr;">
@@ -78,7 +90,7 @@ GitHub サービスの利用方法は下記の通りです。
 <div style="background:var(--proc-panel);color:var(--proc-ink);padding:0.35rem 0.55rem 0.55rem;">
 <div style="text-align:center;font-weight:700;font-size:1.05em;color:var(--proc-accent);margin-bottom:0.45rem;">その他従量課金モデルの追加サービス</div>
 <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:0.45rem;">
-<div style="background:var(--proc-card);border:2px solid var(--proc-copilot-border);height:100%;display:grid;grid-template-rows:auto 1fr;box-shadow:0 0 12px rgba(255,176,0,0.28);"><div style="background:var(--proc-copilot);color:var(--proc-dark);text-align:center;font-weight:700;padding:0.18rem 0.25rem;font-size:1.03em;">Copilot<br/>Business/Enterprise</div><div style="padding:0.45rem 0.35rem;font-weight:700;color:var(--proc-copilot);">・生成系AIによるコード提案サービス</div></div>
+<div style="background:var(--proc-card);border:2px solid var(--proc-copilot-border);height:100%;display:grid;grid-template-rows:auto 1fr;box-shadow:0 0 12px rgb(var(--rgb-crt-amber) / 0.28);"><div style="background:var(--proc-copilot);color:var(--proc-dark);text-align:center;font-weight:700;padding:0.18rem 0.25rem;font-size:1.03em;">Copilot<br/>Business/Enterprise</div><div style="padding:0.45rem 0.35rem;font-weight:700;color:var(--proc-copilot);">・生成系AIによるコード提案サービス</div></div>
 <div style="background:var(--proc-card);border:1px solid var(--proc-card-border);height:100%;display:grid;grid-template-rows:auto 1fr;"><div style="background:var(--proc-head);color:var(--proc-dark);text-align:center;font-weight:700;padding:0.3rem 0.25rem;font-size:1.08em;">Actions</div><div style="padding:0.55rem 0.35rem;font-weight:600;">・CI/CD<br/>・ワークフロー自動化</div></div>
 <div style="background:var(--proc-card);border:1px solid var(--proc-card-border);height:100%;display:grid;grid-template-rows:auto 1fr;"><div style="background:var(--proc-head);color:var(--proc-dark);text-align:center;font-weight:700;padding:0.3rem 0.25rem;font-size:1.08em;">Codespaces</div><div style="padding:0.55rem 0.35rem;font-weight:600;">・開発用マシンを提供</div></div>
 <div style="background:var(--proc-card);border:1px solid var(--proc-card-border);height:100%;display:grid;grid-template-rows:auto 1fr;"><div style="background:var(--proc-head);color:var(--proc-dark);text-align:center;font-weight:700;padding:0.3rem 0.25rem;font-size:1.08em;">Packages</div><div style="padding:0.55rem 0.35rem;font-weight:600;">・パッケージ管理</div></div>
@@ -118,10 +130,10 @@ GitHub サービスの利用方法は下記の通りです。
 </div>
 </div>
 
-## Enterprise レベルでの課金
+## Enterprise レベルでの課金 <a class="h2-doc" href="https://docs.github.com/ja/billing/concepts/product-billing/github-copilot-licenses" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
 - 💳 **課金の主体は Enterprise アカウント** — 配下の全 organization の seat が **1 通の請求書** に集約される。
-- 📈 課金単位は **アクティブユーザー × 月**。同じユーザーが複数 org に所属していても重複請求はされない（後述「複数 org と請求」を参照）。
+- 📈 Copilot の seat は **未使用でも割り当て時から課金**され、月途中の追加は日割り計算される。**同一 Enterprise 内**の複数 org から同じユーザーに割り当てても重複請求はされない（後述「複数 org と請求」を参照）。
 - 🧾 organization 向けのプランは **Copilot Business** と **Copilot Enterprise** の 2 種類。Enterprise は Business に加えて、GitHub.com 上の Chat（リポジトリ索引付き）、fine-tuned モデル、Audit log などを含む。
 - 🏢 **Enterprise に属さない単独 organization** は org に直接課金され、選べるのは **Business のみ**。
 
@@ -132,6 +144,7 @@ GitHub サービスの利用方法は下記の通りです。
 - 🏷️ **1 つの org が選べる Copilot プランは 1 種類だけ** — Business **か** Enterprise。同じ org の中で混在はできない。
 - 👥 **その org のメンバー** が seat の対象。Owner が **Org Settings → Copilot → Access** から割り当てる。
 - 🆕 **Enterprise レベルでの割り当て（Business のみ・2025‑10‑28 GA）** — 管理者は Enterprise 設定から **Copilot Business** seat を直接アサインできる。割り当てた seat は **Enterprise 配下の全 org でそのユーザーに付随する**。
+- 🔒 **org 経由ではなく Enterprise から直接ライセンスを受けたユーザー** には「Let organizations decide」が適用されない。該当ポリシーは別設定の **Policies for enterprise-assigned users** に従うため、これが無効だとそれらの機能は使えない。<a class="retro-link" href="https://docs.github.com/ja/enterprise-cloud@latest/copilot/concepts/enterprise/policies" target="_blank" rel="noopener noreferrer">Copilot ポリシー ↗</a>
 
 | 割り当て場所 | 選べるプラン | seat を受け取る人 |
 | --- | --- | --- |
@@ -157,8 +170,9 @@ org のメンバーではない人（ベンダー・契約者・短期パート�
 
 ### 通常 org — Outside collaborator
 
-- 🔐 **まず org レベルで許可** — *Org Settings → Copilot → Access → Outside collaborator を許可*。
+- 🎫 **seat を割り当てるだけ** — 専用の Copilot トグルは廃止。Outside collaborator に Copilot を渡すには、他のメンバーと同じく **seat を割り当てる** だけでよい。
 - 📦 **リポジトリ単位で招待** — Outside collaborator は org の他のリポジトリを見られず、明示的に追加されたリポジトリだけにアクセスできる。
+- 🚫 **招待を制限したい場合** — *Org → Settings → Member privileges → 「Allow members to invite outside collaborators」のチェックを外す*。
 - 💵 seat を割り当てた Outside collaborator は **1 ライセンスとして** Enterprise 請求書に計上される。
 
 ### EMU 環境 — Guest collaborator
@@ -168,3 +182,37 @@ org のメンバーではない人（ベンダー・契約者・短期パート�
 - 💵 seat を割り当てた Guest collaborator も **1 ライセンス分** が課金される。
 
 > 📘 セットアップ: <a href="https://docs.github.com/ja/organizations/managing-user-access-to-your-organizations-repositories/managing-outside-collaborators/adding-outside-collaborators-to-repositories-in-your-organization" target="_blank" rel="noopener noreferrer" class="retro-link">Outside collaborator の追加</a> · <a href="https://docs.github.com/ja/enterprise-cloud@latest/admin/managing-accounts-and-repositories/managing-users-in-your-enterprise/enabling-guest-collaborators" target="_blank" rel="noopener noreferrer" class="retro-link">Guest collaborator の有効化（EMU）</a>
+
+## GHE ライセンス管理 <a class="h2-doc" href="https://docs.github.com/ja/billing/reference/github-license-users" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+GitHub Enterprise Cloud（EMU を含む）が対象です。
+
+<div class="ctl-widget">
+<p class="ctl-hint">▸ + で詳細を開閉</p>
+<div class="ctl-list">
+<details class="ctl-item" name="ghe-licensing">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🔑</span><span class="ctl-name">GHE ライセンス</span><span class="ctl-when">Org / repo へのアクセス</span><a class="ctl-doc" href="https://docs.github.com/ja/billing/reference/github-license-users" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p><strong>Organization に参加</strong>するか、<strong>private / internal リポジトリ</strong>（fork を除く）のコラボレーターとしてアクセスを付与されると、自動的に消費されます。</p>
+</div>
+</details>
+<details class="ctl-item" name="ghe-licensing">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">👤</span><span class="ctl-name">未所属ユーザー</span><span class="ctl-when">Copilot Business のみ</span><a class="ctl-doc" href="https://docs.github.com/ja/copilot/how-tos/administer-copilot/manage-for-enterprise/manage-access/grant-access" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p>Organization に所属せず、リポジトリアクセスも持たない<strong>未所属（unaffiliated）ユーザー</strong>に、<strong>Enterprise レベルで Copilot Business を直接割り当てる</strong>と、通常の GHE ライセンスを消費せずに利用できます。</p>
+</div>
+</details>
+<details class="ctl-item" name="ghe-licensing">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">📦</span><span class="ctl-name">Visual Studio バンドル</span><span class="ctl-when">アカウントを照合</span><a class="ctl-doc" href="https://docs.github.com/ja/enterprise-cloud@latest/billing/how-tos/set-up-payment/set-up-vs-subscription" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p>GitHub アカウントを、<strong>GitHub Enterprise を含む</strong> Visual Studio サブスクリプションに照合します。単体の GHE ライセンスではなく、バンドルライセンスを消費します。<strong>照合済みのユーザーは、未所属でもバンドルライセンスを消費します。</strong></p>
+</div>
+</details>
+<details class="ctl-item" name="ghe-licensing">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">💰</span><span class="ctl-name">GHE の予算</span><span class="ctl-when">アラートのみ</span><a class="ctl-doc" href="https://docs.github.com/ja/billing/concepts/budgets-and-alerts" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p><strong>従量課金の GHE ライセンス</strong>には、予算の <strong>75%、90%、100%</strong> でアラートを設定できます。予算を超えても<strong>ライセンス追加や課金は停止しません</strong>。前払いのボリュームライセンスには利用できません。</p>
+</div>
+</details>
+</div>
+</div>

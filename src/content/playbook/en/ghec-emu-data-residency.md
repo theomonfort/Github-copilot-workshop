@@ -1,0 +1,436 @@
+---
+title: EMU & Data Residency
+titleEn: EMU & Data Residency
+summary: Compare the three GitHub Enterprise Cloud setups (personal accounts, EMU, and data residency) with self-hosted GHES. Covers EMU user management and restrictions, how GHE.com keeps your data in a region such as Japan, features unavailable on GHE.com and GHES, and how Copilot fits in.
+icon: 🌏
+color: magenta
+accent:
+  text: text-neon-magenta
+  border: border-neon-magenta
+  glow: hover:shadow-neon-magenta
+  shadow: shadow-neon-magenta
+  hex: "#ff2e88"
+order: 29.2
+category: administration
+related: ['enterprise-setup', 'migrations', 'governance', 'license-management']
+links:
+  - group: 📖 Enterprise Managed Users
+    label: About Enterprise Managed Users
+    url: https://docs.github.com/en/enterprise-cloud@latest/admin/concepts/identity-and-access-management/enterprise-managed-users
+  - group: 📖 Enterprise Managed Users
+    label: Choosing an enterprise type
+    url: https://docs.github.com/en/enterprise-cloud@latest/admin/concepts/enterprise-fundamentals/choose-an-enterprise-type
+  - group: 📖 Enterprise Managed Users
+    label: Abilities and restrictions of managed user accounts
+    url: https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/abilities-and-restrictions-of-managed-user-accounts
+  - group: 📦 Migration
+    label: Migrate an organization with GitHub Enterprise Importer
+    url: https://docs.github.com/en/enterprise-cloud@latest/migrations/using-github-enterprise-importer/migrating-between-github-products/migrating-organizations-from-githubcom-to-github-enterprise-cloud
+  - group: 🌏 Data residency
+    label: About GitHub Enterprise Cloud with data residency
+    url: https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/about-github-enterprise-cloud-with-data-residency
+  - group: 🌏 Data residency
+    label: About storage of your data with data residency
+    url: https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/about-storage-of-your-data-with-data-residency
+  - group: 🌏 Data residency
+    label: Feature overview (differences from GitHub.com)
+    url: https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/feature-overview-for-github-enterprise-cloud-with-data-residency
+  - group: 🌏 Data residency
+    label: Network details for GHE.com
+    url: https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/network-details-for-ghecom
+  - group: 🌏 Data residency
+    label: GitHub Copilot with data residency
+    url: https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/github-copilot-with-data-residency
+  - group: 🏢 GitHub Enterprise Server
+    label: About GitHub for enterprises (deployment options)
+    url: https://docs.github.com/en/enterprise-cloud@latest/admin/overview/about-github-for-enterprises
+  - group: 🏢 GitHub Enterprise Server
+    label: About GitHub Enterprise Server
+    url: https://docs.github.com/en/enterprise-server@latest/admin/overview/about-github-enterprise-server
+  - group: 🏢 GitHub Enterprise Server
+    label: About GitHub Copilot on GitHub Enterprise Server
+    url: https://docs.github.com/en/enterprise-server@latest/copilot/copilot-on-ghes/about-copilot-on-ghes
+  - group: 📰 Announcements
+    label: GitHub Enterprise Cloud data residency in Japan is GA (2025-12-18)
+    url: https://github.blog/changelog/2025-12-18-github-enterprise-cloud-data-residency-in-japan-is-generally-available/
+---
+
+## In a nutshell
+
+<div data-playbook-article="ghec-emu-data-residency" class="hero-quote hero-quote-admin">
+  <p>
+    GitHub Enterprise Cloud comes in three setups, depending on <strong>who manages the accounts</strong> and <strong>where the data lives</strong>.
+  </p>
+  <p>
+    <strong>EMU</strong> issues accounts from your company IdP. <strong>Data residency</strong> builds on EMU and hosts your enterprise on a dedicated <strong>GHE.com</strong> subdomain, storing code and data in <strong>a region of your choice, such as Japan</strong>. To host it yourself, there is also <strong>GitHub Enterprise Server (GHES)</strong>.
+  </p>
+</div>
+
+## Four GitHub Enterprise setups <a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/admin/overview/about-github-for-enterprises" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+For GHEC you pick the **account type** and **data location** at creation. **GHES** is GitHub you host yourself, on-prem or in your cloud.
+
+<div class="tbl-fit">
+
+| | Personal | **EMU** | **Data residency** | **GHES** |
+| --- | --- | --- | --- | --- |
+| 🏠 Hosted at | github.com | github.com | `*.ghe.com` | **Self-hosted** |
+| 👤 Accounts | Self sign-up | IdP (**SCIM**) | IdP (**SCIM**) | On the instance |
+| 🔐 Sign-in | Password (+SAML) | **SAML / OIDC** | **SAML / OIDC** | LDAP, CAS, SAML |
+| 🗾 Data location | US | US | EU, AU, US, **JP** | **Your choice** |
+| 📢 Public repos | ✅ | ❌ | ❌ | ⚠️ Instance only |
+| 🤝 Outside collab | ✅ | ❌ Read-only | ❌ | ❌ |
+| 🔄 Updates | Auto | Auto | Auto | **Admin-run** |
+| 🤖 Copilot | ✅ | ✅ | ✅ | ⚠️ IDE / CLI only |
+| ⚙️ Hosted runners | ✅ | ✅ | ⚠️ No macOS | ❌ Self-hosted |
+
+</div>
+
+## Features unavailable on GHE.com and GHES <a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/feature-overview-for-github-enterprise-cloud-with-data-residency" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+Gaps compared with EMU on GitHub.com. ❌ unavailable, ⚠️ with conditions.
+
+📖 <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/feature-overview-for-github-enterprise-cloud-with-data-residency" target="_blank" rel="noopener noreferrer">GHE.com feature overview ↗</a>　📖 <a class="retro-link" href="https://docs.github.com/en/enterprise-server@latest/admin/overview/about-github-enterprise-server" target="_blank" rel="noopener noreferrer">About GHES ↗</a>
+
+<div class="ctl-widget">
+<p class="ctl-hint">▸ CLICK + FOR DETAILS</p>
+<div class="ctl-list">
+<details class="ctl-item" name="ghe-gaps">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">⚙️</span><span class="ctl-name">Actions</span><span class="ctl-when">macOS, hosted runners</span><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">🌏 GHE.com</span><span class="ctl-v">❌ <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/actions/concepts/runners/github-hosted-runners" target="_blank" rel="noopener noreferrer">macOS runners ↗</a><br/>❌ <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/feature-overview-for-github-enterprise-cloud-with-data-residency" target="_blank" rel="noopener noreferrer">Marketplace ↗</a> (install actions and apps from source)</span></p>
+<p class="ctl-row"><span class="ctl-k">🏢 GHES</span><span class="ctl-v">❌ <a class="retro-link" href="https://docs.github.com/en/enterprise-server@latest/actions/concepts/runners/github-hosted-runners" target="_blank" rel="noopener noreferrer">GitHub-hosted runners ↗</a> (self-hosted only)<br/>⚠️ <a class="retro-link" href="https://docs.github.com/en/enterprise-server@latest/admin/managing-github-actions-for-your-enterprise/managing-access-to-actions-from-githubcom/enabling-automatic-access-to-githubcom-actions-using-github-connect" target="_blank" rel="noopener noreferrer">GitHub.com actions ↗</a> need GitHub Connect</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghe-gaps">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">📦</span><span class="ctl-name">Packages</span><span class="ctl-when">Maven / Gradle</span><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">🌏 GHE.com</span><span class="ctl-v">❌ <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry" target="_blank" rel="noopener noreferrer">Maven / Gradle ↗</a> (Java)</span></p>
+<p class="ctl-row"><span class="ctl-k">🏢 GHES</span><span class="ctl-v">✅ <a class="retro-link" href="https://docs.github.com/en/enterprise-server@latest/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry" target="_blank" rel="noopener noreferrer">Maven / Gradle ↗</a> supported (admin enables Packages)</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghe-gaps">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🔗</span><span class="ctl-name">Dependencies</span><span class="ctl-when">Insights, Dependabot</span><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">🌏 GHE.com</span><span class="ctl-v">❌ Org and enterprise <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/organizations/collaborating-with-groups-in-organizations/viewing-insights-for-dependencies-in-your-organization" target="_blank" rel="noopener noreferrer">dependency insights ↗</a><br/>❌ License data in <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-your-supply-chain/establish-provenance-and-integrity/export-dependencies-as-sbom" target="_blank" rel="noopener noreferrer">SBOM ↗</a> exports</span></p>
+<p class="ctl-row"><span class="ctl-k">🏢 GHES</span><span class="ctl-v">⚠️ <a class="retro-link" href="https://docs.github.com/en/enterprise-server@latest/admin/configuring-settings/configuring-github-connect/enabling-dependabot-for-your-enterprise" target="_blank" rel="noopener noreferrer">Dependabot ↗</a> needs GitHub Connect and self-hosted runners</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghe-gaps">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🤖</span><span class="ctl-name">Copilot</span><span class="ctl-when">Region, web features</span><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">🌏 GHE.com</span><span class="ctl-v">⚠️ <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/github-copilot-with-data-residency" target="_blank" rel="noopener noreferrer">Data leaves the region by default ↗</a> (in-region inference: US and EU only)</span></p>
+<p class="ctl-row"><span class="ctl-k">🏢 GHES</span><span class="ctl-v">❌ <a class="retro-link" href="https://docs.github.com/en/enterprise-server@latest/copilot/copilot-on-ghes/about-copilot-on-ghes" target="_blank" rel="noopener noreferrer">Chat on the web ↗</a>, <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/copilot/concepts/copilot-surfaces/copilot-on-github" target="_blank" rel="noopener noreferrer">cloud agent ↗</a>, <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/copilot/concepts/agents/code-review" target="_blank" rel="noopener noreferrer">code review ↗</a>, <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/copilot/concepts/context/spaces" target="_blank" rel="noopener noreferrer">Spaces ↗</a><br/>⚠️ License assigned in the cloud; offline CLI is in preview</span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghe-gaps">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🛡️</span><span class="ctl-name">Security</span><span class="ctl-when">AI secret detection</span><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">🌏 GHE.com</span><span class="ctl-v">— No gap</span></p>
+<p class="ctl-row"><span class="ctl-k">🏢 GHES</span><span class="ctl-v">❌ <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-your-secrets/detect-secret-leaks/enabling-secret-scanning-for-ai-detected-secrets" target="_blank" rel="noopener noreferrer">AI-powered generic secret detection ↗</a></span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghe-gaps">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">💻</span><span class="ctl-name">Dev environments</span><span class="ctl-when">Codespaces</span><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">🌏 GHE.com</span><span class="ctl-v">✅ <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/codespaces/developing-in-a-codespace/using-github-codespaces-in-visual-studio-code" target="_blank" rel="noopener noreferrer">Codespaces ↗</a> (VS Code settings required)</span></p>
+<p class="ctl-row"><span class="ctl-k">🏢 GHES</span><span class="ctl-v">❌ <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/codespaces/quickstart" target="_blank" rel="noopener noreferrer">Codespaces ↗</a></span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghe-gaps">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">👤</span><span class="ctl-name">Identity, other</span><span class="ctl-when">EMU, gists, Importer</span><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">🌏 GHE.com</span><span class="ctl-v">❌ <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/abilities-and-restrictions-of-managed-user-accounts" target="_blank" rel="noopener noreferrer">Gists, public repos ↗</a> (EMU limits)<br/>❌ <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/migrations/importing-source-code/using-github-importer/about-github-importer" target="_blank" rel="noopener noreferrer">GitHub Importer ↗</a>, <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/admin/monitoring-activity-in-your-enterprise/reviewing-audit-logs-for-your-enterprise/streaming-the-audit-log-for-your-enterprise" target="_blank" rel="noopener noreferrer">audit log streaming to S3 via OIDC ↗</a></span></p>
+<p class="ctl-row"><span class="ctl-k">🏢 GHES</span><span class="ctl-v">❌ EMU (auth via <a class="retro-link" href="https://docs.github.com/en/enterprise-server@latest/admin/managing-iam/understanding-iam-for-enterprises/about-identity-and-access-management" target="_blank" rel="noopener noreferrer">built-in, LDAP, CAS, SAML ↗</a>)<br/>❌ <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/sponsors/getting-started-with-github-sponsors/about-github-sponsors" target="_blank" rel="noopener noreferrer">GitHub Sponsors ↗</a></span></p>
+</div>
+</details>
+<details class="ctl-item" name="ghe-gaps">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🆕</span><span class="ctl-name">New features</span><span class="ctl-when">Release timing</span><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">🌏 GHE.com</span><span class="ctl-v">⚠️ Some <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/feature-overview-for-github-enterprise-cloud-with-data-residency" target="_blank" rel="noopener noreferrer">preview features ↗</a> unavailable until GA</span></p>
+<p class="ctl-row"><span class="ctl-k">🏢 GHES</span><span class="ctl-v">⚠️ Ship on GitHub.com first, arrive via <a class="retro-link" href="https://docs.github.com/en/enterprise-server@latest/admin/overview/about-github-enterprise-server" target="_blank" rel="noopener noreferrer">feature releases ↗</a></span></p>
+</div>
+</details>
+</div>
+</div>
+
+## Personal accounts at a glance <a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/admin/concepts/enterprise-fundamentals/choose-an-enterprise-type" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+Personal accounts live **outside** the enterprise and join organizations by invitation.
+
+<div class="pa-map" style="margin:0.4rem auto 0.2rem;">
+<svg viewBox="0 0 1000 392" role="img" aria-label="Personal accounts structure. Inside github.com the user lives outside the Enterprise and can join both its organizations and outside organizations. Outside organizations and personal repositories are beyond the admin's reach." style="width:100%;height:auto;display:block;font-family:inherit;">
+<defs>
+<marker id="pa-ok" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--c-neon-cyan)"/></marker>
+<marker id="pa-warn" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--c-crt-amber)"/></marker>
+</defs>
+<rect x="6" y="26" width="988" height="358" rx="14" fill="rgb(var(--rgb-shadow-ink) / 0.55)" stroke="var(--c-phosphor)" stroke-width="2.5"/>
+<rect x="400" y="8" width="200" height="38" rx="6" fill="var(--c-shadow-ink)" stroke="var(--c-phosphor)" stroke-width="2"/>
+<text x="500" y="35" text-anchor="middle" font-size="24" fill="var(--c-phosphor)">github.com</text>
+<rect x="30" y="78" width="498" height="284" rx="12" fill="rgb(var(--rgb-gb-green) / 0.07)" stroke="var(--c-gb-green)" stroke-width="3"/>
+<rect x="48" y="62" width="150" height="32" rx="6" fill="var(--c-shadow-ink)" stroke="var(--c-gb-green)" stroke-width="2"/>
+<text x="123" y="85" text-anchor="middle" font-size="20" fill="var(--c-gb-green)">Enterprise</text>
+<rect x="548" y="78" width="436" height="284" rx="12" fill="rgb(var(--rgb-crt-amber) / 0.05)" stroke="var(--c-crt-amber)" stroke-width="2" stroke-dasharray="8 6"/>
+<rect x="748" y="62" width="222" height="32" rx="6" fill="var(--c-shadow-ink)" stroke="var(--c-crt-amber)" stroke-width="2"/>
+<text x="859" y="85" text-anchor="middle" font-size="18" fill="var(--c-crt-amber)">⚠️ Outside admin reach</text>
+<path d="M614 158 V122 H370 V156" stroke="var(--c-neon-cyan)" stroke-width="3" fill="none" marker-end="url(#pa-ok)"/>
+<path d="M370 122 H138 V156" stroke="var(--c-neon-cyan)" stroke-width="3" fill="none" marker-end="url(#pa-ok)"/>
+<text x="380" y="112" text-anchor="middle" font-size="20" fill="var(--c-neon-cyan)">✅ Can join (invited)</text>
+<text x="58" y="182" font-size="21" fill="var(--c-phosphor)">📁 Organization</text>
+<path d="M78 196 V322 M78 236 H100 M78 322 H100" stroke="#7a8aa8" stroke-width="2" fill="none"/>
+<text x="106" y="243" font-size="19" fill="#c9d6ea">🗄️ repo</text>
+<text x="158" y="290" font-size="20" fill="#7a8aa8">⋮</text>
+<text x="106" y="329" font-size="19" fill="#c9d6ea">🗄️ repo</text>
+<text x="290" y="182" font-size="21" fill="var(--c-phosphor)">📁 Organization</text>
+<path d="M310 196 V322 M310 236 H332 M310 322 H332" stroke="#7a8aa8" stroke-width="2" fill="none"/>
+<text x="338" y="243" font-size="19" fill="#c9d6ea">🗄️ repo</text>
+<text x="390" y="290" font-size="20" fill="#7a8aa8">⋮</text>
+<text x="338" y="329" font-size="19" fill="#c9d6ea">🗄️ repo</text>
+<text x="572" y="182" font-size="21" fill="var(--c-crt-amber)">👤 User</text>
+<path d="M592 196 V286 M592 236 H614 M592 286 H614" stroke="#7a8aa8" stroke-width="2" fill="none"/>
+<text x="620" y="243" font-size="18" fill="#c9d6ea">🌐 public repo</text>
+<text x="620" y="293" font-size="18" fill="#c9d6ea">🔒 private repo</text>
+<path d="M652 176 H794" stroke="var(--c-crt-amber)" stroke-width="3" fill="none" marker-end="url(#pa-warn)"/>
+<text x="723" y="164" text-anchor="middle" font-size="16" fill="var(--c-crt-amber)">Can join</text>
+<text x="800" y="182" font-size="21" fill="var(--c-phosphor)">📁 Organization</text>
+<path d="M820 196 V322 M820 236 H842 M820 322 H842" stroke="#7a8aa8" stroke-width="2" fill="none"/>
+<text x="848" y="243" font-size="19" fill="#c9d6ea">🗄️ repo</text>
+<text x="900" y="290" font-size="20" fill="#7a8aa8">⋮</text>
+<text x="848" y="329" font-size="19" fill="#c9d6ea">🗄️ repo</text>
+</svg>
+</div>
+
+- ✅ Admins control only what is inside the enterprise, e.g. whether orgs can create **public repos**
+- ⚠️ **Outside admin reach**: outside orgs and their policies, personal repos (public or private), gists, PRs and stars on outside repos
+
+## EMU at a glance <a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/abilities-and-restrictions-of-managed-user-accounts" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+Managed users are created **inside** the enterprise.
+
+<div class="emu-map" style="margin:0.4rem auto 0.2rem;">
+<svg viewBox="0 0 1000 392" role="img" aria-label="EMU structure. Inside github.com, the managed user belongs to the Enterprise and can join its organizations, but cannot join organizations outside the Enterprise." style="width:100%;height:auto;display:block;font-family:inherit;">
+<defs>
+<marker id="emu-ok" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--c-neon-cyan)"/></marker>
+<marker id="emu-ng" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--c-coral-alert)"/></marker>
+</defs>
+<rect x="6" y="26" width="988" height="358" rx="14" fill="rgb(var(--rgb-shadow-ink) / 0.55)" stroke="var(--c-phosphor)" stroke-width="2.5"/>
+<rect x="400" y="8" width="200" height="38" rx="6" fill="var(--c-shadow-ink)" stroke="var(--c-phosphor)" stroke-width="2"/>
+<text x="500" y="35" text-anchor="middle" font-size="24" fill="var(--c-phosphor)">github.com</text>
+<rect x="30" y="78" width="704" height="284" rx="12" fill="rgb(var(--rgb-gb-green) / 0.07)" stroke="var(--c-gb-green)" stroke-width="3"/>
+<rect x="48" y="62" width="150" height="32" rx="6" fill="var(--c-shadow-ink)" stroke="var(--c-gb-green)" stroke-width="2"/>
+<text x="123" y="85" text-anchor="middle" font-size="20" fill="var(--c-gb-green)">Enterprise</text>
+<path d="M572 158 V122 H366 V156" stroke="var(--c-neon-cyan)" stroke-width="3" fill="none" marker-end="url(#emu-ok)"/>
+<path d="M366 122 H142 V156" stroke="var(--c-neon-cyan)" stroke-width="3" fill="none" marker-end="url(#emu-ok)"/>
+<text x="466" y="112" text-anchor="middle" font-size="20" fill="var(--c-neon-cyan)">✅ Can join</text>
+<text x="62" y="182" font-size="21" fill="var(--c-phosphor)">📁 Organization</text>
+<path d="M82 196 V322 M82 236 H104 M82 322 H104" stroke="#7a8aa8" stroke-width="2" fill="none"/>
+<text x="110" y="243" font-size="19" fill="#c9d6ea">🗄️ repo</text>
+<text x="162" y="290" font-size="20" fill="#7a8aa8">⋮</text>
+<text x="110" y="329" font-size="19" fill="#c9d6ea">🗄️ repo</text>
+<text x="286" y="182" font-size="21" fill="var(--c-phosphor)">📁 Organization</text>
+<path d="M306 196 V322 M306 236 H328 M306 322 H328" stroke="#7a8aa8" stroke-width="2" fill="none"/>
+<text x="334" y="243" font-size="19" fill="#c9d6ea">🗄️ repo</text>
+<text x="386" y="290" font-size="20" fill="#7a8aa8">⋮</text>
+<text x="334" y="329" font-size="19" fill="#c9d6ea">🗄️ repo</text>
+<text x="522" y="182" font-size="21" fill="var(--c-crt-amber)">👤 User</text>
+<path d="M542 196 V236 H562" stroke="#7a8aa8" stroke-width="2" fill="none"/>
+<text x="568" y="243" font-size="18" fill="#c9d6ea">🔒 private repo</text>
+<path d="M608 176 H762" stroke="var(--c-coral-alert)" stroke-width="3" stroke-dasharray="7 6" fill="none" marker-end="url(#emu-ng)"/>
+<circle cx="734" cy="176" r="15" fill="var(--c-shadow-ink)" stroke="var(--c-coral-alert)" stroke-width="2"/>
+<text x="734" y="183" text-anchor="middle" font-size="18" fill="var(--c-coral-alert)">✕</text>
+<text x="866" y="120" text-anchor="middle" font-size="19" fill="var(--c-coral-alert)">❌ Can't join outside</text>
+<text x="768" y="182" font-size="21" fill="var(--c-phosphor)">📁 Organization</text>
+<path d="M788 196 V322 M788 236 H810 M788 322 H810" stroke="#7a8aa8" stroke-width="2" fill="none"/>
+<text x="816" y="243" font-size="19" fill="#c9d6ea">🗄️ repo</text>
+<text x="868" y="290" font-size="20" fill="#7a8aa8">⋮</text>
+<text x="816" y="329" font-size="19" fill="#c9d6ea">🗄️ repo</text>
+</svg>
+</div>
+
+- ✅ Joins any org in the enterprise. Personal repos are **private only**, allowed or blocked by policy
+- 🚫 No public repos or gists, no outside orgs. Public repos on github.com are **read-only** (no PRs, issues, stars)
+
+## EMU vs SAML-only <a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/admin/concepts/identity-and-access-management/enterprise-managed-users" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+Personal accounts can still use SAML SSO. The difference is **who owns the account** and **how people sign in**.
+
+| | Personal accounts + SAML | **EMU** |
+| --- | --- | --- |
+| 🔐 SSO protocol | **SAML** only | **SAML**, or **OIDC** (Entra ID only) |
+| 🔗 SSO scope | Enterprise or org | **Enterprise only** |
+| 🔄 SCIM | Optional, manages org access only | **Required**, creates and suspends the accounts |
+| 🚪 Sign-in | GitHub password, then IdP | IdP from the start |
+| 🏷️ Username | Managed by the user | Managed by the IdP (`mona_octocorp`) |
+
+## EMU restrictions <a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/abilities-and-restrictions-of-managed-user-accounts" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+Tighter control comes with trade-offs. Check these four points before adopting.
+
+<div class="ctl-widget">
+<p class="ctl-hint">▸ Click + for details</p>
+<div class="ctl-list">
+<details class="ctl-item" name="emu-limits">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">👥</span><span class="ctl-name">Everyone is a managed user</span><span class="ctl-when">Externals live in the IdP too</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/admin/managing-accounts-and-repositories/managing-users-in-your-enterprise/enabling-guest-collaborators" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Scope</span><span class="ctl-v">Contractors and outside developers also need an account in Entra ID or Okta</span></p>
+<p class="ctl-row"><span class="ctl-k">Fix</span><span class="ctl-v">Provision them from the IdP and use the <b>guest collaborator</b> role to limit internal repo access</span></p>
+</div>
+</details>
+<details class="ctl-item" name="emu-limits">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🔑</span><span class="ctl-name">One IdP only</span><span class="ctl-when">Same IdP for auth and SCIM</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/admin/concepts/identity-and-access-management/enterprise-managed-users" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Partners</span><span class="ctl-v">Entra ID (SAML / OIDC), Okta (SAML), PingFederate (SAML)</span></p>
+<p class="ctl-row"><span class="ctl-k">Note</span><span class="ctl-v">Mixing <b>Okta and Entra ID</b> (one for auth, the other for SCIM) is not supported</span></p>
+</div>
+</details>
+<details class="ctl-item" name="emu-limits">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🚫</span><span class="ctl-name">No public content</span><span class="ctl-when">Public repos, gists, public Pages</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/abilities-and-restrictions-of-managed-user-accounts" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Visibility</span><span class="ctl-v">Only <b>private and internal</b> repos. Use internal repos for InnerSource</span></p>
+<p class="ctl-row"><span class="ctl-k">Other</span><span class="ctl-v">Cannot create or comment on gists, no GitHub Pages visible outside the enterprise</span></p>
+</div>
+</details>
+<details class="ctl-item" name="emu-limits">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">🤝</span><span class="ctl-name">No outside collaboration</span><span class="ctl-when">OSS needs a second account</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/getting-started-with-enterprise-managed-users" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Scope</span><span class="ctl-v">Cannot push, open PRs or issues, star, or fork outside the enterprise (public repos are read-only)</span></p>
+<p class="ctl-row"><span class="ctl-k">Impact</span><span class="ctl-v">OSS contributors keep a personal account too. Watch for leaks when switching accounts</span></p>
+</div>
+</details>
+</div>
+</div>
+
+## What is data residency (GHE.com)? <a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/about-github-enterprise-cloud-with-data-residency" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+GitHub.com stores data in the **US** by default. With data residency, your enterprise lives on a **dedicated GHE.com subdomain** (e.g. `octocorp.ghe.com`) in the region you choose.
+
+- 🗺️ **Regions**: EU, Australia, US, **Japan** (GA Dec 2025)
+- 🔐 **Identity**: **EMU only**, isolated from the GitHub.com community
+- ☁️ **vs GHES**: Latest features like Copilot, no upgrade downtime
+
+| 📍 Stored in region | 🌐 May leave the region |
+| --- | --- |
+| Repos, code, PRs, comments | Telemetry with pseudonymous IDs |
+| Actions data and logs, BCDR | Billing, license, support data |
+| Email, username, name, IP | Copilot data (default), secret validity checks |
+
+## Differences from GitHub.com <a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/feature-overview-for-github-enterprise-cloud-with-data-residency" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+Features are close to EMU on GitHub.com. A few are unavailable, and **URLs change**.
+
+- 🛒 **No GitHub Marketplace**: install actions and apps from source
+- 🍎 No **macOS runners** or **Maven / Gradle** packages yet
+- 📊 No org or enterprise **dependency insights** yet
+
+| Use | GitHub.com | GHE.com |
+| --- | --- | --- |
+| API | `api.github.com` | `api.SUBDOMAIN.ghe.com` |
+| Container registry | `ghcr.io` | `containers.SUBDOMAIN.ghe.com` |
+| SSH clone | `git@github.com:` | `SUBDOMAIN@SUBDOMAIN.ghe.com:` |
+
+> ⚠️ IP ranges and SSH fingerprints also differ from GitHub.com. Update firewall, IdP, and storage allowlists for GHE.com.
+
+## Copilot with data residency <a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/github-copilot-with-data-residency" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+Assign **Copilot Business or Enterprise** to use Copilot on GHE.com (no Pro or Free). Copilot data is processed **outside your region by default**. To keep it in region, enable the **Restrict Copilot to data residency compliant models** policy (off by default).
+
+| | Default | **Policy enabled** |
+| --- | --- | --- |
+| 🧠 Inference, prompts, logs | May leave the region | **Stays in region** |
+| 🤖 Available models | All models | Region-certified models only |
+| 💰 AI credit consumption | Standard | **+10%** |
+| 🗺️ Supported regions | All regions | **US and EU only** |
+
+> ⚠️ The Japan region does not yet support in-region Copilot inference. Japanese enterprises still have Copilot data processed outside the region.
+
+## ★ Which one to choose? <a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/admin/concepts/enterprise-fundamentals/choose-an-enterprise-type" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+Decide **before you create the enterprise**. Three questions get you there.
+
+```mermaid
+flowchart LR
+  Q1{"Must you choose<br/>where data is stored?"}
+  Q2{"Need public repos, gists,<br/>or outside OSS work?"}
+  Q3{"Can the IdP be the source<br/>of truth for users?"}
+  DR(["🌏 Data residency<br/>GHE.com + EMU"])
+  EMU(["🏢 EMU<br/>github.com"])
+  PA(["👤 Personal accounts<br/>+ SAML SSO"])
+  Q1 -->|"Yes"| DR
+  Q1 -->|"No"| Q2
+  Q2 -->|"Yes"| PA
+  Q2 -->|"No"| Q3
+  Q3 -->|"Yes"| EMU
+  Q3 -->|"No"| PA
+
+  classDef q fill:#0b1420,stroke:#00f0ff,color:#00f0ff,stroke-width:2px
+  classDef dr fill:#11162c,stroke:#ff2e88,color:#ff2e88,stroke-width:2px
+  classDef emu fill:#1a1500,stroke:#ffb000,color:#ffb000,stroke-width:2px
+  classDef pa fill:#0a1a14,stroke:#9bbc0f,color:#9bbc0f,stroke-width:2px
+  class Q1,Q2,Q3 q
+  class DR dr
+  class EMU emu
+  class PA pa
+```
+
+> ⚠️ You cannot switch types after creation. Moving from a personal-account enterprise to EMU or GHE.com means creating a new enterprise and migrating (for example with GitHub Enterprise Importer).
+
+## GitHub.com → EMU / GHE.com (GEI) <a class="h2-doc" href="https://docs.github.com/en/enterprise-cloud@latest/migrations/using-github-enterprise-importer/migrating-between-github-products/migrating-organizations-from-githubcom-to-github-enterprise-cloud" target="_blank" rel="noopener noreferrer">📖 Docs</a>
+
+<div class="ctl-widget ctl-stable ctl-tight">
+<div class="ctl-list">
+<details class="ctl-item" name="emu-org-migration">
+<summary class="ctl-btn"><span class="ctl-name">In a nutshell</span><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-intro"><strong>GEI creates the target org and migrates the data (repos, teams, some settings, etc.).</strong> The IdP provisions user accounts, which must be matched to mannequins to reattribute issues, PRs, etc. Unsupported data must be migrated or reconfigured manually.</p>
+</div>
+</details>
+<details class="ctl-item" name="emu-org-migration">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">1.</span><span class="ctl-name">Inventory the migration</span><span class="ctl-when">Included / excluded</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/migrations/using-github-enterprise-importer/migrating-between-github-products/about-migrations-between-github-products#data-that-is-migrated-from-githubcom" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Included</span><span class="ctl-v"><b>Repos:</b> Git history, PRs, issues, comments, releases, workflow files.<br/><b>Teams:</b> team definitions and repo permissions.<br/><b>Settings:</b> supported repo/org settings.</span></p>
+<p class="ctl-row"><span class="ctl-k">Not included</span><span class="ctl-v"><b>Access:</b> team membership, direct user access, SSH keys, PATs.<br/><b>Automation:</b> Actions config/run history, Apps.<br/><b>Other:</b> Packages, Projects, LFS objects, rulesets. Full list: Docs.</span></p>
+</div>
+</details>
+<details class="ctl-item" name="emu-org-migration">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">2.</span><span class="ctl-name">Prepare the EMU enterprise</span><span class="ctl-when">Setup / GEI access</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/understanding-iam-for-enterprises/getting-started-with-enterprise-managed-users" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Enterprise</span><span class="ctl-v"><a class="retro-link" href="https://livesend.github.com/i/PLUSSIGNmO___ceUsv7m___o6AFPLUSSIGNv8g8ZvMEsSwHipZ7T6fVpuWzDHhbTXlPNmIPLUSSIGN28yn1oCfM___wSnn9wVegCrDYY0K___MXh5FIxYr3sBkD8PLUSSIGN4S3StnoRPLUSSIGNkZY9KE1NCUgm9DhLFRbBjkV" target="_blank" rel="noopener noreferrer">Create an EMU enterprise ↗</a></span></p>
+<p class="ctl-row"><span class="ctl-k">Required role</span><span class="ctl-v">Source: <b>org owner / migrator</b>. Target: <b>enterprise owner</b>.</span></p>
+<p class="ctl-row"><span class="ctl-k">PAT</span><span class="ctl-v">Set up the <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/migrations/using-github-enterprise-importer/migrating-between-github-products/managing-access-for-a-migration-between-github-products#creating-a-personal-access-token-for-github-enterprise-importer" target="_blank" rel="noopener noreferrer">classic PATs ↗</a> that GEI will use for the migration, with the required scopes and <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/authentication/authenticating-with-single-sign-on/authorizing-a-personal-access-token-for-use-with-single-sign-on" target="_blank" rel="noopener noreferrer">SSO authorization ↗</a> if needed.</span></p>
+<p class="ctl-row"><span class="ctl-k">IP</span><span class="ctl-v">Check that <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/migrations/using-github-enterprise-importer/migrating-between-github-products/managing-access-for-a-migration-between-github-products#configuring-ip-allow-lists-for-migrations" target="_blank" rel="noopener noreferrer">IP restrictions ↗</a> do not block GEI.</span></p>
+</div>
+</details>
+<details class="ctl-item" name="emu-org-migration">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">3.</span><span class="ctl-name">Rehearse the full migration</span><span class="ctl-when">Separate test org</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/migrations/using-github-enterprise-importer/migrating-between-github-products/overview-of-a-migration-between-github-products#running-your-migrations" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Trial</span><span class="ctl-v">Run a migration via the CLI, specifying a test org name.</span></p>
+<p class="ctl-row"><span class="ctl-k">Validate</span><span class="ctl-v">Measure duration, review warnings, rehearse steps 5 and 6. Users check data, access and CI/CD.</span></p>
+<p class="ctl-row"><span class="ctl-k">Production</span><span class="ctl-v">Fix problems first. Production is a <b>fresh full migration</b>, not a test-org sync.</span></p>
+</div>
+</details>
+<details class="ctl-item" name="emu-org-migration">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">4.</span><span class="ctl-name">Freeze writes and migrate</span><span class="ctl-when">No delta sync</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/migrations/using-github-enterprise-importer/migrating-between-github-products/migrating-organizations-from-githubcom-to-github-enterprise-cloud" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Freeze</span><span class="ctl-v">Stop pushes, PR/issue updates and bots across the source org. <b>No delta migration</b>: later changes are not picked up automatically.</span></p>
+<p class="ctl-row"><span class="ctl-k">Run</span><span class="ctl-v">Run <code>gh gei migrate-org</code> with the production org name. For blocking <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/migrations/using-github-enterprise-importer/migrating-between-github-products/about-migrations-between-github-products#limitations-of-github-enterprise-importer" target="_blank" rel="noopener noreferrer">rulesets ↗</a>, use <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/migrations/troubleshooting/setting-ruleset-bypasses-for-repository-migrations" target="_blank" rel="noopener noreferrer"><b>Repository migrations → Exempt ↗</b></a>.</span></p>
+<p class="ctl-row"><span class="ctl-k">Check</span><span class="ctl-v">Review org status and every repo log. <b>Success can include warnings</b> about missing data.</span></p>
+</div>
+</details>
+<details class="ctl-item" name="emu-org-migration">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">5.</span><span class="ctl-name">Restore members and attribution</span><span class="ctl-when">Mannequins</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/migrations/using-github-enterprise-importer/completing-your-migration-with-github-enterprise-importer/reclaiming-mannequins-for-github-enterprise-importer" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Members</span><span class="ctl-v">Provision staff/contractors via IdP; add to the org and <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/migrations/using-github-enterprise-importer/migrating-between-github-products/overview-of-a-migration-between-github-products#recreating-teams-for-organization-migrations" target="_blank" rel="noopener noreferrer">restore team membership ↗</a> via IdP groups.</span></p>
+<p class="ctl-row"><span class="ctl-k">Mannequins</span><span class="ctl-v"><b>Placeholder authors of PRs/issues/comments.</b> Org owner: <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/migrations/using-github-enterprise-importer/completing-your-migration-with-github-enterprise-importer/reclaiming-mannequins-for-github-enterprise-importer#reclaiming-mannequins-with-the-gei-extension" target="_blank" rel="noopener noreferrer"><code>gh gei generate-mannequin-csv</code> ↗</a> → map the CSV to existing EMU org members → <code>gh gei reclaim-mannequin</code>.</span></p>
+<p class="ctl-row"><span class="ctl-k">Limits</span><span class="ctl-v"><a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/migrations/using-github-enterprise-importer/completing-your-migration-with-github-enterprise-importer/reclaiming-mannequins-for-github-enterprise-importer#reclaiming-mannequins" target="_blank" rel="noopener noreferrer"><b>No access grants ↗</b></a>; <a class="retro-link" href="https://docs.github.com/en/enterprise-cloud@latest/migrations/overview/mannequins-and-user-activity#what-are-mannequins" target="_blank" rel="noopener noreferrer"><b>Git commit attribution is unchanged ↗</b></a>.</span></p>
+</div>
+</details>
+<details class="ctl-item" name="emu-org-migration">
+<summary class="ctl-btn"><span class="ctl-icon" aria-hidden="true">6.</span><span class="ctl-name">Restore services and cut over</span><span class="ctl-when">Validate before reopening</span><a class="ctl-doc" href="https://docs.github.com/en/enterprise-cloud@latest/migrations/using-github-enterprise-importer/migrating-between-github-products/overview-of-a-migration-between-github-products#completing-follow-up-tasks" target="_blank" rel="noopener noreferrer">Docs</a><span class="ctl-toggle" aria-hidden="true"></span></summary>
+<div class="ctl-body">
+<p class="ctl-row"><span class="ctl-k">Services</span><span class="ctl-v">Restore Actions secrets/variables/environments/runners, Apps and excluded data. <b>Re-enable webhooks with secrets.</b></span></p>
+<p class="ctl-row"><span class="ctl-k">Checks</span><span class="ctl-v">Fix remotes/<b>CODEOWNERS</b>/team references; check partial branch protections. Repos arrive <b>private</b>; EMU forbids public.</span></p>
+<p class="ctl-row"><span class="ctl-k">Go live</span><span class="ctl-v">Validate data, access and CI/CD. Reopen target; <b>keep source frozen</b> until acceptance.</span></p>
+</div>
+</details>
+</div>
+</div>

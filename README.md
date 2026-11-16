@@ -23,6 +23,14 @@
 
 > `.github/` 配下の Copilot instruction files は、ワークショップ手順の中で作成します。
 
+## Playbook 教材の同期 / Playbook content source
+
+日本語・英語各39記事は [theomonfort/theomonfort の固定版](https://github.com/theomonfort/theomonfort/tree/817360dde8a93a4cea4d6b60db578b6ea899c345) (`817360dde8a93a4cea4d6b60db578b6ea899c345`) から同期しています。本文の出典は保持し、配置パス・レトロ配色・デモ手順の折りたたみ・標準動画プレーヤーだけをワークショップ用に調整しています。参照画像・動画・ダウンロード資料のみを追加し、サイト全体の `public/` 同期は行っていません。
+
+main は素材のみ、checkpoint1 は基本サイト、checkpoint2 はプレゼン、checkpoint3 は既存3Dとテスト、という構成は変わりません。本文図表用のCSSだけを checkpoint1 以降で再利用し、モダンテーマ・新ナビ・音声は取り込みません。英語は引き続き教材素材で、画面は日本語です。元サイトの archived 記事 (Hooks / Usage-Based Billing / VS Code Agents Window) も削除せず保持しています。ローカルにないハンズオン・Changelog・英語ページへの本文リンクは元サイトを開きます。
+
+**English:** JA/EN content (39 entries each) is pinned to the revision above. Citations are retained; only standalone paths, retro colors, native demo disclosures and video controls are adapted. Only referenced media/downloads and scoped article styles are reused, not the modern theme, navigation, audio or broad public-asset mirror. Main stays starter-only and checkpoint feature boundaries are unchanged. English remains source material rather than a new UI. Source-archived articles remain available; links to routes absent here open the source website.
+
 ## Copilot アプリから Codespace に接続 / Connect from the Copilot app
 
 `.devcontainer/devcontainer.json` に `ghcr.io/github/copilot-host/copilotd:0` を追加済みです。コンテナ起動時にホスト `copilotd` を起動し、Codespace を自動登録します。既存のイメージ、開発ツール、拡張機能、ポート、作成時コマンドは維持しています。Actions 用の `copilot-setup-steps.yml` とは別の設定です。
