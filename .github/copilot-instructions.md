@@ -33,3 +33,7 @@
 1. `resolve-library-id` でライブラリ ID を解決する。
 2. `get-library-docs` で最新ドキュメントを取得する。
 3. 取得したドキュメントに基づいて実装する。
+
+## 機能とテスト
+
+When adding or changing a feature, assess whether tests are needed. Propose relevant tests and ask the user which to add or update, then implement the feature and agreed tests together.

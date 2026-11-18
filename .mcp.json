@@ -7,6 +7,19 @@
     "context7": {
       "type": "http",
       "url": "https://mcp.context7.com/mcp"
+    },
+    "playwright-test": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "--yes",
+        "--package=node@22.23.4",
+        "node",
+        "./node_modules/@playwright/test/cli.js",
+        "run-test-mcp-server",
+        "--headless",
+        "--config=playwright.config.ts"
+      ]
     }
   }
 }

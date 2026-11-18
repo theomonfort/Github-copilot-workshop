@@ -33,11 +33,11 @@ const done = (message) => { state.completed.push(message); console.log(message);
 
 function pullRequestBody(stage, checkpoint, snapshot, base) {
   const validation = stage.name === '03-tests'
-    ? '`npx playwright install chromium`（Linux: `npx playwright install --with-deps chromium`）→ `npm run check` → `npm run test:e2e`。PR の CI 結果も確認してください。'
+    ? '更新済み Dev Container では Chromium の導入は不要です。コンテナ外のみ `npx playwright install --with-deps chromium`。`npm run check` → `npm run test:e2e`。PR の CI 結果も確認してください。'
     : '`npm run check` → `npm run build`。';
   return `${stage.summary}
 
-\`npm ci\` → \`npm run dev\`。表示 URL（Codespaces は転送 URL）の \`/playbook/\` で${stage.inspect}。
+取り込みコマンドが PR 作成後に \`npm ci\` を実行します。成功後は \`npm run dev\`。表示 URL（Codespaces は転送 URL）の \`/playbook/\` で${stage.inspect}。
 
 **差分:** 全追跡ファイルを置換します。独自変更と削除を確認してください。
 
@@ -59,10 +59,23 @@ function pullRequestBody(stage, checkpoint, snapshot, base) {
 </details>`;
 }
 
+function installDependencies(tree) {
+  state.step = 'checking the checkout before dependency installation';
+  requireThat(git(['rev-parse', 'HEAD^{tree}']).text === tree
+    && !git(['status', '--porcelain=v1', '--untracked-files=all']).text,
+  '依存関係は未導入です。現在の checkout が取得した snapshot と異なるか、未コミット・未追跡の変更があります。作業を保存し、取り込み済みブランチへ手動で切り替えてから checkpoint を再実行してください。checkout は自動で変更しません。');
+  state.step = 'installing project dependencies';
+  console.log('取り込んだ package-lock.json で npm ci を実行します（node_modules は再作成されます）。');
+  const result = run('npm', ['ci']);
+  if (result.text) console.log(result.text);
+  done('npm ci が完了しました。npm run dev で起動できます。');
+}
+
 function main() {
   const number = process.argv[2];
   requireThat(process.argv.length === 3 && /^[123]$/.test(number), 'Use ./checkpoint1, ./checkpoint2, or ./checkpoint3.');
   const { target, metadata } = preflight(context);
+  run('npm', ['--version']);
   if (number === '1') requireThat(metadata.has_issues === true,
     'checkpoint1 needs Issues enabled in the participant repository and gh access to read/create issues. Repository settings were not changed.');
   state.release = operationLock(context, target, metadata);
@@ -80,7 +93,7 @@ function main() {
   git([...fetchOptions, source, `refs/heads/${checkpoint}`]);
   const snapshot = git(['rev-parse', 'FETCH_HEAD^{commit}']).text;
   const tree = git(['rev-parse', `${snapshot}^{tree}`]).text;
-  for (const path of ['checkpoint1', 'checkpoint2', 'checkpoint3', 'reset', 'scripts/reset.mjs', 'scripts/checkpoint-common.mjs', 'scripts/checkpoint.mjs', 'scripts/checkpoint-issues.mjs', 'scripts/checkpoint-issues.json']) {
+  for (const path of ['checkpoint1', 'checkpoint2', 'checkpoint3', 'reset', 'scripts/reset.mjs', 'scripts/checkpoint-common.mjs', 'scripts/checkpoint.mjs', 'scripts/checkpoint-issues.mjs', 'scripts/checkpoint-issues.json', 'package.json', 'package-lock.json']) {
     const entry = git(['ls-tree', snapshot, '--', path]).text;
     requireThat(entry.startsWith(path.startsWith('checkpoint') || path === 'reset' ? '100755 blob ' : '100644 blob '),
       `The canonical snapshot is missing a usable ${path}; nothing was switched.`);
@@ -98,6 +111,7 @@ function main() {
   }
   if (alreadyImported) {
     console.log('origin/main already matches this snapshot. No stash, branch, commit, push or PR was created.');
+    installDependencies(tree);
     return;
   }
   // Issue API の待機中に増えた ignored ファイルも、checkout 変更前に保護する。
@@ -146,7 +160,9 @@ function main() {
   state.step = 'opening the pull request';
   state.prArgs = ['pr', 'create', '--repo', state.repo, '--base', 'main', '--head', branch, '--title', state.title, '--body', state.body];
   console.log(run('gh', state.prArgs).text);
+  state.prCreated = true;
   done('PR created. No PR was merged.');
+  installDependencies(tree);
 }
 
 try {
@@ -159,14 +175,18 @@ try {
     console.error('Issue preparation stopped before stash/checkout/commit/push/PR changes. Keep created issues and their identity markers. After resolving the reported error, rerun ./checkpoint1 to reuse existing issues and prepare only missing ones.');
   }
   if (state.branch) console.error(`Your work branch is ${state.branch}; existing branches and main were not updated.`);
+  if (state.step === 'installing project dependencies') {
+    console.error(`依存関係の導入は未完了です。取り込んだファイル・commit・作成済み PR は保持しています。エラーを解消し、同じ checkout で再試行してください:\ncd ${quote(root)} && npm ci\nPR の作り直しや checkpoint の再取り込みは不要です。`);
+  }
   if (state.commit && !state.pushed) {
     console.error(`First check: git ls-remote origin refs/heads/${state.branch}\nIf it already points to ${state.commit}, skip the push and open the PR. Never overwrite another commit.`);
     console.error(`After checking origin and branch availability, retry the create-only push:\ngit push --no-follow-tags --recurse-submodules=no --force-with-lease=refs/heads/${state.branch}: --set-upstream origin ${state.commit}:refs/heads/${state.branch}`);
   }
-  if (state.commit) {
+  if (state.commit && !state.prCreated) {
     console.error(`Check for an existing PR before retrying: gh pr list --repo ${state.repo} --head ${state.branch}`);
     const args = state.prArgs ?? ['pr', 'create', '--repo', state.repo, '--base', 'main', '--head', state.branch, '--title', state.title, '--body', state.body];
     console.error(`After the branch is pushed: gh ${args.map(quote).join(' ')}`);
+    console.error(`PR 作成を手動で復旧した後、依存関係を導入してください:\ncd ${quote(root)} && npm ci`);
   }
   process.exitCode = 1;
 } finally {
