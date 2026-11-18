@@ -117,6 +117,8 @@ GitHub MCP (`github-mcp-server`, `https://api.githubcopilot.com/mcp/`) と Conte
 
 **公式教材 `theomonfort/Github-copilot-workshop` の現在の named checkpoint** を読み取り専用で fetch し、**ファイルの tree だけ**を作業ブランチへ取り込みます。commit → 自分の `origin` へ新規ブランチだけ push → `main` 宛ての PR 作成まで実行し、**merge はしません**。追跡ファイルを checkpoint の tree で置き換えるため、PR の削除差分も確認してください。同じ snapshot が既に `origin/main` にある場合、stash / ブランチ / commit / push / PR は作りませんが、`checkpoint1` は不足する Issue を準備します。
 
+PR 作成後、取り込んだ `package-lock.json` で **`npm ci` を自動実行**します（`node_modules` は再作成）。成功後は `npm run dev` で開始できます。既に取り込み済みでも、現在の checkout が同じ snapshot で変更がなければ導入します。異なる snapshot や変更がある場合は作業を残して停止します。導入失敗はエラー終了し、取り込み・PR は残します。原因を解消して同じ checkout で `npm ci` だけを再試行してください。テスト・ビルドは自動実行しません。
+
 テンプレートからコピーされたブランチは履歴が独立しているため、PR 用に直接 switch / merge しません。**Include all branches は不要**で、`main` だけコピーした repo でも使えます。公式教材自身を `origin` にしての実行は拒否します。
 
 ### 保存した作業とエラーからの復帰 / Recovery
@@ -130,6 +132,8 @@ stash は自動で戻しません。表示された **stash SHA** と復帰コ�
 push / PR 作成に失敗しても、自動 reset やブランチ削除はしません。表示された成功済みステップ、commit、再試行コマンドを確認してください。リモートブランチ / PR が既に作られていないか確認してから再試行し、既存ブランチを上書きしないでください。同じ checkout で複数のコマンドを同時実行しないでください。
 
 **English:** Save editor buffers, then run one command above in your own repository (or invoke it by path from another directory). Requires Node.js 22.12+, Git 2.23+, authenticated `gh`, and push access. It saves tracked/untracked edits in a named stash, creates a fresh branch from your current remote `main`, imports only the current canonical checkpoint's files, commits, pushes that new branch, and opens a PR against your `main`. Review the PR, including deletions, and merge it yourself when ready.
+
+After PR creation, it runs `npm ci` using the imported lockfile, recreating `node_modules`. An already-imported snapshot also installs dependencies only when the current checkout matches and has no changes. Otherwise it stops without touching your work. Installation failure exits nonzero and keeps the import and PR; fix the error and retry only `npm ci` in the same checkout. Tests/builds are not run automatically.
 
 Only `checkpoint1` also prepares the eight Japanese build-step issues from the current canonical catalogue, before stashing or changing the checkout. It requires Issues enabled and read/create access, reuses open/closed issues without editing or reopening them, and prints their actual numbers/URLs. Presentation work maps to checkpoint2; tests/CI and visual 3D are included in checkpoint3. Build 3D manually from checkpoint1/2, or inspect and reuse checkpoint3 instead. Audio and daily reporting remain separate extensions; start audio after merging either the manual 3D PR or checkpoint3 PR. Existing issue bodies and states are preserved; no automatic assignment or completion is triggered. `checkpoint2` and `checkpoint3` never seed issues.
 
