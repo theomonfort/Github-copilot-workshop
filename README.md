@@ -96,6 +96,12 @@ main は素材のみ、checkpoint1 は基本サイト、checkpoint2 はプレゼ
 
 **English:** JA/EN content (39 entries each) is pinned to the revision above. Citations are retained; only standalone paths, retro colors, native demo disclosures and video controls are adapted. Only referenced media/downloads and scoped article styles are reused, not the modern theme, navigation, audio or broad public-asset mirror. Main stays starter-only and checkpoint feature boundaries are unchanged. English remains source material rather than a new UI. Source-archived articles remain available; links to routes absent here open the source website.
 
+## ブラウザテストの準備 / Browser test tooling
+
+Dev Container は Playwright CLI 1.58.2 と対応する Chromium・Linux依存関係を作成時に準備します。プロジェクトの依存・設定が未作成なら、Copilot に「既存構成を確認し、`@playwright/test@1.58.2` と必要なテスト設定を追加して」と依頼してください。古いコピーは設定の取り込みとコンテナのリビルドが必要です。
+
+**English:** The Dev Container provisions Playwright CLI 1.58.2, matching Chromium and Linux dependencies. Project setup is separate: ask Copilot to inspect the project and add `@playwright/test@1.58.2` and test configuration if missing. Existing copies need the updated container configuration and a rebuild.
+
 ## Copilot アプリから Codespace に接続 / Connect from the Copilot app
 
 `.devcontainer/devcontainer.json` に `ghcr.io/github/copilot-host/copilotd:0` を追加済みです。コンテナ起動時にホスト `copilotd` を起動し、Codespace を自動登録します。既存のイメージ、開発ツール、拡張機能、ポート、作成時コマンドは維持しています。Actions 用の `copilot-setup-steps.yml` とは別の設定です。
