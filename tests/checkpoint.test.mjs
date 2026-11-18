@@ -28,6 +28,7 @@ function fixture(t, { copied = false, https = false } = {}) {
     GIT_SSH_COMMAND: join(bin, 'ssh'), GIT_SSH_VARIANT: 'ssh',
     PATH: `${bin}:${process.env.PATH}`, TEST_ORIGIN: origin, TEST_SOURCE: source,
     TEST_GH_LOG: join(sandbox, 'gh.log'), TEST_SSH_LOG: join(sandbox, 'ssh.log'),
+    TEST_NPM_LOG: join(sandbox, 'npm.log'),
     TEST_ISSUES: join(sandbox, 'issues.json'), TEST_PULLS: join(sandbox, 'pulls.json'),
   };
   function git(cwd, ...args) {
@@ -149,6 +150,23 @@ process.exit(r.status ?? 1);
 `);
   chmodSync(join(bin, 'gh'), 0o755);
   chmodSync(join(bin, 'ssh'), 0o755);
+  writeFileSync(join(bin, 'npm'), `#!/usr/bin/env node
+const fs = require('node:fs');
+const {execFileSync} = require('node:child_process');
+const args = process.argv.slice(2);
+if (args.length === 1 && args[0] === '--version') { console.log('10.9.9'); process.exit(0); }
+if (args.length !== 1 || args[0] !== 'ci') process.exit(90);
+for (const path of ['package.json', 'package-lock.json']) {
+  const committed = execFileSync('git', ['show', 'HEAD:' + path]);
+  if (!committed.equals(fs.readFileSync(path))) process.exit(91);
+}
+fs.appendFileSync(process.env.TEST_NPM_LOG, JSON.stringify({
+  args, cwd: process.cwd(), pulls: JSON.parse(fs.readFileSync(process.env.TEST_PULLS, 'utf8')).length,
+}) + '\\n');
+if (process.env.FAIL_NPM_CI) { console.error('Simulated npm ci failure'); process.exit(1); }
+console.log('Simulated npm ci completed');
+`);
+  chmodSync(join(bin, 'npm'), 0o755);
   function install(where) {
     mkdirSync(join(where, 'scripts'), { recursive: true });
     for (const path of files) copyFileSync(join(project, path), join(where, path));
@@ -176,6 +194,11 @@ process.exit(r.status ?? 1);
   const stale = git(canonical, 'rev-parse', 'HEAD');
   git(canonical, 'push', source, 'HEAD:refs/heads/main');
   writeFileSync(join(canonical, 'canonical-current.txt'), 'latest canonical checkpoint\n');
+  writeFileSync(join(canonical, 'package.json'), JSON.stringify({ name: 'checkpoint-fixture', version: '1.0.0', private: true }));
+  writeFileSync(join(canonical, 'package-lock.json'), JSON.stringify({
+    name: 'checkpoint-fixture', version: '1.0.0', lockfileVersion: 3,
+    packages: { '': { name: 'checkpoint-fixture', version: '1.0.0' } },
+  }));
   git(canonical, 'add', '.');
   git(canonical, 'commit', '-m', 'Canonical update');
   const snapshots = [];
@@ -202,6 +225,7 @@ process.exit(r.status ?? 1);
   git(participant, 'remote', 'set-url', 'origin', https
     ? 'https://github.com/workshop-tests/participant.git' : 'git@github.com:workshop-tests/participant.git');
   const calls = () => existsSync(env.TEST_GH_LOG) ? readFileSync(env.TEST_GH_LOG, 'utf8').trim().split('\n').map(JSON.parse) : [];
+  const npmCalls = () => existsSync(env.TEST_NPM_LOG) ? readFileSync(env.TEST_NPM_LOG, 'utf8').trim().split('\n').map(JSON.parse) : [];
   const run = (number, extra = {}) => {
     const result = spawnSync(join(participant, number === 'reset' ? 'reset' : `checkpoint${number}`), [], {
       cwd: sandbox, env: { ...env, ...extra }, input: number === 'reset' ? (extra.INPUT ?? 'RESET github.com/workshop-tests/participant\n') : undefined,
@@ -224,7 +248,7 @@ process.exit(r.status ?? 1);
   const receiptPath = join(participant, '.git', 'workshop-issues', 'github.com-314.json');
   const pulls = () => JSON.parse(readFileSync(env.TEST_PULLS, 'utf8'));
   const savePulls = value => writeFileSync(env.TEST_PULLS, JSON.stringify(value));
-  return { sandbox, participant, origin, source, canonical, env, bin, initial, snapshots, copiedSHA, git, run, calls, head, remoteRef, assertStable, issues, saveIssues, receiptPath, pulls, savePulls, starter: stale };
+  return { sandbox, participant, origin, source, canonical, env, bin, initial, snapshots, copiedSHA, git, run, calls, npmCalls, head, remoteRef, assertStable, issues, saveIssues, receiptPath, pulls, savePulls, starter: stale };
 }
 
 function assertPullRequest(f, number, base) {
@@ -242,7 +266,7 @@ function assertPullRequest(f, number, base) {
     /一覧 \/ 詳細 \/ プレゼンを備えたサイトの完成例/,
     /2D \/ 3D \/ プレゼン対応サイト、Playwright テスト、PR CI の完成例/,
   ][number - 1]);
-  assert.match(visible, /`npm ci` → `npm run dev`/);
+  assert.match(visible, /PR 作成後に `npm ci` を実行.*成功後は `npm run dev`/);
   assert.match(visible, /表示 URL（Codespaces は転送 URL）の `\/playbook\/`/);
   assert.match(visible, /全追跡ファイルを置換.*独自変更と削除を確認/);
   assert.match(visible, /意図的な脆弱性と品質問題はサイトから隔離/);
@@ -253,8 +277,8 @@ function assertPullRequest(f, number, base) {
     number === 3 ? ['dev', 'check', 'test:e2e'] : ['dev', 'check', 'build']);
   if (number === 3) {
     assert.match(visible, /2D \/ 3D、詳細、プレゼンを確認/);
-    assert.match(details, /npx playwright install chromium/);
-    assert.match(details, /Linux: `npx playwright install --with-deps chromium`/);
+    assert.match(details, /更新済み Dev Container では Chromium の導入は不要/);
+    assert.match(details, /コンテナ外のみ `npx playwright install --with-deps chromium`/);
     assert.match(details, /PR の CI 結果も確認/);
   } else {
     assert.doesNotMatch(visible, /3D/);
@@ -627,7 +651,7 @@ test('preserves staged, unstaged, untracked and non-colliding ignored work witho
   f.assertStable();
 });
 
-test('sequential imports preserve titles/commits and provide useful stage-specific PR descriptions; a matching snapshot is a no-op', (t) => {
+test('sequential imports install after each PR; dirty already-imported work is preserved without installation', (t) => {
   const f = fixture(t);
   let previous = f.initial;
   for (const number of [1, 2, 3]) {
@@ -637,6 +661,8 @@ test('sequential imports preserve titles/commits and provide useful stage-specif
     const prs = f.calls().filter((args) => args[0] === 'pr');
     assert.equal(prs.length, number);
     assertPullRequest(f, number, previous);
+    assert.equal(f.npmCalls().length, number);
+    assert.deepEqual(f.npmCalls().at(-1), { args: ['ci'], cwd: f.participant, pulls: number });
     previous = f.head();
     f.git(f.sandbox, '--git-dir=' + f.origin, 'update-ref', 'refs/heads/main', previous);
   }
@@ -644,11 +670,66 @@ test('sequential imports preserve titles/commits and provide useful stage-specif
   writeFileSync(join(f.participant, 'untracked.txt'), 'keep this');
   const before = f.git(f.participant, 'status', '--porcelain');
   const result = f.run(3);
-  assert.equal(result.status, 0, result.output);
+  assert.notEqual(result.status, 0, result.output);
   assert.match(result.output, /already matches/);
+  assert.match(result.output, /依存関係は未導入/);
+  assert.equal(f.npmCalls().length, 3);
   assert.equal(f.git(f.participant, 'status', '--porcelain'), before);
   assert.equal(f.head(), previous);
   assert.equal(f.calls().filter((args) => args[0] === 'pr').length, 3);
+  assert.equal(f.git(f.participant, 'stash', 'list'), '');
+});
+
+test('依存導入に失敗しても取り込み・PR・stashを残し、npm ciだけの再試行を案内する', (t) => {
+  const f = fixture(t);
+  writeFileSync(join(f.participant, 'notes.txt'), 'keep my work');
+  const result = f.run(3, { FAIL_NPM_CI: '1' });
+  assert.notEqual(result.status, 0, result.output);
+  assert.match(result.output, /Stopped while installing project dependencies.*Simulated npm ci failure/);
+  assert.match(result.output, /同じ checkout で再試行/);
+  assert.match(result.output, /npm ci/);
+  assert.doesNotMatch(result.output, /After the branch is pushed:|Check for an existing PR before retrying/);
+  assert.equal(f.pulls().length, 1);
+  assert.equal(f.remoteRef('workshop-checkpoint3'), f.head());
+  assert.equal(f.git(f.participant, 'rev-parse', 'HEAD^{tree}'), f.git(f.canonical, 'rev-parse', `${f.snapshots[2]}^{tree}`));
+  assert.equal(f.git(f.participant, 'show', 'refs/stash^3:notes.txt'), 'keep my work');
+  assert.deepEqual(f.npmCalls(), [{ args: ['ci'], cwd: f.participant, pulls: 1 }]);
+  f.assertStable();
+});
+
+test('既に取り込み済みのcleanなcheckoutでもnpm ciを行い、失敗後もPRを重複作成しない', (t) => {
+  const f = fixture(t);
+  assert.equal(f.run(3).status, 0);
+  const head = f.head();
+  f.git(f.sandbox, '--git-dir=' + f.origin, 'update-ref', 'refs/heads/main', head);
+  const failed = f.run(3, { FAIL_NPM_CI: '1' });
+  assert.notEqual(failed.status, 0, failed.output);
+  assert.match(failed.output, /already matches/);
+  assert.match(failed.output, /依存関係の導入は未完了/);
+  const retried = f.run(3);
+  assert.equal(retried.status, 0, retried.output);
+  assert.match(retried.output, /npm ci が完了/);
+  assert.equal(f.npmCalls().length, 3);
+  assert.equal(f.pulls().length, 1);
+  assert.equal(f.head(), head);
+  assert.equal(f.git(f.participant, 'stash', 'list'), '');
+});
+
+test('mainが取り込み済みでも異なるcleanなcheckoutでは依存を変更しない', (t) => {
+  const f = fixture(t);
+  const original = f.head();
+  const imported = f.run(3);
+  assert.equal(imported.status, 0, imported.output);
+  f.git(f.sandbox, '--git-dir=' + f.origin, 'update-ref', 'refs/heads/main', f.head());
+  f.git(f.participant, 'switch', 'demo');
+  const result = f.run(3);
+  assert.notEqual(result.status, 0, result.output);
+  assert.match(result.output, /already matches/);
+  assert.match(result.output, /依存関係は未導入/);
+  assert.equal(f.npmCalls().length, 1);
+  assert.equal(f.head(), original);
+  assert.equal(f.pulls().length, 1);
+  assert.equal(f.git(f.participant, 'status', '--porcelain'), '');
   assert.equal(f.git(f.participant, 'stash', 'list'), '');
 });
 
@@ -704,7 +785,7 @@ test('canonical origin, alternate push destination, and redirected canonical rep
   assert.equal(f.issues().length, 0);
 });
 
-test('missing Node/git/gh, missing authentication and push permission stop before saving work', (t) => {
+test('missing Node/git/gh/npm, missing authentication and push permission stop before saving work', (t) => {
   const f = fixture(t);
   const before = f.head();
   writeFileSync(join(f.participant, 'notes.txt'), 'not stashed on prerequisite failure');
@@ -717,6 +798,8 @@ test('missing Node/git/gh, missing authentication and push permission stop befor
   const realGit = spawnSync('which', ['git'], { encoding: 'utf8' }).stdout.trim();
   symlinkSync(realGit, join(empty, 'git'));
   assert.match(f.run(1, { PATH: empty }).output, /gh:.*ENOENT/);
+  symlinkSync(join(f.bin, 'gh'), join(empty, 'gh'));
+  assert.match(f.run(1, { PATH: empty }).output, /npm:.*ENOENT/);
   assert.notEqual(f.run(1, { FAIL_AUTH: '1' }).status, 0);
   assert.match(f.run(1, { NO_PUSH: '1' }).output, /needs push access/);
   assert.equal(f.head(), before);
@@ -791,9 +874,10 @@ test('reruns preserve edited/closed issues and recover marker-free identities fr
   const before = f.git(f.participant, 'status', '--porcelain');
   const head = f.head();
   const result = f.run(1);
-  assert.equal(result.status, 0, result.output);
+  assert.notEqual(result.status, 0, result.output);
   assert.match(result.output, /0 created, 8 reused/);
   assert.match(result.output, /already matches/);
+  assert.equal(f.npmCalls().length, 1);
   assert.deepEqual(f.issues(), issues);
   assert.equal(f.calls().filter((args) => args.includes('POST')).length, 8);
   assert.equal(f.calls().filter((args) => args[0] === 'pr').length, 1);
@@ -816,9 +900,10 @@ test('an already-imported main still prepares missing issues and reuses paginate
   const before = f.git(f.participant, 'status', '--porcelain');
   const head = f.head();
   const result = f.run(1);
-  assert.equal(result.status, 0, result.output);
+  assert.notEqual(result.status, 0, result.output);
   assert.match(result.output, /5 created, 3 reused/);
   assert.match(result.output, /already matches/);
+  assert.equal(f.npmCalls().length, 0);
   assert.deepEqual(f.issues().slice(0, 3), existing);
   assert.equal(f.issues().length, 8);
   assert.equal(f.head(), head);
@@ -948,6 +1033,7 @@ test('fetch failure leaves the checkout unchanged; push/PR failures retain recov
   assert.match(pr.output, /Check for an existing PR before retrying/);
   assert.match(pr.output, /'--title' 'Website with presentation mode' '--body' 'PLAN ハーネス/);
   assertPullRequest(f, 2, f.initial);
+  assert.deepEqual(f.npmCalls(), []);
   assert.equal(f.remoteRef('workshop-checkpoint2'), f.head());
   assert.equal(f.git(f.participant, 'show', 'refs/stash^3:notes.txt'), 'recover me');
   f.assertStable();
