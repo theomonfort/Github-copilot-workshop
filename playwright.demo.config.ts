@@ -5,6 +5,7 @@ export default defineConfig({
   ...config,
   testDir: './tests/demo',
   testMatch: 'playbook.demo.ts',
+  outputDir: './test-results/demo',
   fullyParallel: false,
   workers: 1,
   retries: 0,
