@@ -1,6 +1,7 @@
 ---
 import { render } from 'astro:content';
 import Layout from '../../components/layout/Layout.astro';
+import PlaybookZettelkastenModal from '../../components/interactive/PlaybookZettelkastenModal.astro';
 import { accentColorValues } from '../../lib/theme';
 import { getPlaybookEntries } from '../../lib/playbook';
 import { categories } from '../../lib/playbook-categories';
@@ -100,22 +101,23 @@ for (const link of entry.data.links) {
       <button type="button" class="present-toc-toggle" data-toc-toggle aria-label="目次の表示切り替え">T 目次</button>
     </div>
     <div class="slide-progress" role="tablist" aria-label="スライド"></div>
+    <PlaybookZettelkastenModal slug={item.slug} category={entry.data.category} />
     <div class="slide-counter" role="status" aria-label="現在のスライド"><span class="slide-counter-text"></span></div>
     <div class="slide-title-tag" aria-hidden="true"></div>
     <nav class="present-toc" aria-label="プレゼン目次" data-current-id={item.slug} transition:persist="present-toc-ja">
       {tocGroups.filter((group) => group.items.length > 0).map((group) => (
         <>
-          <div class="toc-section" style={`color:${accentColorValues[group.color]};border-color:${accentColorValues[group.color]}`}>
-            {group.icon} {group.labelJa}
+          <div class="toc-section" lang="en" style={`color:${accentColorValues[group.color]};border-color:${accentColorValues[group.color]}`}>
+            {group.icon} {group.labelEn}
           </div>
           {group.items.map((e) => (
             <a href={`/playbook/${e.slug}/?present=1`} class="toc-item" data-id={e.slug} style={`--cat-color:${accentColorValues[group.color]}`}>
               <span class="toc-num">{String(e.entry.data.order).padStart(2, '0')}</span>
-              <span class="toc-text">
+              <span class="toc-text" lang="en">
                 {/\.(svg|png|jpg|jpeg|webp|gif)$/i.test(e.entry.data.icon)
                   ? <img src={e.entry.data.icon} alt="" class="inline h-4 w-4 mr-2" />
                   : <span>{e.entry.data.icon} </span>}
-                {e.entry.data.title}
+                {e.entry.data.titleEn || e.entry.data.title}
               </span>
             </a>
           ))}

@@ -92,6 +92,10 @@ test('TOC で別エントリの先頭へ切替え、スクロールとプレゼ�
   const toc = page.getByRole('navigation', { name: 'プレゼン目次' });
   await expect(toc.locator('.toc-section')).toHaveCount(7);
   await expect(toc.locator('.toc-item')).toHaveCount(slugs.length);
+  for (const label of await toc.locator('.toc-section, .toc-text').allTextContents()) {
+    expect(label).not.toMatch(/[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}]/u);
+  }
+  await expect(toc.locator('[data-id="github"] .toc-text')).toHaveText('GitHub');
   const before = await toc.evaluate((el) => {
     const link = el.querySelector<HTMLElement>('[data-id="cli"]');
     if (!link) throw new Error('CLI の TOC エントリがありません');
@@ -106,6 +110,80 @@ test('TOC で別エントリの先頭へ切替え、スクロールとプレゼ�
   await expect(toc.locator('[data-id="github"]')).not.toHaveAttribute('aria-current');
   await expect.poll(() => toc.evaluate((el) => el.scrollTop)).toBe(before);
   await expect(page.locator('.playbook-detail')).toHaveCSS('background-image', /slide-bg-develop\.webp/);
+});
+
+test('Zettelkasten で検索・閲覧し、編集せず同じスライドへ戻れる', async ({ page }) => {
+  const writes: string[] = [];
+  const vaultRequests: string[] = [];
+  const apiRequests: string[] = [];
+  page.on('request', (request) => {
+    const url = new URL(request.url());
+    if (url.pathname.startsWith('/zettelkasten/')) vaultRequests.push(url.pathname);
+    if (/^\/api\/notes(?:\/|$)/.test(url.pathname)) apiRequests.push(url.pathname);
+    if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method())) writes.push(request.url());
+  });
+  await page.goto('/playbook/github/?present=1&slide=2');
+  await expectSlide(page, 2);
+  const storedNotes = JSON.stringify({ 'test-only-note': '# Test-only note\n\nIsolated fixture.' });
+  await page.evaluate((value) =>
+    localStorage.setItem('workshop:zettelkasten:introduction', value), storedNotes);
+  await page.keyboard.press('z');
+  const dialog = page.getByRole('dialog', { name: 'Zettelkasten ナレッジグラフ', exact: true });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.locator('.zk-canvas')).toBeVisible();
+  await expect(dialog.locator('.zk-note-title')).toHaveText('GitHub');
+  await expect(dialog.locator('.zk-read-pane')).not.toBeEmpty();
+  await expect(dialog.locator('.zk-new-note-btn, [data-mode="edit"], [data-action="delete-note"]')).toHaveCount(0);
+  await expect(dialog.locator('.zk-edit-pane')).toBeHidden();
+  await expect(dialog.locator('[data-action="reset-seed"]')).toBeHidden();
+
+  const search = dialog.locator('.zk-search-input');
+  await search.fill('GitHub Copilot');
+  await dialog.locator('.zk-search-item[data-open-slug="github-copilot"]').click();
+  await expect(dialog.locator('.zk-note-title')).toHaveText('GitHub Copilot');
+  await search.fill('workshop-nonexistent-note');
+  await expect(dialog.locator('.zk-search-empty')).toBeVisible();
+  await expect(dialog.locator('.zk-create-from-search')).toHaveCount(0);
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeVisible();
+  await expect(dialog.locator('.zk-search-results')).toBeHidden();
+
+  await dialog.getByRole('button', { name: 'Esc スライドに戻る', exact: true }).focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(page.locator('.slide-counter-text')).toHaveText(/^2 \/ \d+$/);
+  await page.keyboard.press('Escape');
+  await expect(dialog).not.toBeVisible();
+  await expect(page.locator('.zk-root')).toHaveCount(0);
+  await expectSlide(page, 2);
+  await expect(page.locator('[data-zk-trigger]')).toBeFocused();
+  expect(await page.evaluate(() => localStorage.getItem('workshop:zettelkasten:introduction'))).toBe(storedNotes);
+  expect(vaultRequests).toContain('/zettelkasten/introduction.json');
+  expect(apiRequests).toEqual([]);
+  expect(writes).toEqual([]);
+});
+
+test('Zettelkasten は分野を切り替えられ、ページ移動後も対象記事を開く', async ({ page }) => {
+  await page.goto('/playbook/github/?present=1');
+  await expectSlide(page, 1);
+  await page.locator('[data-zk-trigger]').click();
+  const dialog = page.getByRole('dialog', { name: 'Zettelkasten ナレッジグラフ', exact: true });
+  await expect(dialog.locator('.zk-note-title')).toHaveText('GitHub');
+  await dialog.locator('.zk-vault-tab[data-vault-id="develop"]').click();
+  await expect(dialog.locator('.zk-vault-tab[data-vault-id="develop"]')).toHaveAttribute('aria-selected', 'true');
+  await expect(dialog.locator('[data-zk-current]')).toHaveText('開発 / GitHub');
+  await dialog.locator('.zk-search-input').fill('Copilot CLI');
+  await dialog.locator('.zk-search-item[data-open-slug="copilot-cli"]').click();
+  await expect(dialog.locator('.zk-note-title')).toHaveText('Copilot CLI');
+  await dialog.getByRole('button', { name: 'Esc スライドに戻る', exact: true }).click();
+  await page.locator('.present-toc [data-id="cli"]').click();
+  await expect(page).toHaveURL(/\/playbook\/cli\/\?present=1$/);
+  await expectSlide(page, 1);
+  await page.keyboard.press('z');
+  await expect(dialog.locator('.zk-root')).toHaveCount(1);
+  await expect(dialog.locator('.zk-note-title')).toHaveText('Copilot CLI');
+  await page.keyboard.press('Escape');
+  await expect(dialog).not.toBeVisible();
+  await expect(page.locator('.zk-root')).toHaveCount(0);
 });
 
 test('スライドの深いリンクを直接開き、再読み込みしても保持する', async ({ page }) => {

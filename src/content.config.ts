@@ -30,4 +30,14 @@ const playbook = defineCollection({
   }),
 });
 
-export const collections = { playbook };
+const zettelkasten = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/zettelkasten' }),
+  schema: z.object({
+    title: z.string().optional(),
+    group: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    aliases: z.array(z.string()).optional(),
+  }).passthrough(),
+});
+
+export const collections = { playbook, zettelkasten };

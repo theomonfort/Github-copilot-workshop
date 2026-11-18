@@ -22,7 +22,15 @@ PLAN のハーネスと、日本語 Playbook の基本サイトを含みます�
 - Mermaid 図の描画 (後続スライドを含む)、スクロール可能なコード / テーブル
 - 幅 768px 未満では通常の Markdown 詳細に戻るモバイルフォールバック
 
-**02-cloud-agent** に、元サイトの 3D ギャラクシー、Playwright E2E と `.github/workflows/test.yml` を追加しています。2D の一覧 / 詳細とプレゼンはそのまま利用できます。TOC のデザイン案 10 種、元サイトの英語切替 / BGM / 環境音は含めません。
+**02-cloud-agent** に、元サイトの 3D ギャラクシー、読み取り専用 Zettelkasten、Playwright E2E と `.github/workflows/test.yml` を追加しています。2D の一覧 / 詳細とプレゼンはそのまま利用できます。TOC のデザイン案 10 種、元サイトの英語切替 / BGM / 環境音は含めません。
+
+## Zettelkasten / 英語のプレゼン目次
+
+プレゼン中に **Zettelkasten** ボタンまたは `Z` で、記事・スライドに対応するノートを開きます。グラフ、検索、関連ノートへの移動、7分野の切替に対応します。`Esc` は検索候補を先に閉じ、次の `Esc` で元のスライドへ戻ります。TOC のカテゴリと記事名は既存の `labelEn` / `titleEn` を使い、日本語本文・記事URL・通常一覧は変えません。
+
+ノートは `src/content/zettelkasten/` の公開教材だけを静的 JSON として配信します。編集・作成・削除UI、書き込みAPI、localStorageへの保存はありません。個人のvaultやサーバー側の書き込み処理は含めません。
+
+ビューアーとノートの出典は [theomonfort/theomonfort の固定版](https://github.com/theomonfort/theomonfort/tree/c28b27037dbf92b23f15bdeea27cc6449e5e29c6) です。`src/vendor/zettelkasten/` の既存 JS / CSS は変更せず同梱する限定的な互換性例外とし、新しい接続処理は TypeScript で記述しています。出典・第三者ライセンスは同ディレクトリの `NOTICE` / `LICENSE-*` を参照してください。
 
 ## 3D ギャラクシー
 
@@ -44,7 +52,7 @@ npm run test:e2e
 
 テストは production build を作り、専用ポート **44321** で preview を起動・終了します。既存のサーバーは再利用しません。ポートが使用中なら先に競合を解消してください。
 
-`tests/e2e/presentation.spec.ts` は、通常の一覧 / 詳細を入口として、スライドの前後移動、TOC 切替とスクロール位置、深いリンク、進捗バー、リンク集、後続 Mermaid スライド、Esc、モバイルフォールバック、全詳細のローカルリンク / 画像を検証します。外部フォントへの通信はテスト中だけ差し替えます。
+`tests/e2e/presentation.spec.ts` は、通常の一覧 / 詳細を入口として、スライドの前後移動、英語 TOC とスクロール位置、Zettelkasten の開閉・検索・読み取り専用動作、深いリンク、進捗バー、リンク集、後続 Mermaid スライド、Esc、モバイルフォールバック、全詳細のローカルリンク / 画像を検証します。外部フォントへの通信はテスト中だけ差し替えます。
 
 `tests/e2e/galaxy.spec.ts` は、実際の WebGL 描画と色付きピクセル、目的地 / 衛星 / 記事への移動、URL 復元、カメラ操作、モバイル、動きの停止、失敗時の 2D 復帰、遅延読込の中断と描画終了を検証します。CI でも GPU に依存せず検証できるよう、テスト用 Chromium にだけ SwiftShader を指定します。アプリのブラウザ設定は変更しません。
 

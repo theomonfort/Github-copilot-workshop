@@ -297,6 +297,7 @@ function initPresent() {
 }
 
 function onKey(e: KeyboardEvent) {
+  if (document.body.classList.contains('akq-zk-open')) return;
   const t = e.target as HTMLElement | null;
   if (e.altKey || e.ctrlKey || e.metaKey || t?.closest('input,textarea,select,[contenteditable="true"]')) return;
   if (t?.closest('video,audio') || (e.key === ' ' && t?.closest('summary'))) return;

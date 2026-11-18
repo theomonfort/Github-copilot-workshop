@@ -1,0 +1,16 @@
+移植元: theomonfort/theomonfort
+固定コミット: c28b27037dbf92b23f15bdeea27cc6449e5e29c6
+https://github.com/theomonfort/theomonfort/tree/c28b27037dbf92b23f15bdeea27cc6449e5e29c6
+
+このディレクトリの JS 8ファイルと zettelkasten.css は
+src/lib/zettelkasten/ の上流ファイルを変更せず同梱したものです。
+TypeScript 規約に対する例外は、この既存ライブラリに限定します。
+追加した型宣言、Astro の表示枠、接続処理、データローダーは独自の移植部分です。
+
+vendor.js は D3 ライブラリと Marked を含みます。
+第三者の著作権表示・利用条件は LICENSE-d3.txt と LICENSE-marked.txt に同梱しています。
+上流 bundle に依存バージョンの記録はなく、ここではバージョンを推定しません。
+
+公開教材ノートは同じコミットの src/data/zettelkasten/ から
+src/content/zettelkasten/ へ変更せず移しています。
+個人 vault、書き込みミドルウェア、元サイトのテーマ切替・音声は移植していません。
