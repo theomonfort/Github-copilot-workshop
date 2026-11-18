@@ -51,6 +51,24 @@ Linux でブラウザのシステム依存が足りない場合は `npx playwrig
 
 PR の作成 / 更新時に GitHub Actions が Node.js 22、`npm ci`、Chromium、型チェック、E2E を実行します。失敗時は HTML レポート / trace / スクリーンショットを artifact に保存します。Actions の実行許可、外部 PR の承認、必須チェックの branch protection は各自のリポジトリで設定してください。Security のアカウント設定はこの checkpoint に含まれません。
 
+## 18秒のライブデモ / Live demo
+
+上記の依存関係と Chromium の準備後、リポジトリのルートで実行します。
+
+```bash
+npx --package=node@22.23.4 node ./node_modules/@playwright/test/cli.js test --config=playwright.demo.config.ts
+```
+
+1つのブラウザ・ページで、一覧 → ギットハブの記事 → `P` でプレゼン → 次のスライド → 目次から Copilot → Fusion → `Esc` で一覧へ、という操作を自動で見せます。Inspector の手動ステップやトレース再生ではありません。一覧が表示されてから約18秒、実測15〜20秒を確認します。初回の一時 Node 取得、ビルド、ブラウザ起動は別時間です。遅い環境で20秒を超える場合はデモの時間チェックが失敗します。
+
+専用ポート **44331** を使い、終了時に専用ブラウザと preview を閉じます。既存サーバーは再利用・停止しません。ポートが使用中なら起動を中止します。GUI があるローカル環境向けで、ヘッドレスの Codespace ではそのまま画面表示できません。
+
+`tests/demo/playbook.demo.ts` は専用設定でだけ検出され、通常の `npx playwright test` / PR CI の対象には入りません。見せるための待機はこのデモだけです。3D、動画、外部フォント取得、トレース保存は含めません。Node 26 と Playwright 1.58.2 のトレース保存問題を避けるため、一時 Node 22 を明示しています。外側に `npx -c` を付けないでください。内側の preview 起動と衝突します。
+
+既存の派生リポジトリには自動反映されません。checkpoint3 を取り込み済みなら、新規の `playwright.demo.config.ts` と `tests/demo/playbook.demo.ts` だけを追加すれば使えます。同名ファイルがある場合は上書きせず差分を確認してください。デモのために `./checkpoint3` で全体を再取り込みする必要はありません。
+
+**English:** This opt-in, headed demo uses one page/context and runs automatically for about 18 seconds after the catalogue is visible. Package download, build and browser startup are additional. It checks real navigation and slide state, and fails if the measured visible journey exceeds 20 seconds. Normal tests and PR CI remain unchanged. It uses its own port (44331), closes its browser/server, requires a desktop GUI, and uses temporary Node 22 without `npx -c`. Existing template copies need only the two new demo files, added without overwriting local work.
+
 ## 起動
 
 Node.js **22.12 以上**と npm を使います。Codespaces は同梱の Dev Container を利用できます。
