@@ -36,12 +36,11 @@ PLAN のハーネスと、日本語 Playbook の基本サイトを含みます�
 
 ```bash
 npm ci
-npx playwright install chromium
 npm run check
 npm run test:e2e
 ```
 
-Linux でブラウザのシステム依存が足りない場合は `npx playwright install --with-deps chromium` を使います。
+更新済み Dev Container では Chromium の手動導入は不要です。コンテナ外のみ `npx playwright install --with-deps chromium` を実行してください。
 
 テストは production build を作り、専用ポート **44321** で preview を起動・終了します。既存のサーバーは再利用しません。ポートが使用中なら先に競合を解消してください。
 
