@@ -435,9 +435,9 @@ test('reset retries lost PR and close responses without duplicate PRs; checkpoin
   assert.equal(f.pulls().length, 2);
   const imported = f.run(1);
   assert.equal(imported.status, 0, imported.output);
-  assert.equal(f.issues().length, 8);
+  assert.equal(f.issues().length, 6);
   assert(f.issues().every(issue => issue.state === 'closed'));
-  assert.match(imported.output, /0 created, 8 reused/);
+  assert.match(imported.output, /0 created, 6 reused/);
 });
 
 test('reset resumes an unpublished prepared commit after push failure', (t) => {
@@ -832,10 +832,10 @@ test('checkpoint1 prepares the exact current Japanese catalogue before Git write
   writeFileSync(join(f.participant, 'scripts/checkpoint-issues.json'), 'unfinished local catalogue');
   const result = f.run(1);
   assert.equal(result.status, 0, result.output);
-  assert.equal(catalogue.length, 8);
+  assert.equal(catalogue.length, 6);
   assert.deepEqual(catalogue.map((item) => item.key), [
     'presentation-core', 'presentation-content', 'mermaid-rendering', 'responsive-navigation',
-    'presentation-tests', 'playbook-3d', 'galaxy-audio', 'daily-repo-status',
+    'presentation-tests', 'daily-repo-status',
   ]);
   assert.deepEqual(f.issues().map(({ title, body }) => ({ title, body })),
     catalogue.map(({ title, body }) => ({ title, body })));
@@ -844,7 +844,7 @@ test('checkpoint1 prepares the exact current Japanese catalogue before Git write
     assert.equal(receipt.issues[item.key], f.issues()[index].number);
     assert(result.output.includes(f.issues()[index].html_url));
   }
-  assert(result.output.indexOf('Workshop issues ready: 8 created') < result.output.indexOf('Saved tracked'));
+  assert(result.output.indexOf('Workshop issues ready: 6 created') < result.output.indexOf('Saved tracked'));
   assert.equal(f.git(f.participant, 'show', 'refs/stash:scripts/checkpoint-issues.json'), 'unfinished local catalogue');
   assert.equal(f.git(f.participant, 'ls-tree', 'HEAD', '--', '.git/workshop-issues'), '');
   assertPullRequest(f, 1, f.initial);
@@ -875,11 +875,11 @@ test('reruns preserve edited/closed issues and recover marker-free identities fr
   const head = f.head();
   const result = f.run(1);
   assert.notEqual(result.status, 0, result.output);
-  assert.match(result.output, /0 created, 8 reused/);
+  assert.match(result.output, /0 created, 6 reused/);
   assert.match(result.output, /already matches/);
   assert.equal(f.npmCalls().length, 1);
   assert.deepEqual(f.issues(), issues);
-  assert.equal(f.calls().filter((args) => args.includes('POST')).length, 8);
+  assert.equal(f.calls().filter((args) => args.includes('POST')).length, 6);
   assert.equal(f.calls().filter((args) => args[0] === 'pr').length, 1);
   assert.equal(f.git(f.participant, 'status', '--porcelain'), before);
   assert.equal(f.git(f.participant, 'stash', 'list'), '');
@@ -901,11 +901,11 @@ test('an already-imported main still prepares missing issues and reuses paginate
   const head = f.head();
   const result = f.run(1);
   assert.notEqual(result.status, 0, result.output);
-  assert.match(result.output, /5 created, 3 reused/);
+  assert.match(result.output, /3 created, 3 reused/);
   assert.match(result.output, /already matches/);
   assert.equal(f.npmCalls().length, 0);
   assert.deepEqual(f.issues().slice(0, 3), existing);
-  assert.equal(f.issues().length, 8);
+  assert.equal(f.issues().length, 6);
   assert.equal(f.head(), head);
   assert.equal(f.remoteRef('main'), imported);
   assert.equal(f.git(f.participant, 'status', '--porcelain'), before);
@@ -950,8 +950,8 @@ test('partial issue failures and lost creation responses resume without duplicat
   assert.equal(f.git(f.participant, 'stash', 'list'), '');
   const completed = f.run(1);
   assert.equal(completed.status, 0, completed.output);
-  assert.match(completed.output, /5 created, 3 reused/);
-  assert.equal(f.issues().length, 8);
+  assert.match(completed.output, /3 created, 3 reused/);
+  assert.equal(f.issues().length, 6);
   assert.deepEqual(f.issues().map((issue) => issue.title), catalogue.map((item) => item.title));
   assert.equal(f.calls().filter((args) => args[0] === 'pr').length, 1);
   assert.equal(f.git(f.participant, 'show', 'refs/stash^3:notes.txt'), 'keep until successful issue preparation');
@@ -1046,6 +1046,30 @@ test('create-only lease rejects a branch created between collision checks and pu
   assert.equal(f.remoteRef('workshop-checkpoint1'), f.initial);
   assert(!f.calls().some((args) => args[0] === 'pr'));
   assert.equal(f.git(f.participant, 'rev-parse', 'HEAD^'), f.initial);
+  f.assertStable();
+});
+
+test('初期Issueから除いた3Dと音声の既存Issue・記録を再利用時に変更しない', (t) => {
+  const f = fixture(t);
+  const oldIssues = ['playbook-3d', 'galaxy-audio'].map((key, index) => ({
+    id: 20000 + index, number: 200 + index, title: `[playbook:${key}] User title`,
+    body: `<!-- workshop-issue:${key} -->\nUser notes`, state: index ? 'closed' : 'open',
+    html_url: `https://github.com/workshop-tests/participant/issues/${200 + index}`,
+  }));
+  f.saveIssues(oldIssues);
+  mkdirSync(dirname(f.receiptPath), { recursive: true });
+  writeFileSync(f.receiptPath, JSON.stringify({
+    version: 1, issues: { 'playbook-3d': 200, 'galaxy-audio': 201 },
+  }));
+  const result = f.run(1);
+  assert.equal(result.status, 0, result.output);
+  assert.deepEqual(f.issues().slice(0, 2), oldIssues);
+  assert.deepEqual(f.issues().slice(2).map(({ title }) => title), catalogue.map(({ title }) => title));
+  assert.equal(f.calls().filter((args) => args.includes('POST')).length, 6);
+  assert(!f.calls().some((args) => args.includes('PATCH')));
+  const receipt = JSON.parse(readFileSync(f.receiptPath, 'utf8'));
+  assert.equal(receipt.issues['playbook-3d'], 200);
+  assert.equal(receipt.issues['galaxy-audio'], 201);
   f.assertStable();
 });
 

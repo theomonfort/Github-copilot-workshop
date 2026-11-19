@@ -114,7 +114,7 @@ For recovery, follow README.md and use `./checkpoint1`, `./checkpoint2`, or
 These save tracked/untracked edits in a named stash, create a fresh branch from
 the participant's remote main, import the current canonical checkpoint's files,
 and push/open a PR in the participant repository without merging it.
-Only `checkpoint1` also prepares the eight Japanese Part 6 build-step issues
+Only `checkpoint1` also prepares the six Japanese Part 6 build-step issues
 from `scripts/checkpoint-issues.json`, before any stash or checkout changes.
 It needs Issues enabled and read/create access, reuses open/closed issues without
 editing or reopening them, and prints their actual numbers and URLs.
@@ -124,19 +124,22 @@ If issue preparation fails, keep successful issues, fix the reported error and
 rerun `./checkpoint1`. An already-imported snapshot still prepares missing issues
 without another PR. Later push/PR failures use the printed Git/PR recovery steps.
 Do not run imports concurrently, even from different clones.
-Presentation tasks map to checkpoint2; tests/CI and visual 3D are in checkpoint3.
-Build 3D manually from checkpoint1/2, or inspect and reuse checkpoint3 instead.
-Audio and daily reporting remain separate extensions. Start audio after merging
-the manual 3D PR or checkpoint3 PR. Existing issue bodies and states stay unchanged;
-creating their issues does not implement, assign, or complete them.
+Presentation tasks map to optional Cloud Agent (Part 8) or checkpoint2, tests/CI
+to Part 9, and daily reporting to Operate (Part 13). There is no CLI exercise.
+Do not seed 3D, audio or Zettelkasten issues. Checkpoint3 remains the complete
+site with tests/CI, 3D, read-only Zettelkasten and English TOC; reuse it rather
+than rebuilding those integrations. Audio and the daily workflow are not bundled.
+Previously created issues and identity receipts stay unchanged; preparing the
+six current issues does not implement, assign, or complete them.
 Do not base participant PRs on copied template branches: their histories are
 unrelated. Keep the printed stash SHA and recovery commands; never recommend
 a destructive reset or automatically reapply the stash onto a different snapshot.
 The cumulative checkpoints are `checkpoint/01-develop` (basic landing/detail site),
 `checkpoint/02-cloud-agent` (presentation features), and `checkpoint/03-tests`
-(3D Galaxy, Playwright and PR workflow). The landing page is not presentation mode.
-External guide step numbers may still reflect the previous ordering; use titles
-and complete Cloud Agent before TEST & SECURE in this workshop.
+(3D Galaxy, read-only Zettelkasten, English TOC, Playwright and PR workflow).
+The landing page is not presentation mode.
+Before TEST & SECURE, prepare presentation features through Cloud Agent
+or checkpoint2. Use lesson titles if an older copy has different step numbers.
 
 ## Troubleshooting rules
 
