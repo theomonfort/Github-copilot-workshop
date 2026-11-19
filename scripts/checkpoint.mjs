@@ -126,7 +126,13 @@ function main() {
     branch = `${prefix}-${suffix}`;
   }
   state.step = 'preserving current work';
+  const preservedIgnored = new Set();
   if (git(['status', '--porcelain=v1', '--untracked-files=all']).text) {
+    // stash が .gitignore を戻しても、既に除外されていたファイルは作業ツリーに残る。
+    for (const path of git(['ls-files', '--others', '--ignored', '--exclude-standard', '-z']).stdout.split('\0')) {
+      if (path && !path.endsWith('/')) preservedIgnored.add(path);
+    }
+    preserveIgnoredFiles(context, base, snapshot);
     const before = git(['rev-parse', '--verify', '--quiet', 'refs/stash'], [0, 1]).text;
     git(['stash', 'push', '--include-untracked', '-m', `workshop checkpoint${number} before import ${new Date().toISOString()}`]);
     const stash = git(['rev-parse', 'refs/stash']).text;
@@ -134,7 +140,11 @@ function main() {
     state.stash = stash;
     done(`Saved tracked and untracked work in stash ${stash}. It will NOT be reapplied automatically.`);
   }
-  requireThat(!git(['status', '--porcelain=v1', '--untracked-files=all']).text, 'Worktree is not clean after stashing; stop and inspect git status.');
+  const remaining = git(['ls-files', '--others', '--exclude-standard', '-z']).stdout.split('\0').filter(Boolean);
+  requireThat(!git(['status', '--porcelain=v1', '--untracked-files=no']).text
+    && remaining.every((path) => preservedIgnored.has(path)),
+  'Worktree is not clean after stashing; stop and inspect git status.');
+  if (remaining.length) console.log(`stash 前から除外されていた ${remaining.length} ファイルは、そのまま保持します。`);
   state.step = 'creating the participant work branch';
   git(['switch', '-c', branch, base]);
   state.branch = branch;
