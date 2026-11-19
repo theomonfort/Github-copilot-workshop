@@ -14,7 +14,7 @@ export function createContext(root) {
     if (!accepted.includes(result.status)) {
       throw new Error(`${command} failed (${result.status}): ${(result.stderr || result.stdout).trim()}`);
     }
-    return { text: result.stdout.trim(), status: result.status };
+    return { text: result.stdout.trim(), stdout: result.stdout, status: result.status };
   };
   const git = (args, accepted) => run('git', args, accepted);
   const fetch = (remote, ref) => {

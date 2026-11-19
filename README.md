@@ -111,6 +111,8 @@ Issue の準備に失敗した場合、成功済みの Issue は残し、表示�
 
 stash は自動で戻しません。表示された **stash SHA** と復帰コマンドを保存し、元のブランチへ戻って `git stash apply --index` で復元します。内容を確認するまで stash を削除しないでください。ignored ファイルは stash に含まれず、置き換えに衝突する場合は事前に停止します。
 
+checkpoint の stash で `.gitignore` が退避・復元されても、直前から ignored だったファイルは残したまま取り込みます。途中で増えた未追跡ファイルや追跡ファイルの変更は停止対象です。旧版で stash 後に停止し `package.json` が見えなくなった場合、繰り返し実行せず `git stash list` と `git stash show --include-untracked <SHA>` で保存先を確認してください。複数回試した場合、元のサイトは最新ではなく最初の stash に残っていることがあります。
+
 push / PR 作成に失敗しても、自動 reset やブランチ削除はしません。表示された成功済みステップ、commit、再試行コマンドを確認してください。リモートブランチ / PR が既に作られていないか確認してから再試行し、既存ブランチを上書きしないでください。同じ checkout で複数のコマンドを同時実行しないでください。
 
 **English:** Save editor buffers, then run one command above in your own repository (or invoke it by path from another directory). Requires Node.js 22.12+, Git 2.23+, authenticated `gh`, and push access. It saves tracked/untracked edits in a named stash, creates a fresh branch from your current remote `main`, imports only the current canonical checkpoint's files, commits, pushes that new branch, and opens a PR against your `main`. Review the PR, including deletions, and merge it yourself when ready.
@@ -122,6 +124,8 @@ Only `checkpoint1` also prepares the six Japanese build-step issues from the cur
 Copied template branches have unrelated histories; these commands deliberately do not use them. A main-only copy works. Existing branches/tags are preserved. An identical snapshot on main skips Git/PR writes but `checkpoint1` still prepares missing issues. If issue preparation fails, keep successful issues, fix the reported error and rerun `./checkpoint1`; it rechecks all pages/states before creating missing items, including after an uncertain response. Preserve the body marker or title key for reuse in other clones; local receipts in Git metadata additionally preserve identities after edits. Missing recorded issues, duplicate identities and invalid receipts stop rather than creating replacements. Do not run imports concurrently, even from different clones.
 
 Keep the printed stash SHA; return to the original branch and use the printed `git stash apply --index` command when safe. Ignored files are not stashed; collisions stop the import. Later push/PR failures retain issues and recoverable work and print retry instructions. Check for an existing remote branch/PR before retrying those steps; do not recreate the issues.
+
+Checkpoint imports retain files that were already ignored immediately before stashing, even if stashing changes `.gitignore`. New untracked files or tracked changes still stop the import. If an older helper stopped after stashing and `package.json` disappeared, do not repeatedly retry: inspect `git stash list` and `git stash show --include-untracked <SHA>`. After multiple attempts, the original site may be in the first stash, not the latest.
 
 メンテナー用テスト / Maintainer tests: `node --test tests/checkpoint.test.mjs` (isolated local repositories, fake GitHub CLI, no live issues or PRs).
 
