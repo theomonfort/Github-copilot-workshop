@@ -12,7 +12,7 @@ const catalogue = JSON.parse(readFileSync(join(project, 'scripts/checkpoint-issu
 const stages = ['01-develop', '02-cloud-agent', '03-tests'];
 const titles = ['Website scaffold', 'Website with presentation mode', 'Complete website with tests and CI'];
 
-function fixture(t, { copied = false, https = false } = {}) {
+function fixture(t, { copied = false, https = false, starterIgnores = true } = {}) {
   const sandbox = mkdtempSync(join(tmpdir(), 'workshop-checkpoint-test-'));
   t.after(() => rmSync(sandbox, { recursive: true, force: true }));
   const participant = join(sandbox, 'participant');
@@ -175,7 +175,7 @@ console.log('Simulated npm ci completed');
   git(sandbox, 'init', '--bare', origin);
   git(sandbox, 'clone', origin, participant);
   writeFileSync(join(participant, 'starter.txt'), 'participant main\n');
-  writeFileSync(join(participant, '.gitignore'), '.env\nlocal-only/\n');
+  if (starterIgnores) writeFileSync(join(participant, '.gitignore'), '.env\nlocal-only/\n');
   git(participant, 'add', '.');
   git(participant, 'commit', '-m', 'Participant root');
   git(participant, 'push', 'origin', 'main');
@@ -187,7 +187,7 @@ console.log('Simulated npm ci completed');
   git(sandbox, 'init', '--bare', source);
   git(sandbox, 'init', canonical);
   install(canonical);
-  writeFileSync(join(canonical, '.gitignore'), '.env\nlocal-only/\n');
+  writeFileSync(join(canonical, '.gitignore'), '.env\nlocal-only/\nnode_modules/\ndist/\n.astro/\n');
   writeFileSync(join(canonical, 'site.txt'), 'canonical site\n');
   git(canonical, 'add', '.');
   git(canonical, 'commit', '-m', 'Canonical root');
@@ -249,6 +249,22 @@ console.log('Simulated npm ci completed');
   const pulls = () => JSON.parse(readFileSync(env.TEST_PULLS, 'utf8'));
   const savePulls = value => writeFileSync(env.TEST_PULLS, JSON.stringify(value));
   return { sandbox, participant, origin, source, canonical, env, bin, initial, snapshots, copiedSHA, git, run, calls, npmCalls, head, remoteRef, assertStable, issues, saveIssues, receiptPath, pulls, savePulls, starter: stale };
+}
+
+function writeAfterGit(f, prefix, path, content) {
+  const executable = spawnSync('which', ['git'], { encoding: 'utf8' });
+  assert.equal(executable.status, 0, executable.stderr);
+  writeFileSync(join(f.bin, 'git'), `#!/usr/bin/env node
+const { spawnSync } = require('node:child_process');
+const { writeFileSync } = require('node:fs');
+const args = process.argv.slice(2);
+const result = spawnSync(${JSON.stringify(executable.stdout.trim())}, args, { stdio: 'inherit' });
+if (result.status === 0 && ${JSON.stringify(prefix)}.every((arg, index) => args[index] === arg)) {
+  writeFileSync(${JSON.stringify(join(f.participant, path))}, ${JSON.stringify(content)});
+}
+process.exit(result.status ?? 1);
+`);
+  chmodSync(join(f.bin, 'git'), 0o755);
 }
 
 function assertPullRequest(f, number, base) {
@@ -648,6 +664,90 @@ test('preserves staged, unstaged, untracked and non-colliding ignored work witho
   assert.equal(f.git(f.participant, 'ls-tree', 'HEAD', '--', 'starter.txt', 'notes with space.txt', '.env'), '');
   assert.equal(readFileSync(join(f.participant, '.env'), 'utf8'), 'local secret, never commit');
   assert.match(result.output, /git switch 'demo'/);
+  f.assertStable();
+});
+
+for (const starterIgnores of [false, true]) {
+  test(`${starterIgnores ? '変更済み' : '未追跡'} .gitignoreをstashしても依存ファイルを退避せずcheckpoint1を取り込む`, (t) => {
+    const f = fixture(t, { starterIgnores });
+    const ignore = '.env\nlocal-only/\nnode_modules/\ndist/\n.astro/\n';
+    writeFileSync(join(f.participant, '.gitignore'), ignore);
+    writeFileSync(join(f.participant, 'package.json'), '{"name":"unfinished-site"}\n');
+    writeFileSync(join(f.participant, 'starter.txt'), 'unfinished tracked work');
+    const ignored = ['node_modules/example/index.js', 'dist/index.html', '.astro/env.d.ts'];
+    for (const path of ignored) {
+      mkdirSync(dirname(join(f.participant, path)), { recursive: true });
+      writeFileSync(join(f.participant, path), `preserve ${path}`);
+      assert.equal(f.git(f.participant, 'check-ignore', path), path);
+    }
+
+    const result = f.run(1);
+    assert.equal(result.status, 0, result.output);
+    const stash = f.git(f.participant, 'rev-parse', 'refs/stash');
+    assert.equal(f.git(f.participant, 'show', `${stash}${starterIgnores ? '' : '^3'}:.gitignore`), ignore.trim());
+    assert.equal(f.git(f.participant, 'show', `${stash}^3:package.json`), '{"name":"unfinished-site"}');
+    assert.equal(f.git(f.participant, 'show', `${stash}:starter.txt`), 'unfinished tracked work');
+    for (const path of ignored) assert.equal(readFileSync(join(f.participant, path), 'utf8'), `preserve ${path}`);
+    assert.equal(f.git(f.participant, 'ls-tree', '-r', `${stash}^3`, '--', 'node_modules', 'dist', '.astro'), '');
+    assert.equal(f.git(f.participant, 'ls-tree', '-r', 'HEAD', '--', 'node_modules', 'dist', '.astro'), '');
+    assert.equal(f.git(f.participant, 'status', '--porcelain'), '');
+    assert.equal(f.git(f.participant, 'rev-parse', 'HEAD^{tree}'), f.git(f.canonical, 'rev-parse', `${f.snapshots[0]}^{tree}`));
+    assert.equal(f.pulls().length, 1);
+    assert.deepEqual(f.npmCalls(), [{ args: ['ci'], cwd: f.participant, pulls: 1 }]);
+    f.assertStable();
+  });
+}
+
+for (const path of ['node_modules/new-file.js', 'starter.txt']) {
+  test(`stash後に増えた${path}は既存ignoredファイルの例外に含めず停止する`, (t) => {
+    const f = fixture(t, { starterIgnores: false });
+    writeFileSync(join(f.participant, '.gitignore'), 'node_modules/\n');
+    mkdirSync(join(f.participant, 'node_modules'));
+    writeFileSync(join(f.participant, 'node_modules/existing.js'), 'existing dependency');
+    writeAfterGit(f, ['stash', 'push'], path, 'concurrent work');
+    const head = f.head();
+    const result = f.run(1);
+    assert.notEqual(result.status, 0, result.output);
+    assert.match(result.output, /Worktree is not clean after stashing/);
+    assert.equal(f.head(), head);
+    assert.equal(readFileSync(join(f.participant, path), 'utf8'), 'concurrent work');
+    assert.equal(readFileSync(join(f.participant, 'node_modules/existing.js'), 'utf8'), 'existing dependency');
+    assert.equal(f.git(f.participant, 'show', 'refs/stash^3:.gitignore'), 'node_modules/');
+    assert.equal(f.pulls().length, 0);
+    assert.equal(f.npmCalls().length, 0);
+    f.assertStable();
+  });
+}
+
+test('待機中に増えたignoredファイルもstash直前に衝突を再確認する', (t) => {
+  const f = fixture(t, { starterIgnores: false });
+  writeFileSync(join(f.participant, '.gitignore'), 'site.txt\n');
+  writeAfterGit(f, ['ls-remote'], 'site.txt', 'new ignored work');
+  const head = f.head();
+  const result = f.run(1);
+  assert.notEqual(result.status, 0, result.output);
+  assert.match(result.output, /Ignored files would be replaced/);
+  assert.equal(f.head(), head);
+  assert.equal(f.git(f.participant, 'stash', 'list'), '');
+  assert.equal(readFileSync(join(f.participant, 'site.txt'), 'utf8'), 'new ignored work');
+  assert.equal(readFileSync(join(f.participant, '.gitignore'), 'utf8'), 'site.txt\n');
+  assert.equal(f.pulls().length, 0);
+  assert.equal(f.npmCalls().length, 0);
+  f.assertStable();
+});
+
+test('snapshot導入後に未追跡として残るファイルはnpm ci前の厳格な判定で停止する', (t) => {
+  const f = fixture(t, { starterIgnores: false });
+  writeFileSync(join(f.participant, '.gitignore'), 'local-cache.txt\n');
+  writeFileSync(join(f.participant, 'local-cache.txt'), 'preserve custom ignored data');
+  const result = f.run(1);
+  assert.notEqual(result.status, 0, result.output);
+  assert.match(result.output, /checking the checkout before dependency installation/);
+  assert.equal(readFileSync(join(f.participant, 'local-cache.txt'), 'utf8'), 'preserve custom ignored data');
+  assert.equal(f.git(f.participant, 'show', 'refs/stash^3:.gitignore'), 'local-cache.txt');
+  assert.equal(f.git(f.participant, 'ls-tree', '-r', 'HEAD', '--', 'local-cache.txt'), '');
+  assert.equal(f.pulls().length, 1);
+  assert.equal(f.npmCalls().length, 0);
   f.assertStable();
 });
 
