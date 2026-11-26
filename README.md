@@ -77,7 +77,7 @@ tail -F /workspaces/.copilotd/logs/copilotd.log
 
 サーバーの信頼確認、OAuth 認証などは各自で実施します。接続先 JSON だけで認証済みにはなりません。トークンや API キーをコミットしないでください。
 
-この手順は **Copilot ハーネス**用です。従来の **Local ハーネス**用 `.vscode/mcp.json` (`servers`) とは形式が異なります。この教材では併用せず、同じサーバーの二重登録を避けます。[VS Code の設定先の説明](https://code.visualstudio.com/docs/agent-customization/mcp-servers#_choose-a-configuration-destination)を参照してください。
+この手順は **Copilot ハーネス**用です。この教材の共有 MCP 設定は **`.mcp.json`** のみを使います。同じサーバーを別の Workspace 設定ファイルにも登録しないでください。[VS Code の設定先の説明](https://code.visualstudio.com/docs/agent-customization/mcp-servers#_choose-a-configuration-destination)を参照してください。
 
 ## チェックポイントから PR を作る / Create a checkpoint PR
 

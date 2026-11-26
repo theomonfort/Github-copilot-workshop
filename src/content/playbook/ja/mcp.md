@@ -134,7 +134,9 @@ MCP サーバーの実行場所は **2 種類** あります。
 
 **Copilot ハーネス** で **Customizations → MCP Servers** を開きます。
 
-**Workspace +**（User ではない）→ **HTTP** → サーバーの URL と ID を入力。信頼やサインインの確認に対応します。
+この教材では **`.mcp.json`** に **`github-mcp-server`** が登録済みです。その設定を使い、信頼やサインインの確認に対応します。同じサーバーを追加し直さないでください。
+
+未登録のサーバーを追加する場合だけ、**Workspace +**（User ではない）→ **HTTP** → サーバーの URL と ID を入力します。
 
 <div class="setup-cards">
   <div class="setup-card">
@@ -153,11 +155,11 @@ MCP サーバーの実行場所は **2 種類** あります。
   </div>
 </div>
 
-> ⚠️ ルートへの保存には **`chat.mcp.workspaceRootConfig.enabled`**（Experimental）を有効化。Local 互換用の `.vscode/mcp.json` は `servers` を使い、追加画面では deprecated と表示されます。
+> ⚠️ ルートへの保存には **`chat.mcp.workspaceRootConfig.enabled`**（Experimental）を有効化。この教材では有効化済みです。共有 MCP 設定は **`.mcp.json`** のみを使い、同じサーバーを別の Workspace 設定ファイルにも登録しないでください。
 
 ## Copilot CLI で始める <a class="h2-doc" href="https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference#mcp-server-configuration" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-CLI も、フォルダーを信頼するとルートの **`.mcp.json`**（トップレベルは **`mcpServers`**）を読み込みます。`.vscode/mcp.json` から移行する場合は、ファイル名だけでなく `servers` を `mcpServers` に変更します。
+CLI も、フォルダーを信頼するとルートの **`.mcp.json`**（トップレベルは **`mcpServers`**）を読み込みます。VS Code と CLI でこの共有設定を使い、同じサーバーの設定を二重に作らないでください。
 
 ```bash
 # MCP server を追加
