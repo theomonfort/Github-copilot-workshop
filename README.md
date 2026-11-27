@@ -58,6 +58,18 @@ npm run test:e2e
 
 PR の作成 / 更新時に GitHub Actions が Node.js 22、`npm ci`、Chromium、型チェック、E2E を実行します。失敗時は HTML レポート / trace / スクリーンショットを artifact に保存します。Actions の実行許可、外部 PR の承認、必須チェックの branch protection は各自のリポジトリで設定してください。Security のアカウント設定はこの checkpoint に含まれません。
 
+### checkpoint3 の意図的な解析例
+
+**教材専用、本番への転用禁止。** `src/lib/playbook.ts` の `createWorkshopAnalysisDemo()` に、セキュリティ弱点2箇所と品質問題1箇所を含めています。通常ページからは呼ばれず、外部入力・通信・保存はありません。鍵は呼び出したときだけメモリ内に生成し、実際の秘密情報は含めません。
+
+| 対象 | 意図的な問題 / 期待するルール | 修正方法 |
+| --- | --- | --- |
+| CodeQL セキュリティ | HTTPS Agent の証明書検証を無効化: [`js/disabling-certificate-validation`](https://codeql.github.com/codeql-query-help/javascript/js-disabling-certificate-validation/) | `rejectUnauthorized: false` を削除し、既定の検証を使う |
+| CodeQL セキュリティ | RSA 鍵が 1024-bit: [`js/insufficient-key-size`](https://codeql.github.com/codeql-query-help/javascript/js-insufficient-key-size/) | `modulusLength` を 2048 以上にする |
+| GitHub Code Quality | `concat()` の戻り値を捨て、トピックが追加されない: [`js/ignore-array-result`](https://codeql.github.com/codeql-query-help/javascript/js-ignore-array-result/) | 戻り値を利用するか、`topics.push('Copilot')` にする |
+
+品質ルールは [GitHub Code Quality の公式対象一覧](https://docs.github.com/en/code-security/reference/code-quality/codeql-queries/javascript-queries) に含まれます。CodeQL セキュリティ解析と Code Quality は別に有効化して確認してください。この変更では設定やワークフローを追加せず、GitHub 上での実検出は未検証です。ビルド成功は検出の証明ではなく、既存コードの指摘を含む総件数も保証しません。修正後に checkpoint3 を再取り込みすると、この3箇所が戻る場合があるため差分を確認してください。
+
 ### Copilot にテストを生成してもらう
 
 checkpoint3 には Playwright 1.58.2 公式ベースの `playwright-test-planner` / `playwright-test-generator` / `playwright-test-healer` を `.github/agents/` に同梱しています。planner で候補を相談し、合意したケースを generator で `tests/e2e/` に追加します。healer は失敗調査時のみ任意で使います。`.github/copilot-instructions.md` にも、機能とユーザーが選んだテストを一緒に実装する指示を追加済みです。
