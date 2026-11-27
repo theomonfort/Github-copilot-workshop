@@ -1,6 +1,8 @@
 {
   "name": "GitHub Copilot Workshop",
-  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
   "hostRequirements": {
     "cpus": 8,
     "memory": "32gb",
@@ -27,5 +29,5 @@
     "4321": { "label": "Astro dev",     "onAutoForward": "openPreview" },
     "4322": { "label": "Astro preview", "onAutoForward": "silent" }
   },
-  "postCreateCommand": "gh extension install github/gh-copilot || true && npm install -g @github/copilot pnpm || true && curl -sL https://raw.githubusercontent.com/github/gh-aw/main/install-gh-aw.sh | bash || true && npm install -g @playwright/test@1.58.2 && playwright install --with-deps chromium && sudo apt-get update && sudo apt-get install -y --no-install-recommends bubblewrap socat slirp4netns"
+  "postCreateCommand": "gh extension install github/gh-copilot || true && npm install -g @github/copilot pnpm || true && curl -sL https://raw.githubusercontent.com/github/gh-aw/main/install-gh-aw.sh | bash || true && npm install -g @playwright/test@1.58.2 && playwright install --with-deps chromium"
 }
