@@ -107,8 +107,6 @@ GitHub MCP (`github-mcp-server`, `https://api.githubcopilot.com/mcp/`) と Conte
 | `./checkpoint2` | プレゼン機能 / `checkpoint/02-cloud-agent` |
 | `./checkpoint3` | 3D ギャラクシー + E2E / PR テスト / `checkpoint/03-tests` |
 
-**解析教材 / Analysis exercises:** checkpoint 1 / 2 / 3 には、意図的なセキュリティ問題と品質問題が各 1 / 2 / 3 件、アプリから隔離して含まれます。製品に出荷せず、import / 実行しないでください。Snapshots include cumulative, intentionally flawed static-analysis exercises, not application code. The proof workflow runs only in the canonical template; participant repositories keep their existing CodeQL setup.
-
 **`checkpoint1` のみ:** 事前確認後、stash や checkout の変更前に、自分のリポジトリへ [Part 6 と共通の日本語 Issue 6 件](scripts/checkpoint-issues.json)を準備します。Issues の有効化と `gh` の Issue 読み取り / 作成権限が必要です。既存の open / closed Issue は再利用し、編集内容や状態を変えません。実際の番号と URL を表示するため、Issue 番号を 1 からと仮定しないでください。`checkpoint2` / `checkpoint3` は Issue を作りません。
 
 課題はプレゼンの基本 / 本文 / Mermaid / レスポンシブ (任意の Cloud Agent、Part 8 / checkpoint2)、テスト / CI (Part 9)、日次レポート (Operate、Part 13) の6件です。基本サイトは checkpoint1 に含まれるため重複課題にしません。初期 Issue から `playbook-3d` / `galaxy-audio` を外し、Zettelkasten も Issue 化しません。CLI の演習はありません。**checkpoint3 はテスト / CI、3D、読み取り専用 Zettelkasten、英語目次を含む完成版のままです。** 音声 / 日次 workflow は snapshot に含まれません。以前作成した Issue の本文や状態、作業キーの記録は保持し、自動割り当て・完了処理もしません。
@@ -167,12 +165,6 @@ Checkpoint imports retain files that were already ignored immediately before sta
 Cleanup **closes**, never permanently deletes, provably identified workshop issues and unmodified checkpoint PRs. Titles/prefixes alone and legacy reused-issue receipts are insufficient. Ambiguous or edited resources are retained. A later `./checkpoint1` reuses the closed issues without reopening or recreating them; reopen desired tasks yourself. Generated remote branches are deleted only with verified import commit/tree provenance, exact-SHA leases and recovery refs. Local branches, worktree-used branches, reset branches, and branches backing other open PRs are kept. Fork networks disable branch deletion conservatively.
 
 Dirty/untracked work is stashed only if switching the checkout, never discarded or automatically reapplied. Existing stashes, ignored files, Codespaces, tags, settings and required checks stay intact; ignored-file collisions stop the operation. A starter PR may remove a workflow without removing its required-check rules. Snapshot commits honor signing configuration but do not run commit hooks. After partial failures, inspect the printed results and rerun: existing reset PRs/commits are reused, not duplicated. Closed-unmerged, edited or stale pending resets require manual inspection. Keep Git's `workshop-resets/` journal and `refs/workshop-reset/recovery/` refs. Never run checkpoint/reset commands concurrently, including across separate clones; local locks cannot coordinate different clones.
-
-## 意図的な解析演習 / Intentional analysis exercises
-
-`workshop-exercises/` に、各 checkpoint で新しいセキュリティ問題 1 件と品質問題 1 件を追加します (累積 1 / 2 / 3 件ずつ)。**製品用コードではなく、通常アプリから import / 実行しません。** [講師用マップ、修正方法、実際の検出の見方](workshop-exercises/README.md)を確認してください。
-
-**English:** Each checkpoint adds one inert security example and one quality example outside the application. The proof workflow runs only in the canonical template, separating actual CodeQL security alerts from quality-rule artifacts. It is skipped in participant copies to preserve existing default setup. GitHub Code Quality requires separate enablement and licensing; this template does not enable it. Required checks and security policies still apply. Later imports restore canonical examples, including any you previously fixed.
 
 ## 手動の前提条件
 

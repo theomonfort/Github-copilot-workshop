@@ -41,8 +41,6 @@ function pullRequestBody(stage, checkpoint, snapshot, base) {
 
 **差分:** 全追跡ファイルを置換します。独自変更と削除を確認してください。
 
-**教材:** 意図的な脆弱性と品質問題はサイトから隔離しています。検出例は \`workshop-exercises/README.md\`。
-
 必須チェックは回避せず、依存監査の警告とは分けて確認してください。
 
 <details>

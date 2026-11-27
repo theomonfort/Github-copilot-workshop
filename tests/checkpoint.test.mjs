@@ -11,8 +11,12 @@ const files = ['checkpoint1', 'checkpoint2', 'checkpoint3', 'reset', 'scripts/re
 const catalogue = JSON.parse(readFileSync(join(project, 'scripts/checkpoint-issues.json'), 'utf8'));
 const stages = ['01-develop', '02-cloud-agent', '03-tests'];
 const titles = ['Website scaffold', 'Website with presentation mode', 'Complete website with tests and CI'];
+const retiredExerciseFiles = [
+  'workshop-exercises/legacy.txt', '.github/workflows/workshop-exercises.yml',
+  'scripts/report-exercises.mjs', 'tests/exercises.test.mjs',
+];
 
-function fixture(t, { copied = false, https = false, starterIgnores = true } = {}) {
+function fixture(t, { copied = false, https = false, starterIgnores = true, retiredExercises = false } = {}) {
   const sandbox = mkdtempSync(join(tmpdir(), 'workshop-checkpoint-test-'));
   t.after(() => rmSync(sandbox, { recursive: true, force: true }));
   const participant = join(sandbox, 'participant');
@@ -176,6 +180,12 @@ console.log('Simulated npm ci completed');
   git(sandbox, 'clone', origin, participant);
   writeFileSync(join(participant, 'starter.txt'), 'participant main\n');
   if (starterIgnores) writeFileSync(join(participant, '.gitignore'), '.env\nlocal-only/\n');
+  if (retiredExercises) {
+    for (const path of retiredExerciseFiles) {
+      mkdirSync(dirname(join(participant, path)), { recursive: true });
+      writeFileSync(join(participant, path), 'legacy fixture\n');
+    }
+  }
   git(participant, 'add', '.');
   git(participant, 'commit', '-m', 'Participant root');
   git(participant, 'push', 'origin', 'main');
@@ -275,7 +285,7 @@ function assertPullRequest(f, number, base) {
   const sections = body.split('<details>');
   assert.equal(sections.length, 2);
   const [visible, details] = sections;
-  assert.equal(visible.trim().split('\n\n').length, 5);
+  assert.equal(visible.trim().split('\n\n').length, 4);
   assert.match(visible, /PLAN ハーネス/);
   assert.match(visible, [
     /Playbook の一覧 \/ 詳細を備えた基本サイトの完成例/,
@@ -285,8 +295,7 @@ function assertPullRequest(f, number, base) {
   assert.match(visible, /PR 作成後に `npm ci` を実行.*成功後は `npm run dev`/);
   assert.match(visible, /表示 URL（Codespaces は転送 URL）の `\/playbook\/`/);
   assert.match(visible, /全追跡ファイルを置換.*独自変更と削除を確認/);
-  assert.match(visible, /意図的な脆弱性と品質問題はサイトから隔離/);
-  assert.match(visible, /検出例は `workshop-exercises\/README.md`/);
+  assert.doesNotMatch(body, /workshop-exercises|意図的な脆弱性/);
   assert.match(visible, /必須チェックは回避せず、依存監査の警告とは分けて確認/);
   assert.doesNotMatch(body, /\[x\]|tests passed|checks passed|production-secure|テスト成功|テスト済み|検証済み/i);
   assert.deepEqual([...body.matchAll(/npm run ([a-z0-9:-]+)/g)].map(match => match[1]),
@@ -636,6 +645,24 @@ test('main-only HTTPS/SSH origins: exact snapshots on participant history, despi
   assert.equal(f.git(f.participant, 'rev-parse', 'HEAD^'), f.initial);
   f.assertStable();
 });
+
+for (const number of [1, 2, 3]) {
+  test(`checkpoint${number}は廃止した解析教材を含まないtreeを取り込む`, (t) => {
+    const f = fixture(t, { retiredExercises: true });
+    const result = f.run(number);
+    assert.equal(result.status, 0, result.output);
+    for (const path of retiredExerciseFiles) {
+      assert.equal(existsSync(join(f.participant, path)), false);
+      assert.equal(f.git(f.participant, 'ls-tree', 'HEAD', '--', path), '');
+      assert.equal(f.git(f.participant, 'show', `${f.initial}:${path}`), 'legacy fixture');
+    }
+    assert.equal(f.git(f.participant, 'rev-parse', 'HEAD^{tree}'),
+      f.git(f.canonical, 'rev-parse', `${f.snapshots[number - 1]}^{tree}`));
+    assertPullRequest(f, number, f.initial);
+    assert.equal(f.npmCalls().length, 1);
+    f.assertStable();
+  });
+}
 
 test('copied unrelated branch is untouched; use the current canonical snapshot, not its stale copy', (t) => {
   const f = fixture(t, { copied: true });
