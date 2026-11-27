@@ -14,7 +14,7 @@
 | パス | 内容 |
 |---|---|
 | `.devcontainer/devcontainer.json` | Codespaces / Dev Containers の定義 |
-| `.mcp.json` | Workspace の GitHub MCP Server 設定 (`mcpServers`) |
+| `.mcp.json` | 追加 MCP 用の空の Workspace 設定 (`mcpServers`) |
 | `.vscode/settings.json` | Workspace ルートの MCP 設定を有効化 |
 | `src/content/playbook/ja/` | 最新の日本語 playbook |
 | `src/content/playbook/en/` | 最新の英語 playbook |
@@ -77,9 +77,9 @@ tail -F /workspaces/.copilotd/logs/copilotd.log
 
 ## Workspace MCP
 
-現在の VS Code で **Session Target → Copilot** を選び、**Customizations → MCP Servers → Workspace** を開きます。`.vscode/settings.json` で `chat.mcp.workspaceRootConfig.enabled` を有効にしています。対応する VS Code / Copilot のバージョンが必要です。Codespaces でもこの Workspace 設定を使います。
+現在の VS Code で **Session Target → Copilot** を選び、**Customizations → MCP Servers** を開きます。`.vscode/settings.json` で `chat.mcp.workspaceRootConfig.enabled` を有効にしています。対応する VS Code / Copilot のバージョンが必要です。Codespaces でもこの Workspace 設定を使います。
 
-スターターには GitHub MCP (`github-mcp-server`, `https://api.githubcopilot.com/mcp/`) が登録済みです。同じサーバーを追加し直さず、未登録のサーバーを追加する場合だけ **Workspace の + → HTTP** を選び、URL とサーバー名を入力します。保存先はリポジトリルートの **`.mcp.json`** (`mcpServers`) です。**User / Global** は選びません。
+GitHub MCP (`github-mcp-server`) は **Built-in** のものを使い、Workspace に重複登録しません。スターターの `.mcp.json` の `mcpServers` は空です。ハンズオンで Context7 (`context7`, `https://mcp.context7.com/mcp`) を追加するときは **Workspace の + → HTTP** を選び、URL とサーバー名を入力します。保存先はリポジトリルートの **`.mcp.json`** (`mcpServers`) です。**User / Global** は選びません。
 
 サーバーの信頼確認、OAuth 認証などは各自で実施します。接続先 JSON だけで認証済みにはなりません。トークンや API キーをコミットしないでください。
 
