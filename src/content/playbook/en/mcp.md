@@ -134,7 +134,9 @@ Choose based on your use case and security requirements.
 
 For the **Copilot harness**, open **Customizations → MCP Servers**.
 
-**Workspace +** (not User) → **HTTP** → server URL and ID. Review any trust or sign-in prompts.
+The workshop already configures **`github-mcp-server`** in **`.mcp.json`**. Use that entry and review any trust or sign-in prompts; do not add it again.
+
+For a server that is not configured yet: **Workspace +** (not User) → **HTTP** → server URL and ID.
 
 <div class="setup-cards">
   <div class="setup-card">
@@ -153,11 +155,11 @@ For the **Copilot harness**, open **Customizations → MCP Servers**.
   </div>
 </div>
 
-> ⚠️ Root-file destination: enable **`chat.mcp.workspaceRootConfig.enabled`** (Experimental). Local compatibility: `.vscode/mcp.json` uses `servers` (labeled deprecated in the guided flow).
+> ⚠️ Root-file destination: enable **`chat.mcp.workspaceRootConfig.enabled`** (Experimental), already enabled in this workshop. Use **`.mcp.json`** as the only shared MCP configuration; do not register the same server in another Workspace configuration file.
 
 ## Getting started with Copilot CLI <a class="h2-doc" href="https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference#mcp-server-configuration" target="_blank" rel="noopener noreferrer">📖 Docs</a>
 
-The CLI also reads workspace-root **`.mcp.json`** with a top-level **`mcpServers`** object after you trust the folder. Migrating from `.vscode/mcp.json` requires changing `servers` to `mcpServers`, not just renaming the file.
+The CLI also reads workspace-root **`.mcp.json`** with a top-level **`mcpServers`** object after you trust the folder. Reuse this shared configuration for VS Code and CLI instead of creating a second server entry.
 
 ```bash
 # Add an MCP server
