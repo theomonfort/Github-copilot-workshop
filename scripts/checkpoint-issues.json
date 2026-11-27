@@ -2,7 +2,7 @@
   {
     "key": "presentation-core",
     "title": "[playbook:presentation-core] プレゼンモードと目次ナビゲーションを作る",
-    "body": "<!-- workshop-issue:presentation-core -->\n## 段階\n任意の Cloud Agent (Part 8)。基本サイト (Part 6 / checkpoint1) のレビューとマージ後に実装。checkpoint2 の到達点。テスト前に checkpoint2 を取り込む方法でもよい。\n\n## 完了条件\n- `/playbook` の一覧と Markdown 詳細を残し、カードから `/playbook/<slug>/?present=1` を開ける。\n- 本文の各 H2 をスライドにし、frontmatter のタイトルを先頭に表示する。矢印キーで移動、Esc で一覧へ戻り、現在のエントリとスライドを URL に保持する。\n- `src/lib/playbook-categories.ts` を使ったカテゴリ別目次で現在地を示し、別エントリの先頭へプレゼン状態を保って移動できる。\n\n参考: https://theomonfort.github.io/theomonfort/playbook/github/?present=1"
+    "body": "<!-- workshop-issue:presentation-core -->\n## 段階\n任意の Cloud Agent (Part 8)。基本サイト (Part 6 / checkpoint1) のレビューとマージ後に実装。checkpoint2 の到達点。テスト前に checkpoint2 を取り込む方法でもよい。\n\n## 完了条件\n- `/playbook` の一覧と Markdown 詳細を残し、カードから `/playbook/<slug>/?present=1` を開ける。\n- 本文の各 H2 をスライドにし、frontmatter のタイトルを先頭に表示する。矢印キーで移動、Esc で一覧へ戻り、現在のエントリとスライドを URL に保持する。\n- `src/lib/playbook-categories.ts` を使ったカテゴリ別目次で現在地を示し、別エントリの先頭へプレゼン状態を保って移動できる。\n- スライドの内容は適切な最大幅で中央に配置し、見出し・本文・余白のバランスを取る。画面いっぱいへの引き伸ばしや巨大な表紙見出しは避ける。\n- 目次は初期表示では閉じ、ボタンで開閉できる。デスクトップで開いても本文や操作ボタンに重ならないようにする。\n- 15インチMac・Chrome 125%・目次なしで、見出し・本文・図・操作ボタンが表示領域に収まり、ページ全体のはみ出しや欠けがないことを確認する。小さすぎる文字で調整せず、目次を開いた状態も確認する。\n\n参考: https://theomonfort.github.io/theomonfort/playbook/github/?present=1"
   },
   {
     "key": "presentation-content",
