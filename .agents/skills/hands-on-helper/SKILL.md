@@ -143,21 +143,10 @@ or checkpoint2. Use lesson titles if an older copy has different step numbers.
 
 ## Troubleshooting rules
 
-### Intentional analysis exercises
-
-Each checkpoint adds one new security example and one quality example under
-`workshop-exercises/`, cumulatively. Read its instructor README and the actual
-`workshop-exercise-findings` artifact before claiming a finding was detected.
-The proof workflow is restricted to the canonical template and skipped in
-participant copies; preserve their existing CodeQL default setup. Do not remove
-that repository guard or enable duplicate advanced-setup uploads.
-These files are static-analysis teaching material, never application code:
-do not import, serve, call, or add runtime tests for them. Do not create real secrets.
-Keep CodeQL security alerts, CodeQL quality-rule artifacts, the separately enabled
-GitHub Code Quality bot, and Copilot review comments distinct. Do not activate paid
-features or bypass required checks. Fix the exercise source, not the policy.
-A later canonical checkpoint import can restore earlier intentional defects;
-warn participants to inspect the diff and deliberately reapply prior fixes.
+Preserve participants' existing CodeQL setup and avoid duplicate analysis uploads.
+Do not create real secrets, activate paid features, or bypass required checks.
+Keep CodeQL findings, GitHub Code Quality and Copilot review results distinct;
+inspect actual results before claiming a finding was detected.
 
 When someone is stuck:
 
