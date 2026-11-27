@@ -7,7 +7,7 @@
 PLAN のハーネスと、日本語 Playbook の基本サイトを含みます。
 
 - `.github/copilot-instructions.md` と `.github/instructions/frontend.instructions.md`: Astro / Tailwind / TypeScript / npm、レトロ JRPG テーマの規約
-- `.mcp.json`: Workspace の GitHub MCP と Context7 の接続先 (`mcpServers`)
+- `.mcp.json`: Workspace の Context7 の接続先 (`mcpServers`)
 - `.vscode/settings.json`: Workspace ルートの MCP 設定を有効化
 - `.agents/skills/`: `github-issues` と `hands-on-helper` (参照ファイル / ライセンスを同梱)
 - `/playbook/`: カテゴリ別カード、SDLC ナビゲーション、惑星 / アバター / カテゴリメタデータ
@@ -97,9 +97,9 @@ tail -F /workspaces/.copilotd/logs/copilotd.log
 
 ## Workspace MCP
 
-現在の VS Code で **Session Target → Copilot** を選び、**Customizations → MCP Servers → Workspace** を開きます。`.vscode/settings.json` で `chat.mcp.workspaceRootConfig.enabled` を有効にしています。対応する VS Code / Copilot のバージョンが必要です。Codespaces でもこの Workspace 設定を使います。
+現在の VS Code で **Session Target → Copilot** を選び、**Customizations → MCP Servers** を開きます。`.vscode/settings.json` で `chat.mcp.workspaceRootConfig.enabled` を有効にしています。対応する VS Code / Copilot のバージョンが必要です。Codespaces でもこの Workspace 設定を使います。
 
-GitHub MCP (`github-mcp-server`, `https://api.githubcopilot.com/mcp/`) と Context7 (`context7`, `https://mcp.context7.com/mcp`) は登録済みです。同じサーバーを追加し直さず、未登録のサーバーを追加する場合だけ **Workspace の + → HTTP** を選び、URL とサーバー名を入力します。保存先はリポジトリルートの **`.mcp.json`** (`mcpServers`) です。**User / Global** は選びません。
+GitHub MCP (`github-mcp-server`) は **Built-in** のものを使い、Workspace に重複登録しません。Context7 (`context7`, `https://mcp.context7.com/mcp`) は Workspace に登録済みです。未登録の外部サーバーを追加する場合だけ **Workspace の + → HTTP** を選び、URL とサーバー名を入力します。保存先はリポジトリルートの **`.mcp.json`** (`mcpServers`) です。**User / Global** は選びません。
 
 この手順は **Copilot ハーネス**用です。従来の **Local ハーネス**用 `.vscode/mcp.json` (`servers`) とは形式が異なります。この教材では併用せず、同じサーバーの二重登録を避けます。[VS Code の設定先の説明](https://code.visualstudio.com/docs/agent-customization/mcp-servers#_choose-a-configuration-destination)を参照してください。
 
