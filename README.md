@@ -48,6 +48,12 @@ Dev Container は Playwright CLI 1.58.2 と対応する Chromium・Linux依存�
 
 **English:** The Dev Container provisions Playwright CLI 1.58.2, matching Chromium and Linux dependencies. Project setup is separate: ask Copilot to inspect the project and add `@playwright/test@1.58.2` and test configuration if missing. Existing copies need the updated container configuration and a rebuild.
 
+## Linux sandbox の依存関係 / Linux sandbox dependencies
+
+Dev Container は `bubblewrap` (`bwrap`)、`socat`、ネットワーク接続用の `slirp4netns` を作成時に導入します。APT の更新・導入に失敗した場合、セットアップはエラー終了します。既存の派生リポジトリには自動反映されないため、更新した `.devcontainer/devcontainer.json` を取り込み、作業を保存して Codespace をリビルドしてください。これは不足依存への対策であり、sandbox 設定や保護ポリシーは変更しません。実際の sandbox 動作は Codespace 内で確認が必要です。
+
+**English:** The Dev Container installs `bubblewrap` (`bwrap`), `socat` and `slirp4netns` for network-enabled Linux sandboxing. APT update/install failures fail setup. Existing copies need the updated `.devcontainer/devcontainer.json`: save your work and rebuild the Codespace. This addresses missing dependencies only; sandbox settings and protections remain unchanged, and actual sandbox operation still needs verification inside the Codespace.
+
 ## Copilot アプリから Codespace に接続 / Connect from the Copilot app
 
 `.devcontainer/devcontainer.json` に `ghcr.io/github/copilot-host/copilotd:0` を追加済みです。コンテナ起動時にホスト `copilotd` を起動し、Codespace を自動登録します。既存のイメージ、開発ツール、拡張機能、ポート、作成時コマンドは維持しています。Actions 用の `copilot-setup-steps.yml` とは別の設定です。
