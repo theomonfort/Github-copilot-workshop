@@ -89,8 +89,6 @@ tail -F /workspaces/.copilotd/logs/copilotd.log
 | `./checkpoint2` | プレゼン機能 / `checkpoint/02-cloud-agent` |
 | `./checkpoint3` | 3D ギャラクシー + E2E / PR テスト / `checkpoint/03-tests` |
 
-**解析教材 / Analysis exercises:** checkpoint 1 / 2 / 3 には、意図的なセキュリティ問題と品質問題が各 1 / 2 / 3 件、アプリから隔離して含まれます。製品に出荷せず、import / 実行しないでください。Snapshots include cumulative, intentionally flawed static-analysis exercises, not application code. The proof workflow runs only in the canonical template; participant repositories keep their existing CodeQL setup.
-
 **`checkpoint1` のみ:** 事前確認後、stash や checkout の変更前に、自分のリポジトリへ [Part 6 と共通の日本語 Issue 6 件](scripts/checkpoint-issues.json)を準備します。Issues の有効化と `gh` の Issue 読み取り / 作成権限が必要です。既存の open / closed Issue は再利用し、編集内容や状態を変えません。実際の番号と URL を表示するため、Issue 番号を 1 からと仮定しないでください。`checkpoint2` / `checkpoint3` は Issue を作りません。
 
 課題はプレゼンの基本 / 本文 / Mermaid / レスポンシブ (任意の Cloud Agent、Part 8 / checkpoint2)、テスト / CI (Part 9)、日次レポート (Operate、Part 13) の6件です。基本サイトは checkpoint1 に含まれるため重複課題にしません。初期 Issue から `playbook-3d` / `galaxy-audio` を外し、Zettelkasten も Issue 化しません。CLI の演習はありません。**checkpoint3 はテスト / CI、3D、読み取り専用 Zettelkasten、英語目次を含む完成版のままです。** 音声 / 日次 workflow は snapshot に含まれません。以前作成した Issue の本文や状態、作業キーの記録は保持し、自動割り当て・完了処理もしません。
