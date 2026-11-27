@@ -78,23 +78,25 @@ checkpoint3 には Playwright 1.58.2 公式ベースの `playwright-test-planner
 
 公式定義の出典は [Playwright v1.58.2](https://github.com/microsoft/playwright/tree/ce480a952553175eae75342aad2c5e86cdf2cbba/packages/playwright/src/agents) です。モデル固定とエージェント内の重複MCP設定を省き、既存パスと合意フローに合わせています。healer は失敗を隠す skip / fixme を自動追加しません。ライセンスと通知は `.github/agents/PLAYWRIGHT-LICENSE` / `PLAYWRIGHT-NOTICE` に同梱しています。
 
-## 18秒のライブデモ / Live demo
+## 24秒のライブデモ / Live demo
 
-上記の依存関係と Chromium の準備後、リポジトリのルートで実行します。
+上記の依存関係（`npm ci`）と Chromium を準備し、GUI がある環境で、リポジトリのルートから実行します。
 
 ```bash
-npx --package=node@22.23.4 node ./node_modules/@playwright/test/cli.js test --config=playwright.demo.config.ts
+./e2e
 ```
 
-1つのブラウザ・ページで、一覧 → ギットハブの記事 → `P` でプレゼン → 次のスライド → 目次から Copilot → Fusion → `Esc` で一覧へ、という操作を自動で見せます。Inspector の手動ステップやトレース再生ではありません。一覧が表示されてから約18秒、実測15〜20秒を確認します。初回の一時 Node 取得、ビルド、ブラウザ起動は別時間です。遅い環境で20秒を超える場合はデモの時間チェックが失敗します。
+`./e2e` は画面表示付きの実演デモです。通常の E2E テストは引き続き `npm run test:e2e` で実行します。内部では従来と同じ `npx --package=node@22.23.4 node ./node_modules/@playwright/test/cli.js test --config=playwright.demo.config.ts` を実行し、追加引数もそのまま渡します（例: `./e2e --list`）。プロジェクトの依存関係は自動導入しません。
+
+1つのブラウザ・ページで、一覧 → 3D の回転・宇宙船で Operate / Test & Secure へ飛行・衛星選択 → GitHub の記事とスライド → 目次から Copilot / Fusion → Zettelkasten のノード・関連ノート・分野切替・検索 → CLI のスライド → 一覧、というツアーを自動で見せます。目次も開閉します。従来の6操作から29操作に増やし、約24秒で見せます。密度を上げた18秒版の後半を短縮せず、惑星間の飛行に約6秒を追加しています。各便は実際の到着を待ち、さらに0.6秒見せてから進みます。実測の操作数 (従来の2倍以上) と表示時間 (24〜26秒) を確認します。Inspector の手動操作や録画再生ではありません。初回の一時 Node 取得、ビルド、ブラウザ起動は別時間ですが、途中の3D・グラフ読込は表示時間に含めます。遅い環境で26秒を超える場合も時間チェックを省略せず失敗します。
 
 専用ポート **44331** を使い、終了時に専用ブラウザと preview を閉じます。出力先は `test-results/demo` に分離し、通常テストの結果を削除しません。既存サーバーは再利用・停止しません。ポートが使用中なら起動を中止します。GUI があるローカル環境向けで、ヘッドレスの Codespace ではそのまま画面表示できません。
 
-`tests/demo/playbook.demo.ts` は専用設定でだけ検出され、通常の `npx playwright test` / PR CI の対象には入りません。見せるための待機はこのデモだけです。3D、動画、外部フォント取得、トレース保存は含めません。Node 26 と Playwright 1.58.2 のトレース保存問題を避けるため、一時 Node 22 を明示しています。外側に `npx -c` を付けないでください。内側の preview 起動と衝突します。
+`tests/demo/playbook.demo.ts` は専用設定でだけ検出され、通常の `npx playwright test` / PR CI の対象には入りません。見せるための待機はこのデモだけです。実際の WebGL 2 描画が必要で、3D やグラフを画像・モックに置き換えません。飛行中だけデモの reduced-motion 設定を解除し、既存の「動き」を有効化します。既存の縮小ボタンを Enter で操作してカメラの追従を止め、経路に余白を確保して船が画面内を移動する様子を見せます。船そのもののワールド座標・画面内表示・噴射と到着を確認し、カメラ移動だけを飛行として扱いません。ノードは実際の描画座標でクリックします。動画、外部フォント取得、トレース保存は既定では含めません。Node 26 と Playwright 1.58.2 のトレース保存問題を避けるため、一時 Node 22 を明示しています。外側に `npx -c` を付けないでください。内側の preview 起動と衝突します。
 
-既存の派生リポジトリには自動反映されません。checkpoint3 を取り込み済みなら、新規の `playwright.demo.config.ts` と `tests/demo/playbook.demo.ts` だけを追加すれば使えます。同名ファイルがある場合は上書きせず差分を確認してください。デモのために `./checkpoint3` で全体を再取り込みする必要はありません。
+既存の派生リポジトリには自動反映されません。元のデモが動く checkpoint3 なら `e2e`（実行権限を保持）と `tests/demo/playbook.demo.ts` の差分を取り込めば使えます。初回のみ `playwright.demo.config.ts` も必要です。同名ファイルがある場合は上書きせず差分を確認してください。デモのために `./checkpoint3` で全体を再取り込みする必要はありません。
 
-**English:** This opt-in, headed demo uses one page/context and runs automatically for about 18 seconds after the catalogue is visible. Package download, build and browser startup are additional. It checks real navigation and slide state, and fails if the measured visible journey exceeds 20 seconds. Normal tests and PR CI remain unchanged. Demo output stays in `test-results/demo` without deleting normal test results. It uses its own port (44331), closes its browser/server, requires a desktop GUI, and uses temporary Node 22 without `npx -c`. Existing template copies need only the two new demo files, added without overwriting local work.
+**English:** After installing project dependencies and Chromium, run `./e2e` for the headed presenter demo; `npm run test:e2e` remains the regular suite. The launcher retains Node 22.23.4 internally, forwards optional arguments and does not install project dependencies. This opt-in demo uses one page/context for a roughly 24-second tour with 29 interactions (previously six): rotate the real 3D galaxy, fly the existing courier to Operate and Test & Secure, open a satellite's article and slides, toggle the TOC, switch sections, and explore Zettelkasten nodes, links, vaults and search. Flights add about six seconds without shortening the richer 18-second version's later steps. Each flight waits for arrival, then holds for another 0.6 seconds. Only the flight segment enables motion; activating the existing zoom-out button with Enter stops camera tracking and adds framing margin so the ship visibly crosses the scene. Checks observe its world position, visible projection, exhaust and arrival, not camera movement alone. WebGL 2 and a desktop GUI are required. Package download, build and browser startup are additional; lazy 3D/graph loading is included in the measured 24–26-second journey. It fails rather than skipping readiness or timing checks, and requires at least twice the original action count. Normal tests and PR CI remain unchanged. It uses port 44331, closes its browser/server and isolates output in `test-results/demo`. Do not wrap the launcher in `npx -c`. Existing working demos need the executable `e2e` launcher and demo test update; first-time users also need `playwright.demo.config.ts`. Preserve local edits and the launcher's executable permission when applying these files.
 
 ## 起動
 

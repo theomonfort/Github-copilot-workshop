@@ -1,0 +1,4 @@
+#!/bin/sh
+set -eu
+cd -- "$(dirname -- "$0")"
+exec npx --package=node@22.23.4 node ./node_modules/@playwright/test/cli.js test --config=playwright.demo.config.ts "$@"
